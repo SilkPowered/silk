@@ -1,38 +1,42 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "silk",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Silk",
+  "description": "Silk is a fabric mod provides compatiblity with spigot plugins.",
   "authors": [
-    "Me!"
+    "qyl27"
+  ],
+  "contributors": [
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/SilkPowered/silk",
+    "issues": "https://github.com/SilkPowered/silk/issues"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "GPLv3",
+  "icon": "assets/silk/icon.png",
 
-  "environment": "*",
+  "environment": "server",
   "entrypoints": {
+    "preLaunch": [
+      "cx.rain.silk.SilkLoader"
+    ],
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "cx.rain.silk.SilkMod"
+    ],
+    "mm:early_risers": [
+      "cx.rain.silk.early_loading.SilkEarlyLoader"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "silk.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=0.14.9",
-    "fabric-api": "*",
     "minecraft": "~1.19",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
