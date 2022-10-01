@@ -4,7 +4,7 @@
   "package": "cx.rain.silk.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "loader.MinecraftGameProviderMixin"
+    "core.DedicatedServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

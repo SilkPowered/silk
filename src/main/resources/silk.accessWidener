@@ -1,0 +1,3 @@
+accessWidener	v1	named
+# Qyl27 thinked a lot.
+#accessible	field	net/fabricmc/loader/impl/game/minecraft/MinecraftGameProvider	entrypoint	Ljava/lang/String;

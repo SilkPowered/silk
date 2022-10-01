@@ -10,6 +10,10 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+loom {
+	accessWidenerPath = file('src/main/resources/silk.accessWidener')
+}
+
 repositories {
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
@@ -18,6 +22,10 @@ repositories {
 	// for more information about repositories.
 	mavenCentral()
 	maven { url 'https://jitpack.io' }
+
+	maven {
+		url = "https://repo.codemc.io/repository/nms/"
+	}
 }
 
 dependencies {
@@ -26,11 +34,18 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
-	include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
+//	modImplementation "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
+//	include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
 
-	implementation "com.github.MeiVinEight:ReflectionFX:1.9.4"
-	include "com.github.MeiVinEight:ReflectionFX:1.9.4"
+//	implementation "com.github.MeiVinEight:ReflectionFX:1.9.4"
+//	include "com.github.MeiVinEight:ReflectionFX:1.9.4"
+
+	compileOnly("org.spigotmc:spigot:1.19.2-R0.1-20220924.011305-5:remapped-mojang") {
+		exclude()
+	}
+
+	implementation "org.fusesource.jansi:jansi:2.4.0"
+	include "org.fusesource.jansi:jansi:2.4.0"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 //	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"

@@ -33,6 +33,7 @@
   "mixins": [
     "silk.mixins.json"
   ],
+  "accessWidener": "silk.accessWidener",
 
   "depends": {
     "fabricloader": ">=0.14.9",
