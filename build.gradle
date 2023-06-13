@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
+	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -32,28 +32,13 @@ dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-//	modImplementation "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
-//	include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}"
-
-//	implementation "com.github.MeiVinEight:ReflectionFX:1.9.4"
-//	include "com.github.MeiVinEight:ReflectionFX:1.9.4"
-
-	compileOnly("org.spigotmc:spigot:1.19.2-R0.1-20220924.011305-5:remapped-mojang") {
-		exclude()
-	}
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	implementation "org.fusesource.jansi:jansi:2.4.0"
 	include "org.fusesource.jansi:jansi:2.4.0"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-//	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// Uncomment the following line to enable the deprecated Fabric API modules. 
-	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
-
-	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 }
 
 processResources {

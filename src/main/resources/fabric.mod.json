@@ -20,14 +20,8 @@
 
   "environment": "server",
   "entrypoints": {
-    "preLaunch": [
-      "cx.rain.silk.SilkLoader"
-    ],
     "main": [
       "cx.rain.silk.SilkMod"
-    ],
-    "mm:early_risers": [
-      "cx.rain.silk.early_loading.SilkEarlyLoader"
     ]
   },
   "mixins": [
@@ -36,8 +30,8 @@
   "accessWidener": "silk.accessWidener",
 
   "depends": {
-    "fabricloader": ">=0.14.9",
-    "minecraft": "~1.19",
+    "fabricloader": ">=0.14.21",
+    "minecraft": "~1.20",
     "java": ">=17"
   }
 }

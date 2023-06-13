@@ -10,7 +10,7 @@ Silk is a fabric mod provides compatiblity with spigot plugins.
 - [ ] Run mods using Mixin.
 
 ## License
-Copyright (c) qyl27 2022.  
+Copyright (c) qyl27 2022-2023.  
 Licensed under the GNU General Public License 3.0.
 
 ### Credits
@@ -19,7 +19,9 @@ Licensed under the GNU General Public License 3.0.
 - [IzzelAliz](https://github.com/IzzelAliz)
 
 ### Libraries and some code snippet.
+- Bukkit API and CraftBukkit by [SpigotMC](https://www.spigotmc.org) (LGPL)
 - Loader code ([fabric-loader](https://github.com/FabricMC/fabric-loader)) by [FabricMC](https://github.com/FabricMC/fabric-loader) (Apache 2.0)
 - LoggerNamePatternSelector by [Minecrell](https://github.com/Minecrell/TerminalConsoleAppender) (MIT)
 - Mixin utilities by [OptiFabric](https://github.com/Chocohead/OptiFabric) (MPL 2.0)
 - Fabric invasive code modification by [Fabric-ASM](https://github.com/Chocohead/Fabric-ASM) (MPL 2.0)
+- [MinecraftMappings](https://github.com/MohistMC/MinecraftMappings) by [phase](https://github.com/phase) and fork by [MohistMC](https://github.com/MohistMC) (MIT)

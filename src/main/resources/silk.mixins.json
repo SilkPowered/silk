@@ -4,7 +4,6 @@
   "package": "cx.rain.silk.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "core.DedicatedServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
