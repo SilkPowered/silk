@@ -7,66 +7,46 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.PacketPlayInCloseWindow;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.ITileInventory;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.EnumMainHand;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.entity.projectile.EntityFireworks;
-import net.minecraft.world.inventory.Container;
-import net.minecraft.world.inventory.Containers;
-import net.minecraft.world.item.ItemCooldown;
-import net.minecraft.world.item.crafting.CraftingManager;
-import net.minecraft.world.item.crafting.IRecipe;
-import net.minecraft.world.item.trading.IMerchant;
-import net.minecraft.world.level.block.BlockBed;
-import net.minecraft.world.level.block.BlockEnchantmentTable;
-import net.minecraft.world.level.block.BlockWorkbench;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.TileEntity;
-import net.minecraft.world.level.block.state.IBlockData;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
+import org.bukkit.unrealized.GameMode;
+import org.bukkit.unrealized.Location;
+import org.bukkit.unrealized.Material;
+import org.bukkit.unrealized.NamespacedKey;
+import org.bukkit.unrealized.block.Block;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.entity.memory.CraftMemoryMapper;
-import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.craftbukkit.inventory.CraftContainer;
-import org.bukkit.craftbukkit.inventory.CraftInventory;
-import org.bukkit.craftbukkit.inventory.CraftInventoryDoubleChest;
-import org.bukkit.craftbukkit.inventory.CraftInventoryLectern;
-import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
-import org.bukkit.craftbukkit.inventory.CraftInventoryView;
+import org.bukkit.unrealized.craftbukkit.entity.CraftAbstractVillager;
+import org.bukkit.unrealized.craftbukkit.entity.CraftVillager;
+import org.bukkit.unrealized.craftbukkit.entity.memory.CraftMemoryMapper;
+import org.bukkit.unrealized.craftbukkit.event.CraftEventFactory;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftContainer;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftInventory;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftInventoryDoubleChest;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftInventoryLectern;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftInventoryPlayer;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftInventoryView;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.inventory.CraftMerchantCustom;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftMerchantCustom;
+import org.bukkit.unrealized.craftbukkit.util.CraftChatMessage;
 import org.bukkit.craftbukkit.util.CraftLocation;
-import org.bukkit.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Villager;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MainHand;
-import org.bukkit.inventory.Merchant;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.permissions.PermissibleBase;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.unrealized.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.unrealized.craftbukkit.util.CraftNamespacedKey;
+import org.bukkit.unrealized.entity.Firework;
+import org.bukkit.unrealized.entity.HumanEntity;
+import org.bukkit.unrealized.entity.Villager;
+import org.bukkit.entity.Entity;
+import org.bukkit.unrealized.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.unrealized.inventory.EntityEquipment;
+import org.bukkit.unrealized.inventory.Inventory;
+import org.bukkit.unrealized.inventory.InventoryView;
+import org.bukkit.unrealized.inventory.ItemStack;
+import org.bukkit.unrealized.inventory.MainHand;
+import org.bukkit.unrealized.inventory.Merchant;
+import org.bukkit.unrealized.inventory.PlayerInventory;
+import org.bukkit.unrealized.permissions.PermissibleBase;
+import org.bukkit.unrealized.permissions.Permission;
+import org.bukkit.unrealized.permissions.PermissionAttachment;
+import org.bukkit.unrealized.permissions.PermissionAttachmentInfo;
+import org.bukkit.unrealized.plugin.Plugin;
 
 public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     private CraftInventoryPlayer inventory;
@@ -75,7 +55,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     private boolean op;
     private GameMode mode;
 
-    public CraftHumanEntity(final CraftServer server, final EntityHuman entity) {
+    public CraftHumanEntity(final CraftServer server, final PlayerEntity entity) {
         super(server, entity);
         mode = server.getDefaultGameMode();
         this.inventory = new CraftInventoryPlayer(entity.getInventory());
@@ -99,7 +79,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public MainHand getMainHand() {
-        return getHandle().getMainArm() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT;
+        return getHandle().get() == EnumMainHand.LEFT ? MainHand.LEFT : MainHand.RIGHT;
     }
 
     @Override
@@ -253,8 +233,8 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     @Override
-    public EntityHuman getHandle() {
-        return (EntityHuman) entity;
+    public PlayerEntity getHandle() {
+        return (PlayerEntity) entity;
     }
 
     public void setHandle(final EntityHuman entity) {
@@ -557,7 +537,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     @Override
-    public org.bukkit.entity.Entity getShoulderEntityLeft() {
+    public Entity getShoulderEntityLeft() {
         if (!getHandle().getShoulderEntityLeft().isEmpty()) {
             Optional<Entity> shoulder = EntityTypes.create(getHandle().getShoulderEntityLeft(), getHandle().level());
 
@@ -568,7 +548,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     @Override
-    public void setShoulderEntityLeft(org.bukkit.entity.Entity entity) {
+    public void setShoulderEntityLeft(Entity entity) {
         getHandle().setShoulderEntityLeft(entity == null ? new NBTTagCompound() : ((CraftEntity) entity).save());
         if (entity != null) {
             entity.remove();
@@ -576,7 +556,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     @Override
-    public org.bukkit.entity.Entity getShoulderEntityRight() {
+    public Entity getShoulderEntityRight() {
         if (!getHandle().getShoulderEntityRight().isEmpty()) {
             Optional<Entity> shoulder = EntityTypes.create(getHandle().getShoulderEntityRight(), getHandle().level());
 
@@ -587,7 +567,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     }
 
     @Override
-    public void setShoulderEntityRight(org.bukkit.entity.Entity entity) {
+    public void setShoulderEntityRight(Entity entity) {
         getHandle().setShoulderEntityRight(entity == null ? new NBTTagCompound() : ((CraftEntity) entity).save());
         if (entity != null) {
             entity.remove();

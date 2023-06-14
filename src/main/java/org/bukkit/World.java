@@ -7,35 +7,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.boss.DragonBattle;
-import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.Arrow;
+
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.SpawnCategory;
-import org.bukkit.generator.BiomeProvider;
-import org.bukkit.generator.BlockPopulator;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.generator.WorldInfo;
-import org.bukkit.generator.structure.Structure;
-import org.bukkit.generator.structure.StructureType;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-import org.bukkit.metadata.Metadatable;
-import org.bukkit.persistence.PersistentDataHolder;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.messaging.PluginMessageRecipient;
+import org.bukkit.unrealized.*;
+import org.bukkit.unrealized.block.Biome;
+import org.bukkit.unrealized.block.Block;
+import org.bukkit.unrealized.block.data.BlockData;
+import org.bukkit.unrealized.boss.DragonBattle;
+import org.bukkit.unrealized.entity.AbstractArrow;
+import org.bukkit.unrealized.entity.*;
+import org.bukkit.unrealized.entity.FallingBlock;
+import org.bukkit.unrealized.entity.LightningStrike;
+import org.bukkit.unrealized.entity.LivingEntity;
+import org.bukkit.unrealized.entity.SpawnCategory;
+import org.bukkit.unrealized.generator.BiomeProvider;
+import org.bukkit.unrealized.generator.BlockPopulator;
+import org.bukkit.unrealized.generator.ChunkGenerator;
+import org.bukkit.unrealized.generator.WorldInfo;
+import org.bukkit.unrealized.generator.structure.Structure;
+import org.bukkit.unrealized.generator.structure.StructureType;
+import org.bukkit.unrealized.inventory.ItemStack;
+import org.bukkit.unrealized.material.MaterialData;
+import org.bukkit.unrealized.metadata.Metadatable;
+import org.bukkit.unrealized.persistence.PersistentDataHolder;
+import org.bukkit.unrealized.plugin.Plugin;
+import org.bukkit.unrealized.plugin.messaging.PluginMessageRecipient;
 import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Consumer;
-import org.bukkit.util.RayTraceResult;
-import org.bukkit.util.StructureSearchResult;
+import org.bukkit.unrealized.util.Consumer;
+import org.bukkit.unrealized.util.RayTraceResult;
+import org.bukkit.unrealized.util.StructureSearchResult;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -498,7 +498,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @param speed Speed of the arrow. A recommend speed is 0.6
      * @param spread Spread of the arrow. A recommend spread is 12
      * @param clazz the Entity class for the arrow
-     * {@link org.bukkit.entity.SpectralArrow},{@link Arrow},{@link org.bukkit.entity.TippedArrow}
+     * {@link SpectralArrow},{@link Arrow},{@link TippedArrow}
      * @return Arrow entity spawned as a result of this method
      */
     @NotNull
@@ -2570,7 +2570,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      */
     @Nullable
     @Deprecated
-    public Location locateNearestStructure(@NotNull Location origin, @NotNull org.bukkit.StructureType structureType, int radius, boolean findUnexplored);
+    public Location locateNearestStructure(@NotNull Location origin, @NotNull org.bukkit.unrealized.StructureType structureType, int radius, boolean findUnexplored);
 
     /**
      * Find the closest nearby structure of a given {@link StructureType}.

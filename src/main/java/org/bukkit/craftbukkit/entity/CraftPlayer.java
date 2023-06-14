@@ -26,142 +26,67 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.Holder;
-import net.minecraft.core.SectionPosition;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketDataSerializer;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.chat.PlayerChatMessage;
-import net.minecraft.network.protocol.game.ClientboundClearTitlesPacket;
-import net.minecraft.network.protocol.game.ClientboundCustomChatCompletionsPacket;
-import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
-import net.minecraft.network.protocol.game.ClientboundSetBorderCenterPacket;
-import net.minecraft.network.protocol.game.ClientboundSetBorderLerpSizePacket;
-import net.minecraft.network.protocol.game.ClientboundSetBorderSizePacket;
-import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDelayPacket;
-import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDistancePacket;
-import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockChange;
-import net.minecraft.network.protocol.game.PacketPlayOutCustomPayload;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
-import net.minecraft.network.protocol.game.PacketPlayOutEntitySound;
-import net.minecraft.network.protocol.game.PacketPlayOutExperience;
-import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
-import net.minecraft.network.protocol.game.PacketPlayOutMap;
-import net.minecraft.network.protocol.game.PacketPlayOutMultiBlockChange;
-import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
-import net.minecraft.network.protocol.game.PacketPlayOutPlayerListHeaderFooter;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnPosition;
-import net.minecraft.network.protocol.game.PacketPlayOutStopSound;
-import net.minecraft.network.protocol.game.PacketPlayOutUpdateAttributes;
-import net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth;
-import net.minecraft.network.protocol.game.PacketPlayOutWorldEvent;
-import net.minecraft.network.protocol.game.PacketPlayOutWorldParticles;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.server.AdvancementDataPlayer;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.PlayerChunkMap;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.server.network.PlayerConnection;
-import net.minecraft.server.players.WhiteListEntry;
-import net.minecraft.sounds.SoundEffect;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.entity.ai.attributes.AttributeMapBase;
-import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
-import net.minecraft.world.entity.ai.attributes.GenericAttributes;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.inventory.Container;
-import net.minecraft.world.item.EnumColor;
-import net.minecraft.world.level.EnumGamemode;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.SignText;
-import net.minecraft.world.level.block.entity.TileEntitySign;
-import net.minecraft.world.level.block.state.IBlockData;
-import net.minecraft.world.level.border.IWorldBorderListener;
-import net.minecraft.world.level.saveddata.maps.MapIcon;
-import net.minecraft.world.level.saveddata.maps.WorldMap;
-import net.minecraft.world.phys.Vec3D;
-import org.bukkit.BanList;
+
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Instrument;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Note;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.Statistic;
-import org.bukkit.WeatherType;
-import org.bukkit.WorldBorder;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.sign.Side;
-import org.bukkit.configuration.serialization.DelegateDeserialization;
-import org.bukkit.conversations.Conversation;
-import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.conversations.ManuallyAbandonedConversationCanceller;
-import org.bukkit.craftbukkit.CraftEffect;
-import org.bukkit.craftbukkit.CraftEquipmentSlot;
-import org.bukkit.craftbukkit.CraftOfflinePlayer;
-import org.bukkit.craftbukkit.CraftParticle;
+import org.bukkit.unrealized.*;
+import org.bukkit.unrealized.block.Block;
+import org.bukkit.unrealized.block.BlockState;
+import org.bukkit.unrealized.block.Sign;
+import org.bukkit.unrealized.block.data.BlockData;
+import org.bukkit.unrealized.block.sign.Side;
+import org.bukkit.unrealized.advancement.Advancement;
+import org.bukkit.unrealized.advancement.AdvancementProgress;
+import org.bukkit.unrealized.configuration.serialization.DelegateDeserialization;
+import org.bukkit.unrealized.conversations.Conversation;
+import org.bukkit.unrealized.conversations.ConversationAbandonedEvent;
+import org.bukkit.unrealized.conversations.ManuallyAbandonedConversationCanceller;
+import org.bukkit.unrealized.craftbukkit.CraftEffect;
+import org.bukkit.unrealized.craftbukkit.CraftEquipmentSlot;
+import org.bukkit.unrealized.craftbukkit.CraftOfflinePlayer;
+import org.bukkit.unrealized.craftbukkit.CraftParticle;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.CraftSound;
-import org.bukkit.craftbukkit.CraftStatistic;
+import org.bukkit.unrealized.craftbukkit.CraftSound;
+import org.bukkit.unrealized.craftbukkit.CraftStatistic;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.CraftWorldBorder;
-import org.bukkit.craftbukkit.advancement.CraftAdvancement;
-import org.bukkit.craftbukkit.advancement.CraftAdvancementProgress;
-import org.bukkit.craftbukkit.block.CraftBlockState;
-import org.bukkit.craftbukkit.block.CraftSign;
-import org.bukkit.craftbukkit.block.data.CraftBlockData;
-import org.bukkit.craftbukkit.conversations.ConversationTracker;
-import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.unrealized.craftbukkit.CraftWorldBorder;
+import org.bukkit.unrealized.craftbukkit.advancement.CraftAdvancement;
+import org.bukkit.unrealized.craftbukkit.advancement.CraftAdvancementProgress;
+import org.bukkit.unrealized.craftbukkit.block.CraftBlockState;
+import org.bukkit.unrealized.craftbukkit.block.CraftSign;
+import org.bukkit.unrealized.craftbukkit.block.data.CraftBlockData;
+import org.bukkit.unrealized.craftbukkit.conversations.ConversationTracker;
+import org.bukkit.unrealized.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.map.CraftMapView;
-import org.bukkit.craftbukkit.map.RenderData;
-import org.bukkit.craftbukkit.profile.CraftPlayerProfile;
-import org.bukkit.craftbukkit.scoreboard.CraftScoreboard;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
+import org.bukkit.unrealized.craftbukkit.map.CraftMapView;
+import org.bukkit.unrealized.craftbukkit.map.RenderData;
+import org.bukkit.unrealized.craftbukkit.profile.CraftPlayerProfile;
+import org.bukkit.unrealized.craftbukkit.scoreboard.CraftScoreboard;
+import org.bukkit.unrealized.craftbukkit.util.CraftChatMessage;
 import org.bukkit.craftbukkit.util.CraftLocation;
-import org.bukkit.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerExpCooldownChangeEvent;
-import org.bukkit.event.player.PlayerHideEntityEvent;
-import org.bukkit.event.player.PlayerRegisterChannelEvent;
-import org.bukkit.event.player.PlayerShowEntityEvent;
-import org.bukkit.event.player.PlayerSpawnChangeEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerUnregisterChannelEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.InventoryView.Property;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapCursor;
-import org.bukkit.map.MapView;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.messaging.StandardMessenger;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.unrealized.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.unrealized.craftbukkit.util.CraftNamespacedKey;
+import org.bukkit.unrealized.entity.EntityType;
+import org.bukkit.unrealized.entity.LivingEntity;
+import org.bukkit.unrealized.entity.Player;
+import org.bukkit.entity.Entity;
+import org.bukkit.unrealized.event.player.PlayerExpCooldownChangeEvent;
+import org.bukkit.unrealized.event.player.PlayerHideEntityEvent;
+import org.bukkit.unrealized.event.player.PlayerRegisterChannelEvent;
+import org.bukkit.unrealized.event.player.PlayerShowEntityEvent;
+import org.bukkit.unrealized.event.player.PlayerSpawnChangeEvent;
+import org.bukkit.unrealized.event.player.PlayerTeleportEvent;
+import org.bukkit.unrealized.event.player.PlayerUnregisterChannelEvent;
+import org.bukkit.unrealized.inventory.EquipmentSlot;
+import org.bukkit.unrealized.inventory.InventoryView.Property;
+import org.bukkit.unrealized.inventory.ItemStack;
+import org.bukkit.unrealized.map.MapCursor;
+import org.bukkit.unrealized.map.MapView;
+import org.bukkit.unrealized.metadata.MetadataValue;
+import org.bukkit.unrealized.plugin.Plugin;
+import org.bukkit.unrealized.plugin.messaging.StandardMessenger;
+import org.bukkit.unrealized.profile.PlayerProfile;
+import org.bukkit.unrealized.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 
 @DelegateDeserialization(CraftOfflinePlayer.class)
@@ -180,7 +105,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     private CraftWorldBorder clientWorldBorder = null;
     private IWorldBorderListener clientWorldBorderListener = createWorldBorderListener();
 
-    public CraftPlayer(CraftServer server, EntityPlayer entity) {
+    public CraftPlayer(CraftServer server, ServerPlayerEntity entity) {
         super(server, entity);
 
         firstPlayed = System.currentTimeMillis();
@@ -447,23 +372,23 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public void playSound(Location loc, Sound sound, float volume, float pitch) {
-        playSound(loc, sound, org.bukkit.SoundCategory.MASTER, volume, pitch);
+        playSound(loc, sound, SoundCategory.MASTER, volume, pitch);
     }
 
     @Override
     public void playSound(Location loc, String sound, float volume, float pitch) {
-        playSound(loc, sound, org.bukkit.SoundCategory.MASTER, volume, pitch);
+        playSound(loc, sound, SoundCategory.MASTER, volume, pitch);
     }
 
     @Override
-    public void playSound(Location loc, Sound sound, org.bukkit.SoundCategory category, float volume, float pitch) {
+    public void playSound(Location loc, Sound sound, SoundCategory category, float volume, float pitch) {
         if (loc == null || sound == null || category == null || getHandle().connection == null) return;
 
         playSound0(loc, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(CraftSound.getSoundEffect(sound)), net.minecraft.sounds.SoundCategory.valueOf(category.name()), volume, pitch);
     }
 
     @Override
-    public void playSound(Location loc, String sound, org.bukkit.SoundCategory category, float volume, float pitch) {
+    public void playSound(Location loc, String sound, SoundCategory category, float volume, float pitch) {
         if (loc == null || sound == null || category == null || getHandle().connection == null) return;
 
         playSound0(loc, Holder.direct(SoundEffect.createVariableRangeEvent(new MinecraftKey(sound))), net.minecraft.sounds.SoundCategory.valueOf(category.name()), volume, pitch);
@@ -479,30 +404,30 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public void playSound(org.bukkit.entity.Entity entity, Sound sound, float volume, float pitch) {
-        playSound(entity, sound, org.bukkit.SoundCategory.MASTER, volume, pitch);
+    public void playSound(Entity entity, Sound sound, float volume, float pitch) {
+        playSound(entity, sound, SoundCategory.MASTER, volume, pitch);
     }
 
     @Override
-    public void playSound(org.bukkit.entity.Entity entity, String sound, float volume, float pitch) {
-        playSound(entity, sound, org.bukkit.SoundCategory.MASTER, volume, pitch);
+    public void playSound(Entity entity, String sound, float volume, float pitch) {
+        playSound(entity, sound, SoundCategory.MASTER, volume, pitch);
     }
 
     @Override
-    public void playSound(org.bukkit.entity.Entity entity, Sound sound, org.bukkit.SoundCategory category, float volume, float pitch) {
+    public void playSound(Entity entity, Sound sound, SoundCategory category, float volume, float pitch) {
         if (!(entity instanceof CraftEntity craftEntity) || sound == null || category == null || getHandle().connection == null) return;
 
         playSound0(entity, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(CraftSound.getSoundEffect(sound)), net.minecraft.sounds.SoundCategory.valueOf(category.name()), volume, pitch);
     }
 
     @Override
-    public void playSound(org.bukkit.entity.Entity entity, String sound, org.bukkit.SoundCategory category, float volume, float pitch) {
+    public void playSound(Entity entity, String sound, SoundCategory category, float volume, float pitch) {
         if (!(entity instanceof CraftEntity craftEntity) || sound == null || category == null || getHandle().connection == null) return;
 
         playSound0(entity, Holder.direct(SoundEffect.createVariableRangeEvent(new MinecraftKey(sound))), net.minecraft.sounds.SoundCategory.valueOf(category.name()), volume, pitch);
     }
 
-    private void playSound0(org.bukkit.entity.Entity entity, Holder<SoundEffect> soundEffectHolder, net.minecraft.sounds.SoundCategory categoryNMS, float volume, float pitch) {
+    private void playSound0(Entity entity, Holder<SoundEffect> soundEffectHolder, net.minecraft.sounds.SoundCategory categoryNMS, float volume, float pitch) {
         Preconditions.checkArgument(entity != null, "Entity cannot be null");
         Preconditions.checkArgument(soundEffectHolder != null, "Holder of SoundEffect cannot be null");
         Preconditions.checkArgument(categoryNMS != null, "SoundCategory cannot be null");
@@ -525,19 +450,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public void stopSound(Sound sound, org.bukkit.SoundCategory category) {
+    public void stopSound(Sound sound, SoundCategory category) {
         stopSound(sound.getKey().getKey(), category);
     }
 
     @Override
-    public void stopSound(String sound, org.bukkit.SoundCategory category) {
+    public void stopSound(String sound, SoundCategory category) {
         if (getHandle().connection == null) return;
 
         getHandle().connection.send(new PacketPlayOutStopSound(new MinecraftKey(sound), category == null ? net.minecraft.sounds.SoundCategory.MASTER : net.minecraft.sounds.SoundCategory.valueOf(category.name())));
     }
 
     @Override
-    public void stopSound(org.bukkit.SoundCategory category) {
+    public void stopSound(SoundCategory category) {
         if (getHandle().connection == null) return;
 
         getHandle().connection.send(new PacketPlayOutStopSound(null, net.minecraft.sounds.SoundCategory.valueOf(category.name())));
@@ -650,7 +575,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public void sendBlockDamage(Location loc, float progress, org.bukkit.entity.Entity source) {
+    public void sendBlockDamage(Location loc, float progress, Entity source) {
         Preconditions.checkArgument(source != null, "source must not be null");
         this.sendBlockDamage(loc, progress, source.getEntityId());
     }
@@ -1284,14 +1209,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public void hideEntity(Plugin plugin, org.bukkit.entity.Entity entity) {
+    public void hideEntity(Plugin plugin, Entity entity) {
         Preconditions.checkArgument(plugin != null, "Plugin cannot be null");
         Preconditions.checkArgument(plugin.isEnabled(), "Plugin (%s) cannot be disabled", plugin.getName());
 
         hideEntity0(plugin, entity);
     }
 
-    private void hideEntity0(@Nullable Plugin plugin, org.bukkit.entity.Entity entity) {
+    private void hideEntity0(@Nullable Plugin plugin, Entity entity) {
         Preconditions.checkArgument(entity != null, "Entity hidden cannot be null");
         if (getHandle().connection == null) return;
         if (equals(entity)) return;
@@ -1308,7 +1233,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
     }
 
-    private boolean addInvertedVisibility(@Nullable Plugin plugin, org.bukkit.entity.Entity entity) {
+    private boolean addInvertedVisibility(@Nullable Plugin plugin, Entity entity) {
         Set<WeakReference<Plugin>> invertedPlugins = invertedVisibilityEntities.get(entity.getUniqueId());
         if (invertedPlugins != null) {
             // Some plugins are already inverting the entity. Just mark that this
@@ -1323,7 +1248,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return true;
     }
 
-    private void untrackAndHideEntity(org.bukkit.entity.Entity entity) {
+    private void untrackAndHideEntity(Entity entity) {
         // Remove this entity from the hidden player's EntityTrackerEntry
         PlayerChunkMap tracker = ((WorldServer) getHandle().level()).getChunkSource().chunkMap;
         Entity other = ((CraftEntity) entity).getHandle();
@@ -1343,7 +1268,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         server.getPluginManager().callEvent(new PlayerHideEntityEvent(this, entity));
     }
 
-    void resetAndHideEntity(org.bukkit.entity.Entity entity) {
+    void resetAndHideEntity(Entity entity) {
         // SPIGOT-7312: Can't show/hide self
         if (equals(entity)) {
             return;
@@ -1366,14 +1291,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public void showEntity(Plugin plugin, org.bukkit.entity.Entity entity) {
+    public void showEntity(Plugin plugin, Entity entity) {
         Preconditions.checkArgument(plugin != null, "Plugin cannot be null");
         // Don't require that plugin be enabled. A plugin must be allowed to call
         // showPlayer during its onDisable() method.
         showEntity0(plugin, entity);
     }
 
-    private void showEntity0(@Nullable Plugin plugin, org.bukkit.entity.Entity entity) {
+    private void showEntity0(@Nullable Plugin plugin, Entity entity) {
         Preconditions.checkArgument(entity != null, "Entity show cannot be null");
         if (getHandle().connection == null) return;
         if (equals(entity)) return;
@@ -1390,7 +1315,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         }
     }
 
-    private boolean removeInvertedVisibility(@Nullable Plugin plugin, org.bukkit.entity.Entity entity) {
+    private boolean removeInvertedVisibility(@Nullable Plugin plugin, Entity entity) {
         Set<WeakReference<Plugin>> invertedPlugins = invertedVisibilityEntities.get(entity.getUniqueId());
         if (invertedPlugins == null) {
             return false; // Entity isn't inverted
@@ -1404,7 +1329,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         return true;
     }
 
-    private void trackAndShowEntity(org.bukkit.entity.Entity entity) {
+    private void trackAndShowEntity(Entity entity) {
         PlayerChunkMap tracker = ((WorldServer) getHandle().level()).getChunkSource().chunkMap;
         Entity other = ((CraftEntity) entity).getHandle();
 
@@ -1421,7 +1346,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         server.getPluginManager().callEvent(new PlayerShowEntityEvent(this, entity));
     }
 
-    void resetAndShowEntity(org.bukkit.entity.Entity entity) {
+    void resetAndShowEntity(Entity entity) {
         // SPIGOT-7312: Can't show/hide self
         if (equals(entity)) {
             return;
@@ -1438,16 +1363,16 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
 
     @Override
     public boolean canSee(Player player) {
-        return canSee((org.bukkit.entity.Entity) player);
+        return canSee((Entity) player);
     }
 
     @Override
-    public boolean canSee(org.bukkit.entity.Entity entity) {
+    public boolean canSee(Entity entity) {
         return equals(entity) || entity.isVisibleByDefault() ^ invertedVisibilityEntities.containsKey(entity.getUniqueId()); // SPIGOT-7312: Can always see self
     }
 
     public boolean canSee(UUID uuid) {
-        org.bukkit.entity.Entity entity = getServer().getPlayer(uuid);
+        Entity entity = getServer().getPlayer(uuid);
         if (entity == null) {
             entity = getServer().getEntity(uuid); // Also includes players, but check players first for efficiency
         }
@@ -1887,13 +1812,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public org.bukkit.entity.Entity getSpectatorTarget() {
+    public Entity getSpectatorTarget() {
         Entity followed = getHandle().getCamera();
         return followed == getHandle() ? null : followed.getBukkitEntity();
     }
 
     @Override
-    public void setSpectatorTarget(org.bukkit.entity.Entity entity) {
+    public void setSpectatorTarget(Entity entity) {
         Preconditions.checkArgument(getGameMode() == GameMode.SPECTATOR, "Player must be in spectator mode");
         getHandle().setCamera((entity == null) ? null : ((CraftEntity) entity).getHandle());
     }
@@ -1991,7 +1916,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
     }
 
     @Override
-    public org.bukkit.advancement.AdvancementProgress getAdvancementProgress(org.bukkit.advancement.Advancement advancement) {
+    public AdvancementProgress getAdvancementProgress(Advancement advancement) {
         Preconditions.checkArgument(advancement != null, "advancement");
 
         CraftAdvancement craft = (CraftAdvancement) advancement;

@@ -33,7 +33,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -43,224 +42,157 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import jline.console.ConsoleReader;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.commands.CommandDispatcher;
-import net.minecraft.commands.CommandListenerWrapper;
-import net.minecraft.commands.arguments.ArgumentEntity;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.IRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.DynamicOpsNBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.dedicated.DedicatedPlayerManager;
+import net.minecraft.util.Identifier;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerCommand;
-import net.minecraft.server.WorldLoader;
-import net.minecraft.server.bossevents.BossBattleCustom;
-import net.minecraft.server.commands.CommandReload;
-import net.minecraft.server.dedicated.DedicatedPlayerList;
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.server.dedicated.DedicatedServerProperties;
-import net.minecraft.server.dedicated.DedicatedServerSettings;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.TicketType;
-import net.minecraft.server.level.WorldServer;
-import net.minecraft.server.players.GameProfileBanEntry;
-import net.minecraft.server.players.IpBanEntry;
-import net.minecraft.server.players.OpListEntry;
-import net.minecraft.server.players.PlayerList;
-import net.minecraft.server.players.WhiteListEntry;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.ChatDeserializer;
-import net.minecraft.util.datafix.DataConverterRegistry;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.ai.village.VillageSiege;
-import net.minecraft.world.entity.npc.MobSpawnerCat;
-import net.minecraft.world.entity.npc.MobSpawnerTrader;
-import net.minecraft.world.entity.player.EntityHuman;
-import net.minecraft.world.inventory.Container;
-import net.minecraft.world.inventory.ContainerWorkbench;
-import net.minecraft.world.inventory.InventoryCraftResult;
-import net.minecraft.world.inventory.InventoryCrafting;
-import net.minecraft.world.inventory.TransientCraftingContainer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemWorldMap;
-import net.minecraft.world.item.crafting.IRecipe;
-import net.minecraft.world.item.crafting.RecipeCrafting;
-import net.minecraft.world.item.crafting.RecipeRepair;
-import net.minecraft.world.item.crafting.Recipes;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.EnumGamemode;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.MobSpawner;
-import net.minecraft.world.level.WorldSettings;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.dimension.WorldDimension;
-import net.minecraft.world.level.levelgen.MobSpawnerPatrol;
-import net.minecraft.world.level.levelgen.MobSpawnerPhantom;
-import net.minecraft.world.level.levelgen.WorldDimensions;
-import net.minecraft.world.level.levelgen.WorldOptions;
-import net.minecraft.world.level.material.FluidType;
-import net.minecraft.world.level.saveddata.maps.MapIcon;
-import net.minecraft.world.level.saveddata.maps.WorldMap;
-import net.minecraft.world.level.storage.Convertable;
-import net.minecraft.world.level.storage.SaveData;
-import net.minecraft.world.level.storage.WorldDataServer;
-import net.minecraft.world.level.storage.WorldNBTStorage;
-import net.minecraft.world.level.storage.loot.LootDataManager;
-import net.minecraft.world.level.validation.ContentValidationException;
-import net.minecraft.world.phys.Vec3D;
-import org.bukkit.BanList;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Keyed;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Registry;
-import org.bukkit.Server;
-import org.bukkit.StructureType;
-import org.bukkit.UnsafeValues;
-import org.bukkit.Warning.WarningState;
 import org.bukkit.World;
+import org.bukkit.unrealized.*;
+import org.bukkit.unrealized.ChatColor;
+import org.bukkit.unrealized.NamespacedKey;
+import org.bukkit.unrealized.OfflinePlayer;
+import org.bukkit.unrealized.Registry;
+import org.bukkit.unrealized.StructureType;
+import org.bukkit.unrealized.UnsafeValues;
+import org.bukkit.unrealized.Warning.WarningState;
 import org.bukkit.World.Environment;
-import org.bukkit.WorldBorder;
-import org.bukkit.WorldCreator;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.boss.KeyedBossBar;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.conversations.Conversable;
-import org.bukkit.craftbukkit.block.data.CraftBlockData;
-import org.bukkit.craftbukkit.boss.CraftBossBar;
-import org.bukkit.craftbukkit.boss.CraftKeyedBossbar;
-import org.bukkit.craftbukkit.command.BukkitCommandWrapper;
-import org.bukkit.craftbukkit.command.CraftCommandMap;
-import org.bukkit.craftbukkit.command.VanillaCommandWrapper;
+import org.bukkit.unrealized.WorldBorder;
+import org.bukkit.unrealized.WorldCreator;
+import org.bukkit.unrealized.block.data.BlockData;
+import org.bukkit.unrealized.boss.BarColor;
+import org.bukkit.unrealized.boss.BarFlag;
+import org.bukkit.unrealized.boss.BarStyle;
+import org.bukkit.unrealized.boss.BossBar;
+import org.bukkit.unrealized.boss.KeyedBossBar;
+import org.bukkit.unrealized.command.Command;
+import org.bukkit.unrealized.command.CommandException;
+import org.bukkit.unrealized.command.CommandSender;
+import org.bukkit.unrealized.command.ConsoleCommandSender;
+import org.bukkit.unrealized.command.PluginCommand;
+import org.bukkit.unrealized.command.SimpleCommandMap;
+import org.bukkit.unrealized.advancement.Advancement;
+import org.bukkit.unrealized.configuration.ConfigurationSection;
+import org.bukkit.unrealized.configuration.file.YamlConfiguration;
+import org.bukkit.unrealized.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.unrealized.conversations.Conversable;
+import org.bukkit.unrealized.craftbukkit.*;
+import org.bukkit.unrealized.craftbukkit.block.data.CraftBlockData;
+import org.bukkit.unrealized.craftbukkit.boss.CraftBossBar;
+import org.bukkit.unrealized.craftbukkit.boss.CraftKeyedBossbar;
+import org.bukkit.unrealized.craftbukkit.command.BukkitCommandWrapper;
+import org.bukkit.unrealized.craftbukkit.command.CraftCommandMap;
+import org.bukkit.unrealized.craftbukkit.command.VanillaCommandWrapper;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.craftbukkit.event.CraftEventFactory;
-import org.bukkit.craftbukkit.generator.CraftWorldInfo;
-import org.bukkit.craftbukkit.generator.OldCraftChunkData;
-import org.bukkit.craftbukkit.help.SimpleHelpMap;
-import org.bukkit.craftbukkit.inventory.CraftBlastingRecipe;
-import org.bukkit.craftbukkit.inventory.CraftCampfireRecipe;
-import org.bukkit.craftbukkit.inventory.CraftFurnaceRecipe;
-import org.bukkit.craftbukkit.inventory.CraftItemFactory;
+import org.bukkit.unrealized.craftbukkit.event.CraftEventFactory;
+import org.bukkit.unrealized.craftbukkit.generator.CraftWorldInfo;
+import org.bukkit.unrealized.craftbukkit.generator.OldCraftChunkData;
+import org.bukkit.unrealized.craftbukkit.help.SimpleHelpMap;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftBlastingRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftCampfireRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftFurnaceRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftItemFactory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.inventory.CraftMerchantCustom;
-import org.bukkit.craftbukkit.inventory.CraftRecipe;
-import org.bukkit.craftbukkit.inventory.CraftShapedRecipe;
-import org.bukkit.craftbukkit.inventory.CraftShapelessRecipe;
-import org.bukkit.craftbukkit.inventory.CraftSmithingTransformRecipe;
-import org.bukkit.craftbukkit.inventory.CraftSmithingTrimRecipe;
-import org.bukkit.craftbukkit.inventory.CraftSmokingRecipe;
-import org.bukkit.craftbukkit.inventory.CraftStonecuttingRecipe;
-import org.bukkit.craftbukkit.inventory.RecipeIterator;
-import org.bukkit.craftbukkit.inventory.util.CraftInventoryCreator;
-import org.bukkit.craftbukkit.map.CraftMapColorCache;
-import org.bukkit.craftbukkit.map.CraftMapView;
-import org.bukkit.craftbukkit.metadata.EntityMetadataStore;
-import org.bukkit.craftbukkit.metadata.PlayerMetadataStore;
-import org.bukkit.craftbukkit.metadata.WorldMetadataStore;
-import org.bukkit.craftbukkit.packs.CraftDataPackManager;
-import org.bukkit.craftbukkit.potion.CraftPotionBrewer;
-import org.bukkit.craftbukkit.profile.CraftPlayerProfile;
-import org.bukkit.craftbukkit.scheduler.CraftScheduler;
-import org.bukkit.craftbukkit.scoreboard.CraftCriteria;
-import org.bukkit.craftbukkit.scoreboard.CraftScoreboardManager;
-import org.bukkit.craftbukkit.structure.CraftStructureManager;
-import org.bukkit.craftbukkit.tag.CraftBlockTag;
-import org.bukkit.craftbukkit.tag.CraftEntityTag;
-import org.bukkit.craftbukkit.tag.CraftFluidTag;
-import org.bukkit.craftbukkit.tag.CraftItemTag;
-import org.bukkit.craftbukkit.util.CraftChatMessage;
-import org.bukkit.craftbukkit.util.CraftIconCache;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftMerchantCustom;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftShapedRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftShapelessRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftSmithingTransformRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftSmithingTrimRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftSmokingRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.CraftStonecuttingRecipe;
+import org.bukkit.unrealized.craftbukkit.inventory.RecipeIterator;
+import org.bukkit.unrealized.craftbukkit.inventory.util.CraftInventoryCreator;
+import org.bukkit.unrealized.craftbukkit.map.CraftMapColorCache;
+import org.bukkit.unrealized.craftbukkit.map.CraftMapView;
+import org.bukkit.unrealized.craftbukkit.metadata.EntityMetadataStore;
+import org.bukkit.unrealized.craftbukkit.metadata.PlayerMetadataStore;
+import org.bukkit.unrealized.craftbukkit.metadata.WorldMetadataStore;
+import org.bukkit.unrealized.craftbukkit.packs.CraftDataPackManager;
+import org.bukkit.unrealized.craftbukkit.potion.CraftPotionBrewer;
+import org.bukkit.unrealized.craftbukkit.profile.CraftPlayerProfile;
+import org.bukkit.unrealized.craftbukkit.scheduler.CraftScheduler;
+import org.bukkit.unrealized.craftbukkit.scoreboard.CraftCriteria;
+import org.bukkit.unrealized.craftbukkit.scoreboard.CraftScoreboardManager;
+import org.bukkit.unrealized.craftbukkit.structure.CraftStructureManager;
+import org.bukkit.unrealized.craftbukkit.tag.CraftBlockTag;
+import org.bukkit.unrealized.craftbukkit.tag.CraftEntityTag;
+import org.bukkit.unrealized.craftbukkit.tag.CraftFluidTag;
+import org.bukkit.unrealized.craftbukkit.tag.CraftItemTag;
+import org.bukkit.unrealized.craftbukkit.util.CraftChatMessage;
+import org.bukkit.unrealized.craftbukkit.util.CraftIconCache;
 import org.bukkit.craftbukkit.util.CraftLocation;
-import org.bukkit.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
-import org.bukkit.craftbukkit.util.CraftSpawnCategory;
-import org.bukkit.craftbukkit.util.DatFileFilter;
-import org.bukkit.craftbukkit.util.Versioning;
-import org.bukkit.craftbukkit.util.permissions.CraftDefaultPermissions;
+import org.bukkit.unrealized.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.unrealized.craftbukkit.util.CraftNamespacedKey;
+import org.bukkit.unrealized.craftbukkit.util.CraftSpawnCategory;
+import org.bukkit.unrealized.craftbukkit.util.DatFileFilter;
+import org.bukkit.unrealized.craftbukkit.util.Versioning;
+import org.bukkit.unrealized.craftbukkit.util.permissions.CraftDefaultPermissions;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.SpawnCategory;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerChatTabCompleteEvent;
-import org.bukkit.event.server.BroadcastMessageEvent;
-import org.bukkit.event.server.ServerLoadEvent;
-import org.bukkit.event.server.TabCompleteEvent;
-import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.event.world.WorldUnloadEvent;
-import org.bukkit.generator.BiomeProvider;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.generator.WorldInfo;
-import org.bukkit.help.HelpMap;
-import org.bukkit.inventory.BlastingRecipe;
-import org.bukkit.inventory.CampfireRecipe;
-import org.bukkit.inventory.ComplexRecipe;
-import org.bukkit.inventory.FurnaceRecipe;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Merchant;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.SmithingTransformRecipe;
-import org.bukkit.inventory.SmithingTrimRecipe;
-import org.bukkit.inventory.SmokingRecipe;
-import org.bukkit.inventory.StonecuttingRecipe;
-import org.bukkit.loot.LootTable;
-import org.bukkit.map.MapPalette;
-import org.bukkit.map.MapView;
-import org.bukkit.packs.DataPackManager;
-import org.bukkit.permissions.Permissible;
-import org.bukkit.permissions.Permission;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginLoadOrder;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.ServicesManager;
-import org.bukkit.plugin.SimplePluginManager;
-import org.bukkit.plugin.SimpleServicesManager;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.bukkit.plugin.messaging.Messenger;
-import org.bukkit.plugin.messaging.StandardMessenger;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.scheduler.BukkitWorker;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.structure.StructureManager;
-import org.bukkit.util.StringUtil;
-import org.bukkit.util.permissions.DefaultPermissions;
+import org.bukkit.unrealized.entity.EntityType;
+import org.bukkit.unrealized.entity.Player;
+import org.bukkit.unrealized.entity.SpawnCategory;
+import org.bukkit.unrealized.enchantments.Enchantment;
+import org.bukkit.unrealized.event.inventory.InventoryType;
+import org.bukkit.unrealized.event.player.PlayerChatTabCompleteEvent;
+import org.bukkit.unrealized.event.server.BroadcastMessageEvent;
+import org.bukkit.unrealized.event.server.ServerLoadEvent;
+import org.bukkit.unrealized.event.server.TabCompleteEvent;
+import org.bukkit.unrealized.event.world.WorldLoadEvent;
+import org.bukkit.unrealized.event.world.WorldUnloadEvent;
+import org.bukkit.unrealized.generator.BiomeProvider;
+import org.bukkit.unrealized.generator.ChunkGenerator;
+import org.bukkit.unrealized.generator.WorldInfo;
+import org.bukkit.unrealized.help.HelpMap;
+import org.bukkit.unrealized.inventory.BlastingRecipe;
+import org.bukkit.unrealized.inventory.CampfireRecipe;
+import org.bukkit.unrealized.inventory.ComplexRecipe;
+import org.bukkit.unrealized.inventory.FurnaceRecipe;
+import org.bukkit.unrealized.inventory.Inventory;
+import org.bukkit.unrealized.inventory.InventoryHolder;
+import org.bukkit.unrealized.inventory.InventoryView;
+import org.bukkit.unrealized.inventory.ItemStack;
+import org.bukkit.unrealized.inventory.Merchant;
+import org.bukkit.unrealized.inventory.Recipe;
+import org.bukkit.unrealized.inventory.ShapedRecipe;
+import org.bukkit.unrealized.inventory.ShapelessRecipe;
+import org.bukkit.unrealized.inventory.SmithingTransformRecipe;
+import org.bukkit.unrealized.inventory.SmithingTrimRecipe;
+import org.bukkit.unrealized.inventory.SmokingRecipe;
+import org.bukkit.unrealized.inventory.StonecuttingRecipe;
+import org.bukkit.unrealized.loot.LootTable;
+import org.bukkit.unrealized.map.MapPalette;
+import org.bukkit.unrealized.map.MapView;
+import org.bukkit.unrealized.packs.DataPackManager;
+import org.bukkit.unrealized.permissions.Permissible;
+import org.bukkit.unrealized.permissions.Permission;
+import org.bukkit.unrealized.plugin.Plugin;
+import org.bukkit.unrealized.plugin.PluginLoadOrder;
+import org.bukkit.unrealized.plugin.PluginManager;
+import org.bukkit.unrealized.plugin.ServicesManager;
+import org.bukkit.unrealized.plugin.SimplePluginManager;
+import org.bukkit.unrealized.plugin.SimpleServicesManager;
+import org.bukkit.unrealized.plugin.java.JavaPluginLoader;
+import org.bukkit.unrealized.plugin.messaging.Messenger;
+import org.bukkit.unrealized.plugin.messaging.StandardMessenger;
+import org.bukkit.unrealized.potion.Potion;
+import org.bukkit.unrealized.potion.PotionEffectType;
+import org.bukkit.unrealized.profile.PlayerProfile;
+import org.bukkit.unrealized.scheduler.BukkitWorker;
+import org.bukkit.unrealized.scoreboard.Criteria;
+import org.bukkit.unrealized.structure.StructureManager;
+import org.bukkit.unrealized.util.StringUtil;
+import org.bukkit.unrealized.util.permissions.DefaultPermissions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 
 public final class CraftServer implements Server {
-    private final String serverName = "CraftBukkit";
+    private final String serverName = "Silk";
     private final String serverVersion;
     private final String bukkitVersion = Versioning.getBukkitVersion();
     private final Logger logger = Logger.getLogger("Minecraft");
@@ -272,7 +204,7 @@ public final class CraftServer implements Server {
     private final SimplePluginManager pluginManager = new SimplePluginManager(this, commandMap);
     private final StructureManager structureManager;
     protected final DedicatedServer console;
-    protected final DedicatedPlayerList playerList;
+    protected final DedicatedPlayerManager playerList;
     private final Map<String, World> worlds = new LinkedHashMap<String, World>();
     private final Map<Class<?>, Registry<?>> registries = new HashMap<>();
     private YamlConfiguration configuration;
@@ -302,12 +234,12 @@ public final class CraftServer implements Server {
         CraftItemFactory.instance();
     }
 
-    public CraftServer(DedicatedServer console, PlayerList playerList) {
+    public CraftServer(DedicatedServer console, PlayerManager playerList) {
         this.console = console;
-        this.playerList = (DedicatedPlayerList) playerList;
-        this.playerView = Collections.unmodifiableList(Lists.transform(playerList.players, new Function<EntityPlayer, CraftPlayer>() {
+        this.playerList = (DedicatedPlayerManager) playerList;
+        this.playerView = Collections.unmodifiableList(Lists.transform(playerList.players, new Function<PlayerEntity, CraftPlayer>() {
             @Override
-            public CraftPlayer apply(EntityPlayer player) {
+            public CraftPlayer apply(PlayerEntity player) {
                 return player.getBukkitEntity();
             }
         }));
@@ -319,7 +251,7 @@ public final class CraftServer implements Server {
 
         // Register all the Enchantments and PotionTypes now so we can stop new registration immediately after
         Enchantments.SHARPNESS.getClass();
-        org.bukkit.enchantments.Enchantment.stopAcceptingRegistrations();
+        Enchantment.stopAcceptingRegistrations();
 
         Potion.setPotionBrewer(new CraftPotionBrewer());
         MobEffects.BLINDNESS.getClass();
@@ -1051,7 +983,7 @@ public final class CraftServer implements Server {
             biomeProvider = getBiomeProvider(name);
         }
 
-        ResourceKey<WorldDimension> actualDimension;
+        RegistryKey<WorldDimension> actualDimension;
         switch (creator.environment()) {
             case NORMAL:
                 actualDimension = WorldDimension.OVERWORLD;
@@ -1117,14 +1049,14 @@ public final class CraftServer implements Server {
             biomeProvider = generator.getDefaultBiomeProvider(worldInfo);
         }
 
-        ResourceKey<net.minecraft.world.level.World> worldKey;
+        RegistryKey<net.minecraft.world.level.World> worldKey;
         String levelName = this.getServer().getProperties().levelName;
         if (name.equals(levelName + "_nether")) {
             worldKey = net.minecraft.world.level.World.NETHER;
         } else if (name.equals(levelName + "_the_end")) {
             worldKey = net.minecraft.world.level.World.END;
         } else {
-            worldKey = ResourceKey.create(Registries.DIMENSION, new MinecraftKey(name.toLowerCase(Locale.ENGLISH)));
+            worldKey = RegistryKey.create(Registries.DIMENSION, new Identifier(name.toLowerCase(Locale.ENGLISH)));
         }
 
         WorldServer internal = (WorldServer) new WorldServer(console, console.executor, worldSession, worlddata, worldKey, worlddimension, getServer().progressListenerFactory.create(11),
@@ -1408,7 +1340,7 @@ public final class CraftServer implements Server {
     public boolean removeRecipe(NamespacedKey recipeKey) {
         Preconditions.checkArgument(recipeKey != null, "recipeKey == null");
 
-        MinecraftKey mcKey = CraftNamespacedKey.toMinecraft(recipeKey);
+        Identifier mcKey = CraftNamespacedKey.toMinecraft(recipeKey);
         return getServer().getRecipeManager().removeRecipe(mcKey);
     }
 
@@ -2178,7 +2110,7 @@ public final class CraftServer implements Server {
     }
 
     @Override
-    public org.bukkit.advancement.Advancement getAdvancement(NamespacedKey key) {
+    public Advancement getAdvancement(NamespacedKey key) {
         Preconditions.checkArgument(key != null, "NamespacedKey key cannot be null");
 
         Advancement advancement = console.getAdvancements().getAdvancement(CraftNamespacedKey.toMinecraft(key));
@@ -2186,24 +2118,24 @@ public final class CraftServer implements Server {
     }
 
     @Override
-    public Iterator<org.bukkit.advancement.Advancement> advancementIterator() {
-        return Iterators.unmodifiableIterator(Iterators.transform(console.getAdvancements().getAllAdvancements().iterator(), new Function<Advancement, org.bukkit.advancement.Advancement>() {
+    public Iterator<Advancement> advancementIterator() {
+        return Iterators.unmodifiableIterator(Iterators.transform(console.getAdvancements().getAllAdvancements().iterator(), new Function<Advancement, Advancement>() {
             @Override
-            public org.bukkit.advancement.Advancement apply(Advancement advancement) {
+            public Advancement apply(Advancement advancement) {
                 return advancement.bukkit;
             }
         }));
     }
 
     @Override
-    public BlockData createBlockData(org.bukkit.Material material) {
+    public BlockData createBlockData(Material material) {
         Preconditions.checkArgument(material != null, "Material cannot be null");
 
         return createBlockData(material, (String) null);
     }
 
     @Override
-    public BlockData createBlockData(org.bukkit.Material material, Consumer<BlockData> consumer) {
+    public BlockData createBlockData(Material material, Consumer<BlockData> consumer) {
         BlockData data = createBlockData(material);
 
         if (consumer != null) {
@@ -2221,7 +2153,7 @@ public final class CraftServer implements Server {
     }
 
     @Override
-    public BlockData createBlockData(org.bukkit.Material material, String data) {
+    public BlockData createBlockData(Material material, String data) {
         Preconditions.checkArgument(material != null || data != null, "Must provide one of material or data");
 
         return CraftBlockData.newData(material, data);
@@ -2229,39 +2161,39 @@ public final class CraftServer implements Server {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Keyed> org.bukkit.Tag<T> getTag(String registry, NamespacedKey tag, Class<T> clazz) {
+    public <T extends Keyed> Tag<T> getTag(String registry, NamespacedKey tag, Class<T> clazz) {
         Preconditions.checkArgument(registry != null, "registry cannot be null");
         Preconditions.checkArgument(tag != null, "NamespacedKey tag cannot be null");
         Preconditions.checkArgument(clazz != null, "Class clazz cannot be null");
-        MinecraftKey key = CraftNamespacedKey.toMinecraft(tag);
+        Identifier key = CraftNamespacedKey.toMinecraft(tag);
 
         switch (registry) {
-            case org.bukkit.Tag.REGISTRY_BLOCKS -> {
-                Preconditions.checkArgument(clazz == org.bukkit.Material.class, "Block namespace (%s) must have material type", clazz.getName());
+            case Tag.REGISTRY_BLOCKS -> {
+                Preconditions.checkArgument(clazz == Material.class, "Block namespace (%s) must have material type", clazz.getName());
                 TagKey<Block> blockTagKey = TagKey.create(Registries.BLOCK, key);
                 if (BuiltInRegistries.BLOCK.getTag(blockTagKey).isPresent()) {
-                    return (org.bukkit.Tag<T>) new CraftBlockTag(BuiltInRegistries.BLOCK, blockTagKey);
+                    return (Tag<T>) new CraftBlockTag(BuiltInRegistries.BLOCK, blockTagKey);
                 }
             }
-            case org.bukkit.Tag.REGISTRY_ITEMS -> {
-                Preconditions.checkArgument(clazz == org.bukkit.Material.class, "Item namespace (%s) must have material type", clazz.getName());
+            case Tag.REGISTRY_ITEMS -> {
+                Preconditions.checkArgument(clazz == Material.class, "Item namespace (%s) must have material type", clazz.getName());
                 TagKey<Item> itemTagKey = TagKey.create(Registries.ITEM, key);
                 if (BuiltInRegistries.ITEM.getTag(itemTagKey).isPresent()) {
-                    return (org.bukkit.Tag<T>) new CraftItemTag(BuiltInRegistries.ITEM, itemTagKey);
+                    return (Tag<T>) new CraftItemTag(BuiltInRegistries.ITEM, itemTagKey);
                 }
             }
-            case org.bukkit.Tag.REGISTRY_FLUIDS -> {
-                Preconditions.checkArgument(clazz == org.bukkit.Fluid.class, "Fluid namespace (%s) must have fluid type", clazz.getName());
+            case Tag.REGISTRY_FLUIDS -> {
+                Preconditions.checkArgument(clazz == Fluid.class, "Fluid namespace (%s) must have fluid type", clazz.getName());
                 TagKey<FluidType> fluidTagKey = TagKey.create(Registries.FLUID, key);
                 if (BuiltInRegistries.FLUID.getTag(fluidTagKey).isPresent()) {
-                    return (org.bukkit.Tag<T>) new CraftFluidTag(BuiltInRegistries.FLUID, fluidTagKey);
+                    return (Tag<T>) new CraftFluidTag(BuiltInRegistries.FLUID, fluidTagKey);
                 }
             }
-            case org.bukkit.Tag.REGISTRY_ENTITY_TYPES -> {
-                Preconditions.checkArgument(clazz == org.bukkit.entity.EntityType.class, "Entity type namespace (%s) must have entity type", clazz.getName());
+            case Tag.REGISTRY_ENTITY_TYPES -> {
+                Preconditions.checkArgument(clazz == EntityType.class, "Entity type namespace (%s) must have entity type", clazz.getName());
                 TagKey<EntityTypes<?>> entityTagKey = TagKey.create(Registries.ENTITY_TYPE, key);
                 if (BuiltInRegistries.ENTITY_TYPE.getTag(entityTagKey).isPresent()) {
-                    return (org.bukkit.Tag<T>) new CraftEntityTag(BuiltInRegistries.ENTITY_TYPE, entityTagKey);
+                    return (Tag<T>) new CraftEntityTag(BuiltInRegistries.ENTITY_TYPE, entityTagKey);
                 }
             }
             default -> throw new IllegalArgumentException();
@@ -2272,29 +2204,29 @@ public final class CraftServer implements Server {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Keyed> Iterable<org.bukkit.Tag<T>> getTags(String registry, Class<T> clazz) {
+    public <T extends Keyed> Iterable<Tag<T>> getTags(String registry, Class<T> clazz) {
         Preconditions.checkArgument(registry != null, "registry cannot be null");
         Preconditions.checkArgument(clazz != null, "Class clazz cannot be null");
         switch (registry) {
-            case org.bukkit.Tag.REGISTRY_BLOCKS -> {
-                Preconditions.checkArgument(clazz == org.bukkit.Material.class, "Block namespace (%s) must have material type", clazz.getName());
+            case Tag.REGISTRY_BLOCKS -> {
+                Preconditions.checkArgument(clazz == Material.class, "Block namespace (%s) must have material type", clazz.getName());
                 IRegistry<Block> blockTags = BuiltInRegistries.BLOCK;
-                return blockTags.getTags().map(pair -> (org.bukkit.Tag<T>) new CraftBlockTag(blockTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
+                return blockTags.getTags().map(pair -> (Tag<T>) new CraftBlockTag(blockTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
             }
-            case org.bukkit.Tag.REGISTRY_ITEMS -> {
-                Preconditions.checkArgument(clazz == org.bukkit.Material.class, "Item namespace (%s) must have material type", clazz.getName());
+            case Tag.REGISTRY_ITEMS -> {
+                Preconditions.checkArgument(clazz == Material.class, "Item namespace (%s) must have material type", clazz.getName());
                 IRegistry<Item> itemTags = BuiltInRegistries.ITEM;
-                return itemTags.getTags().map(pair -> (org.bukkit.Tag<T>) new CraftItemTag(itemTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
+                return itemTags.getTags().map(pair -> (Tag<T>) new CraftItemTag(itemTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
             }
-            case org.bukkit.Tag.REGISTRY_FLUIDS -> {
-                Preconditions.checkArgument(clazz == org.bukkit.Material.class, "Fluid namespace (%s) must have fluid type", clazz.getName());
+            case Tag.REGISTRY_FLUIDS -> {
+                Preconditions.checkArgument(clazz == Material.class, "Fluid namespace (%s) must have fluid type", clazz.getName());
                 IRegistry<FluidType> fluidTags = BuiltInRegistries.FLUID;
-                return fluidTags.getTags().map(pair -> (org.bukkit.Tag<T>) new CraftFluidTag(fluidTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
+                return fluidTags.getTags().map(pair -> (Tag<T>) new CraftFluidTag(fluidTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
             }
-            case org.bukkit.Tag.REGISTRY_ENTITY_TYPES -> {
-                Preconditions.checkArgument(clazz == org.bukkit.entity.EntityType.class, "Entity type namespace (%s) must have entity type", clazz.getName());
+            case Tag.REGISTRY_ENTITY_TYPES -> {
+                Preconditions.checkArgument(clazz == EntityType.class, "Entity type namespace (%s) must have entity type", clazz.getName());
                 IRegistry<EntityTypes<?>> entityTags = BuiltInRegistries.ENTITY_TYPE;
-                return entityTags.getTags().map(pair -> (org.bukkit.Tag<T>) new CraftEntityTag(entityTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
+                return entityTags.getTags().map(pair -> (Tag<T>) new CraftEntityTag(entityTags, pair.getFirst())).collect(ImmutableList.toImmutableList());
             }
             default -> throw new IllegalArgumentException();
         }

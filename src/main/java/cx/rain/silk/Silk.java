@@ -6,8 +6,7 @@ import org.slf4j.LoggerFactory;
 public class Silk {
     private static Silk INSTANCE;
 
-    private Logger silkLogger = LoggerFactory.getLogger("Silk");
-    private Logger loaderLogger = LoggerFactory.getLogger("Silk/Loader");
+    private Logger logger = LoggerFactory.getLogger("Silk");
 
     private Silk() {
         INSTANCE = this;
@@ -21,11 +20,7 @@ public class Silk {
         return INSTANCE;
     }
 
-    public Logger getSilkLogger() {
-        return silkLogger;
-    }
-
-    public Logger getLoaderLogger() {
-        return loaderLogger;
+    public Logger getLogger() {
+        return logger;
     }
 }

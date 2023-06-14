@@ -3,20 +3,23 @@ package org.bukkit.entity;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import org.bukkit.EntityEffect;
-import org.bukkit.Location;
-import org.bukkit.Nameable;
-import org.bukkit.Server;
-import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.PistonMoveReaction;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.material.Directional;
-import org.bukkit.metadata.Metadatable;
-import org.bukkit.persistence.PersistentDataHolder;
+
+import net.minecraft.world.World;
+import org.bukkit.unrealized.EntityEffect;
+import org.bukkit.unrealized.Location;
+import org.bukkit.unrealized.Nameable;
+import org.bukkit.unrealized.Server;
+import org.bukkit.unrealized.Sound;
+import org.bukkit.unrealized.block.BlockFace;
+import org.bukkit.unrealized.block.PistonMoveReaction;
+import org.bukkit.unrealized.command.CommandSender;
+import org.bukkit.unrealized.entity.*;
+import org.bukkit.unrealized.event.entity.EntityDamageEvent;
+import org.bukkit.unrealized.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.unrealized.material.Directional;
+import org.bukkit.unrealized.metadata.Metadatable;
+import org.bukkit.unrealized.persistence.PersistentDataHolder;
+import org.bukkit.unrealized.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
@@ -112,7 +115,6 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
      *
      * @return World
      */
-    @NotNull
     public World getWorld();
 
     /**
@@ -525,7 +527,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
      * Sets whether or not this entity is visible by default.
      *
      * If this entity is not visible by default, then
-     * {@link Player#showEntity(org.bukkit.plugin.Plugin, Entity)}
+     * {@link Player#showEntity(Plugin, Entity)}
      * will need to be called before the entity is visible to a given player.
      *
      * @param visible default visibility status
@@ -538,7 +540,7 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
      * Gets whether or not this entity is visible by default.
      *
      * If this entity is not visible by default, then
-     * {@link Player#showEntity(org.bukkit.plugin.Plugin, Entity)}
+     * {@link Player#showEntity(Plugin, Entity)}
      * will need to be called before the entity is visible to a given player.
      *
      * @return default visibility status

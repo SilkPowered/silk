@@ -13,45 +13,48 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
-import org.bukkit.Warning.WarningState;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.boss.KeyedBossBar;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
+
+import org.bukkit.unrealized.*;
+import org.bukkit.unrealized.advancement.Advancement;
+import org.bukkit.unrealized.block.data.BlockData;
+import org.bukkit.unrealized.boss.BarColor;
+import org.bukkit.unrealized.boss.BarFlag;
+import org.bukkit.unrealized.boss.BarStyle;
+import org.bukkit.unrealized.boss.BossBar;
+import org.bukkit.unrealized.boss.KeyedBossBar;
+import org.bukkit.unrealized.command.CommandException;
+import org.bukkit.unrealized.command.CommandSender;
+import org.bukkit.unrealized.command.ConsoleCommandSender;
+import org.bukkit.unrealized.command.PluginCommand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.SpawnCategory;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.help.HelpMap;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemFactory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Merchant;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.loot.LootTable;
-import org.bukkit.map.MapView;
-import org.bukkit.packs.DataPackManager;
-import org.bukkit.permissions.Permissible;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.ServicesManager;
-import org.bukkit.plugin.messaging.Messenger;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.structure.StructureManager;
-import org.bukkit.util.CachedServerIcon;
+import org.bukkit.unrealized.entity.Player;
+import org.bukkit.unrealized.entity.SpawnCategory;
+import org.bukkit.unrealized.entity.Boss;
+import org.bukkit.unrealized.event.inventory.InventoryType;
+import org.bukkit.unrealized.event.server.ServerListPingEvent;
+import org.bukkit.unrealized.generator.ChunkGenerator;
+import org.bukkit.unrealized.help.HelpMap;
+import org.bukkit.unrealized.inventory.Inventory;
+import org.bukkit.unrealized.inventory.InventoryHolder;
+import org.bukkit.unrealized.inventory.ItemFactory;
+import org.bukkit.unrealized.inventory.ItemStack;
+import org.bukkit.unrealized.inventory.Merchant;
+import org.bukkit.unrealized.inventory.Recipe;
+import org.bukkit.unrealized.inventory.meta.ItemMeta;
+import org.bukkit.unrealized.loot.LootTable;
+import org.bukkit.unrealized.map.MapView;
+import org.bukkit.unrealized.packs.DataPackManager;
+import org.bukkit.unrealized.permissions.Permissible;
+import org.bukkit.unrealized.plugin.PluginManager;
+import org.bukkit.unrealized.plugin.ServicesManager;
+import org.bukkit.unrealized.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.unrealized.plugin.messaging.Messenger;
+import org.bukkit.unrealized.profile.PlayerProfile;
+import org.bukkit.unrealized.scheduler.BukkitScheduler;
+import org.bukkit.unrealized.scoreboard.Criteria;
+import org.bukkit.unrealized.scoreboard.ScoreboardManager;
+import org.bukkit.unrealized.structure.StructureManager;
+import org.bukkit.unrealized.util.CachedServerIcon;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -957,7 +960,7 @@ public final class Bukkit {
      * <p>The {@link World} and {@link Player} arguments are required to fulfill the Bukkit Crafting
      * events.</p>
      *
-     * <p>Calls {@link org.bukkit.event.inventory.PrepareItemCraftEvent} to imitate the {@link Player}
+     * <p>Calls {@link PrepareItemCraftEvent} to imitate the {@link Player}
      * initiating the crafting event.</p>
      *
      * @param craftingMatrix list of items to be crafted from.
@@ -1568,7 +1571,7 @@ public final class Bukkit {
      * @return the configured warning state
      */
     @NotNull
-    public static WarningState getWarningState() {
+    public static Warning.WarningState getWarningState() {
         return server.getWarningState();
     }
 
@@ -1728,7 +1731,7 @@ public final class Bukkit {
     /**
      * Gets an unmodifiable iterator through all persistent bossbars.
      * <ul>
-     *   <li><b>not</b> bound to a {@link org.bukkit.entity.Boss}</li>
+     *   <li><b>not</b> bound to a {@link Boss}</li>
      *   <li>
      *     <b>not</b> created using
      *     {@link #createBossBar(String, BarColor, BarStyle, BarFlag...)}
@@ -1747,7 +1750,7 @@ public final class Bukkit {
     /**
      * Gets the {@link KeyedBossBar} specified by this key.
      * <ul>
-     *   <li><b>not</b> bound to a {@link org.bukkit.entity.Boss}</li>
+     *   <li><b>not</b> bound to a {@link Boss}</li>
      *   <li>
      *     <b>not</b> created using
      *     {@link #createBossBar(String, BarColor, BarStyle, BarFlag...)}
@@ -1767,7 +1770,7 @@ public final class Bukkit {
     /**
      * Removes a {@link KeyedBossBar} specified by this key.
      * <ul>
-     *   <li><b>not</b> bound to a {@link org.bukkit.entity.Boss}</li>
+     *   <li><b>not</b> bound to a {@link Boss}</li>
      *   <li>
      *     <b>not</b> created using
      *     {@link #createBossBar(String, BarColor, BarStyle, BarFlag...)}

@@ -1,10 +1,14 @@
 package cx.rain.silk;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.DedicatedServerModInitializer;
 
-public class SilkMod implements ModInitializer {
+public class SilkMod implements DedicatedServerModInitializer {
+    private final Silk silk = Silk.get();
+
     @Override
-    public void onInitialize() {
+    public void onInitializeServer() {
+        silk.getLogger().info("Silk loading!");
+
 
     }
 }
