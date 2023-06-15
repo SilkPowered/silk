@@ -3,6 +3,10 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.item.Item;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -413,14 +417,14 @@ public final class CraftItemFactory implements ItemFactory {
     @Override
     public ItemStack createItemStack(String input) throws IllegalArgumentException {
         try {
-            ArgumentParserItemStack.a arg = ArgumentParserItemStack.parseForItem(BuiltInRegistries.ITEM.asLookup(), new StringReader(input));
+            ItemStringReader.ItemResult arg = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(input));
 
             Item item = arg.item().value();
-            net.minecraft.world.item.ItemStack nmsItemStack = new net.minecraft.world.item.ItemStack(item);
+            net.minecraft.item.ItemStack nmsItemStack = new net.minecraft.item.ItemStack(item);
 
-            NBTTagCompound nbt = arg.nbt();
+            NbtCompound nbt = arg.nbt();
             if (nbt != null) {
-                nmsItemStack.setTag(nbt);
+                nmsItemStack.setNbt(nbt);
             }
 
             return CraftItemStack.asCraftMirror(nmsItemStack);

@@ -15,6 +15,16 @@ extendable class net/minecraft/item/ItemStack
 accessible method net/minecraft/nbt/StringNbtReader parseElementPrimitiveArray ()Lnet/minecraft/nbt/NbtElement;
 accessible method net/minecraft/nbt/StringNbtReader parsePrimitive (Ljava/lang/String;)Lnet/minecraft/nbt/NbtElement;
 
+accessible field net/minecraft/world/World dimension Lnet/minecraft/registry/RegistryKey;
+accessible field net/minecraft/entity/projectile/PersistentProjectileEntity inGround Z
+accessible method net/minecraft/entity/Entity getBurningDuration ()I
+accessible field net/minecraft/entity/Entity hasVisualFire Z
+accessible class net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker
+accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible method net/minecraft/entity/Entity getSavedEntityId ()Ljava/lang/String;
+accessible method net/minecraft/server/world/ThreadedAnvilChunkStorage$EntityTracker sendToOtherNearbyPlayers (Lnet/minecraft/network/packet/Packet;)V
+accessible field net/minecraft/entity/Entity portalCooldown I
+
 accessible field net/minecraft/server/PlayerManager players Ljava/util/List;
 accessible field net/minecraft/world/World properties Lnet/minecraft/world/MutableWorldProperties;
 accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;

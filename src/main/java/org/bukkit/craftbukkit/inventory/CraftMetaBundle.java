@@ -3,8 +3,8 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
@@ -36,19 +36,19 @@ public class CraftMetaBundle extends CraftMetaItem implements BundleMeta {
         }
     }
 
-    CraftMetaBundle(NBTTagCompound tag) {
+    CraftMetaBundle(NbtCompound tag) {
         super(tag);
 
         if (tag.contains(ITEMS.NBT, CraftMagicNumbers.NBT.TAG_LIST)) {
-            NBTTagList list = tag.getList(ITEMS.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
+            NbtList list = tag.getList(ITEMS.NBT, CraftMagicNumbers.NBT.TAG_COMPOUND);
 
             if (list != null && !list.isEmpty()) {
                 items = new ArrayList<>();
 
                 for (int i = 0; i < list.size(); i++) {
-                    NBTTagCompound nbttagcompound1 = list.getCompound(i);
+                    NbtCompound nbttagcompound1 = list.getCompound(i);
 
-                    ItemStack itemStack = CraftItemStack.asCraftMirror(net.minecraft.world.item.ItemStack.of(nbttagcompound1));
+                    ItemStack itemStack = CraftItemStack.asCraftMirror(net.minecraft.item.ItemStack.fromNbt(nbttagcompound1));
                     if (!itemStack.getType().isAir()) { // SPIGOT-7174 - Avoid adding air
                         addItem(itemStack);
                     }
@@ -71,15 +71,15 @@ public class CraftMetaBundle extends CraftMetaItem implements BundleMeta {
     }
 
     @Override
-    void applyToItem(NBTTagCompound tag) {
+    void applyToItem(NbtCompound tag) {
         super.applyToItem(tag);
 
         if (hasItems()) {
-            NBTTagList list = new NBTTagList();
+            NbtList list = new NbtList();
 
             for (ItemStack item : items) {
-                NBTTagCompound saved = new NBTTagCompound();
-                CraftItemStack.asNMSCopy(item).save(saved);
+                NbtCompound saved = new NbtCompound();
+                CraftItemStack.asNMSCopy(item).writeNbt(saved);
                 list.add(saved);
             }
 

@@ -750,7 +750,7 @@ public final class CraftServer implements Server {
         return new ArrayList<World>(worlds.values());
     }
 
-    public DedicatedPlayerList getHandle() {
+    public DedicatedPlayerManager getHandle() {
         return playerList;
     }
 
