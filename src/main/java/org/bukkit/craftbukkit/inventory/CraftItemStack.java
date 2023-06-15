@@ -2,25 +2,26 @@ package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-
 import cx.rain.silk.mixins.interfaces.item.IItemStackMixin;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import org.bukkit.unrealized.Material;
-import org.bukkit.unrealized.NamespacedKey;
-import org.bukkit.unrealized.configuration.serialization.DelegateDeserialization;
-import org.bukkit.unrealized.craftbukkit.enchantments.CraftEnchantment;
-import org.bukkit.unrealized.craftbukkit.inventory.*;
-import org.bukkit.unrealized.craftbukkit.util.CraftLegacy;
-import org.bukkit.unrealized.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.unrealized.craftbukkit.util.CraftNamespacedKey;
-import org.bukkit.unrealized.enchantments.Enchantment;
-import org.bukkit.unrealized.inventory.ItemStack;
-import org.bukkit.unrealized.inventory.meta.ItemMeta;
-import org.bukkit.unrealized.material.MaterialData;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.serialization.DelegateDeserialization;
+import org.bukkit.craftbukkit.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.util.CraftLegacy;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.util.CraftNamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
+
+import java.util.Map;
+
+import static org.bukkit.craftbukkit.inventory.CraftMetaItem.*;
 
 @DelegateDeserialization(ItemStack.class)
 public final class CraftItemStack extends ItemStack {
@@ -128,7 +129,7 @@ public final class CraftItemStack extends ItemStack {
         } else if (handle == null) {
             handle = new net.minecraft.item.ItemStack(CraftMagicNumbers.getItem(type), 1);
         } else {
-            ((IItemStackMixin) (Object) handle).setItem(CraftMagicNumbers.getItem(type));
+            ((IItemStackMixin) handle).setItem(CraftMagicNumbers.getItem(type));
             if (hasItemMeta()) {
                 // This will create the appropriate item meta, which will contain all the data we intend to keep
                 setItemMeta(handle, getItemMeta(handle));
@@ -186,21 +187,21 @@ public final class CraftItemStack extends ItemStack {
         NbtList list = getEnchantmentList(handle);
         if (list == null) {
             list = new NbtList();
-            handle.getNbt().put(CraftMetaItem.ENCHANTMENTS.NBT, list);
+            handle.getNbt().put(ENCHANTMENTS.NBT, list);
         }
         int size = list.size();
 
         for (int i = 0; i < size; i++) {
             NbtCompound tag = (NbtCompound) list.get(i);
-            String id = tag.getString(CraftMetaItem.ENCHANTMENTS_ID.NBT);
+            String id = tag.getString(ENCHANTMENTS_ID.NBT);
             if (ench.getKey().equals(NamespacedKey.fromString(id))) {
-                tag.putShort(CraftMetaItem.ENCHANTMENTS_LVL.NBT, (short) level);
+                tag.putShort(ENCHANTMENTS_LVL.NBT, (short) level);
                 return;
             }
         }
         NbtCompound tag = new NbtCompound();
-        tag.putString(CraftMetaItem.ENCHANTMENTS_ID.NBT, ench.getKey().toString());
-        tag.putShort(CraftMetaItem.ENCHANTMENTS_LVL.NBT, (short) level);
+        tag.putString(ENCHANTMENTS_ID.NBT, ench.getKey().toString());
+        tag.putShort(ENCHANTMENTS_LVL.NBT, (short) level);
         list.add(tag);
     }
 
@@ -244,10 +245,10 @@ public final class CraftItemStack extends ItemStack {
 
         for (int i = 0; i < size; i++) {
             NbtCompound enchantment = (NbtCompound) list.get(i);
-            String id = enchantment.getString(CraftMetaItem.ENCHANTMENTS_ID.NBT);
+            String id = enchantment.getString(ENCHANTMENTS_ID.NBT);
             if (ench.getKey().equals(NamespacedKey.fromString(id))) {
                 index = i;
-                level = 0xffff & enchantment.getShort(CraftMetaItem.ENCHANTMENTS_LVL.NBT);
+                level = 0xffff & enchantment.getShort(ENCHANTMENTS_LVL.NBT);
                 break;
             }
         }
@@ -256,7 +257,7 @@ public final class CraftItemStack extends ItemStack {
             return 0;
         }
         if (size == 1) {
-            handle.getNbt().remove(CraftMetaItem.ENCHANTMENTS.NBT);
+            handle.getNbt().remove(ENCHANTMENTS.NBT);
             if (handle.getNbt().isEmpty()) {
                 handle.setNbt(null);
             }
@@ -270,7 +271,7 @@ public final class CraftItemStack extends ItemStack {
                 listCopy.add(list.get(i));
             }
         }
-        handle.getNbt().put(CraftMetaItem.ENCHANTMENTS.NBT, listCopy);
+        handle.getNbt().put(ENCHANTMENTS.NBT, listCopy);
 
         return level;
     }
@@ -290,8 +291,8 @@ public final class CraftItemStack extends ItemStack {
         ImmutableMap.Builder<Enchantment, Integer> result = ImmutableMap.builder();
 
         for (int i = 0; i < list.size(); i++) {
-            String id = ((NbtCompound) list.get(i)).getString(CraftMetaItem.ENCHANTMENTS_ID.NBT);
-            int level = 0xffff & ((NbtCompound) list.get(i)).getShort(CraftMetaItem.ENCHANTMENTS_LVL.NBT);
+            String id = ((NbtCompound) list.get(i)).getString(ENCHANTMENTS_ID.NBT);
+            int level = 0xffff & ((NbtCompound) list.get(i)).getShort(ENCHANTMENTS_LVL.NBT);
 
             Enchantment enchant = Enchantment.getByKey(CraftNamespacedKey.fromStringOrNull(id));
             if (enchant != null) {
@@ -653,16 +654,16 @@ public final class CraftItemStack extends ItemStack {
         Item oldItem = item.getItem();
         Item newItem = CraftMagicNumbers.getItem(CraftItemFactory.instance().updateMaterial(itemMeta, CraftMagicNumbers.getMaterial(oldItem)));
         if (oldItem != newItem) {
-            ((IItemStackMixin) (Object) item).setItem(newItem);
+            ((IItemStackMixin) item).setItem(newItem);
         }
 
         NbtCompound tag = new NbtCompound();
         item.setNbt(tag);
 
         ((CraftMetaItem) itemMeta).applyToItem(tag);
-        item.convertStack(((CraftMetaItem) itemMeta).getVersion());
+        ((IItemStackMixin) item).convertStack(((CraftMetaItem) itemMeta).getVersion());
         // SpigotCraft#463 this is required now by the Vanilla client, so mimic ItemStack constructor in ensuring it
-        if (item.getItem() != null && item.getItem().canBeNested()) {
+        if (item.getItem() != null && item.getItem().isDamageable()) {
             item.setDamage(item.getDamage());
         }
 

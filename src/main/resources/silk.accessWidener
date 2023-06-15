@@ -1,4 +1,20 @@
 accessWidener	v1	named
+accessible field net/minecraft/server/MinecraftServer serverThread Ljava/lang/Thread;
+accessible field net/minecraft/server/command/ServerCommandSource output Lnet/minecraft/server/command/CommandOutput;
+accessible field net/minecraft/state/State PROPERTY_MAP_PRINTER Ljava/util/function/Function;
+accessible field net/minecraft/state/property/IntProperty min I
+accessible field net/minecraft/state/property/IntProperty max I
+accessible method net/minecraft/world/biome/Biome getTemperature (Lnet/minecraft/util/math/BlockPos;)F
+accessible field net/minecraft/block/AbstractBlock$AbstractBlockState liquid Z
+accessible field net/minecraft/entity/mob/MobEntity handDropChances [F
+accessible field net/minecraft/entity/mob/MobEntity armorDropChances [F
+accessible field net/minecraft/text/TextColor FORMATTING_TO_COLOR Ljava/util/Map;
+extendable class net/minecraft/text/TextColor
+accessible method net/minecraft/text/TextColor <init> (I)V
+extendable class net/minecraft/item/ItemStack
+accessible method net/minecraft/nbt/StringNbtReader parseElementPrimitiveArray ()Lnet/minecraft/nbt/NbtElement;
+accessible method net/minecraft/nbt/StringNbtReader parsePrimitive (Ljava/lang/String;)Lnet/minecraft/nbt/NbtElement;
+
 accessible field net/minecraft/server/PlayerManager players Ljava/util/List;
 accessible field net/minecraft/world/World properties Lnet/minecraft/world/MutableWorldProperties;
 accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;

@@ -4,7 +4,7 @@ import cx.rain.silk.mixins.interfaces.world.IWorldMixin;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.PositionImpl;
 import net.minecraft.util.math.Vec3d;
-import org.bukkit.unrealized.Location;
+import org.bukkit.Location;
 import org.bukkit.World;
 
 public final class CraftLocation {
@@ -27,9 +27,11 @@ public final class CraftLocation {
     public static Location toBukkit(BlockPos blockPosition) {
         return toBukkit(blockPosition, (World) null);
     }
+
     public static Location toBukkit(BlockPos blockPosition, net.minecraft.world.World world) {
         return toBukkit(blockPosition, ((IWorldMixin) world).getWorld(), 0.0F, 0.0F);
     }
+
     public static Location toBukkit(BlockPos blockPosition, World world) {
         return toBukkit(blockPosition, world, 0.0F, 0.0F);
     }

@@ -2,69 +2,41 @@ package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import org.bukkit.unrealized.FluidCollisionMode;
-import org.bukkit.unrealized.Location;
-import org.bukkit.unrealized.Material;
-import org.bukkit.unrealized.Sound;
-import org.bukkit.unrealized.attribute.Attribute;
-import org.bukkit.unrealized.attribute.AttributeInstance;
-import org.bukkit.unrealized.block.Block;
+import org.bukkit.FluidCollisionMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.unrealized.craftbukkit.CraftSound;
+import org.bukkit.craftbukkit.CraftSound;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.unrealized.craftbukkit.entity.memory.CraftMemoryKey;
-import org.bukkit.unrealized.craftbukkit.entity.memory.CraftMemoryMapper;
-import org.bukkit.unrealized.craftbukkit.inventory.CraftEntityEquipment;
+import org.bukkit.craftbukkit.entity.memory.CraftMemoryKey;
+import org.bukkit.craftbukkit.entity.memory.CraftMemoryMapper;
+import org.bukkit.craftbukkit.inventory.CraftEntityEquipment;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.unrealized.craftbukkit.potion.CraftPotionUtil;
-import org.bukkit.unrealized.entity.AbstractArrow;
-import org.bukkit.unrealized.entity.DragonFireball;
-import org.bukkit.unrealized.entity.Egg;
-import org.bukkit.unrealized.entity.EnderPearl;
-import org.bukkit.entity.Entity;
-import org.bukkit.unrealized.entity.EntityCategory;
-import org.bukkit.unrealized.entity.EntityType;
-import org.bukkit.unrealized.entity.Fireball;
-import org.bukkit.unrealized.entity.Firework;
-import org.bukkit.unrealized.entity.FishHook;
-import org.bukkit.unrealized.entity.HumanEntity;
-import org.bukkit.unrealized.entity.LingeringPotion;
-import org.bukkit.unrealized.entity.LivingEntity;
-import org.bukkit.unrealized.entity.LlamaSpit;
-import org.bukkit.unrealized.entity.Player;
-import org.bukkit.unrealized.entity.Projectile;
-import org.bukkit.unrealized.entity.ShulkerBullet;
-import org.bukkit.unrealized.entity.SmallFireball;
-import org.bukkit.unrealized.entity.Snowball;
-import org.bukkit.unrealized.entity.SpectralArrow;
-import org.bukkit.unrealized.entity.ThrownExpBottle;
-import org.bukkit.unrealized.entity.ThrownPotion;
-import org.bukkit.unrealized.entity.TippedArrow;
-import org.bukkit.unrealized.entity.Trident;
-import org.bukkit.unrealized.entity.WitherSkull;
-import org.bukkit.unrealized.entity.memory.MemoryKey;
-import org.bukkit.unrealized.event.entity.EntityPotionEffectEvent;
-import org.bukkit.unrealized.event.player.PlayerTeleportEvent;
-import org.bukkit.unrealized.inventory.EntityEquipment;
-import org.bukkit.unrealized.inventory.ItemStack;
-import org.bukkit.unrealized.potion.PotionData;
-import org.bukkit.unrealized.potion.PotionEffect;
-import org.bukkit.unrealized.potion.PotionEffectType;
-import org.bukkit.unrealized.potion.PotionType;
-import org.bukkit.unrealized.util.BlockIterator;
-import org.bukkit.unrealized.util.RayTraceResult;
+import org.bukkit.craftbukkit.potion.CraftPotionUtil;
+import org.bukkit.entity.*;
+import org.bukkit.entity.memory.MemoryKey;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
+import org.bukkit.util.BlockIterator;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
+
+import java.util.*;
 
 public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     private CraftEntityEquipment equipment;
 
-    public CraftLivingEntity(final CraftServer server, final net.minecraft.entity.LivingEntity entity) {
+    public CraftLivingEntity(final CraftServer server, final EntityLiving entity) {
         super(server, entity);
 
         if (entity instanceof EntityInsentient || entity instanceof EntityArmorStand) {
@@ -303,8 +275,8 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     @Override
-    public EntityLiving getHandle() {
-        return (EntityLiving) entity;
+    public net.minecraft.entity.LivingEntity getHandle() {
+        return (net.minecraft.entity.LivingEntity) entity;
     }
 
     public void setHandle(final EntityLiving entity) {

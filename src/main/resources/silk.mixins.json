@@ -4,16 +4,22 @@
     "package": "cx.rain.silk.mixins.mixin",
     "compatibilityLevel": "JAVA_17",
     "server": [
+        "entity.EntityMixin",
+        "item.ItemStackMixin",
         "server.MainMixin",
         "server.MinecraftServerMixin",
+        "server.world.ChunkTicketManagerMixin",
         "world.WorldMixin"
     ],
     "injectors": {
         "defaultRequire": 1
     },
     "mixins": [
-        "entity.EntityMixin",
-        "item.ItemStackMixin",
-        "server.world.ChunkTicketManagerMixin"
+        "entity.LivingEntityMixin",
+        "server.PlayerManagerMixin",
+        "text.TextColorBridge",
+        "util.crash.CrashReportMixin",
+        "world.ServerWorldMixin",
+        "world.chunk.WorldChunkMixin"
     ]
 }
