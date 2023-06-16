@@ -1,6 +1,9 @@
 package cx.rain.silk.mixins.mixin.entity.player;
 
 import cx.rain.silk.mixins.bridge.entity.player.IHungerManagerBridge;
+import cx.rain.silk.mixins.bridge.entity.player.IPlayerEntityBridge;
+import cx.rain.silk.mixins.interfaces.entity.ILivingEntityMixin;
+import cx.rain.silk.mixins.interfaces.entity.player.IPlayerEntityMixin;
 import cx.rain.silk.mixins.interfaces.entity.player.IServerPlayerEntityMixin;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,6 +13,8 @@ import net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
+import org.bukkit.event.entity.EntityExhaustionEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -77,4 +82,32 @@ public abstract class HungerManagerMixin implements IHungerManagerBridge {
 
         ((ServerPlayerEntity) player).networkHandler.sendPacket(new HealthUpdateS2CPacket(((IServerPlayerEntityMixin) player).getBukkitEntity().getScaledHealth(), foodLevel, saturationLevel));
     }
+
+    @Inject(at = @At(value = "INVOKE", target = "net.minecraft.entity.player.PlayerEntity.heal(F)V",
+            ordinal = 0), method = "update")
+    private void silk$invokeFirstUpdateHeal(PlayerEntity player, CallbackInfo ci) {
+        var f = Math.min(this.saturationLevel, 6.0F);
+        ((ILivingEntityMixin) player).heal(f / 6.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED);
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "net.minecraft.entity.player.HungerManager.addExhaustion(F)V",
+            ordinal = 0), method = "update")
+    private void silk$invokeFirstUpdateAddExhaustion(PlayerEntity player, CallbackInfo ci) {
+        var f = Math.min(this.saturationLevel, 6.0F);
+        ((IPlayerEntityMixin) player).addExhaustion(f, EntityExhaustionEvent.ExhaustionReason.REGEN);
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "net.minecraft.entity.player.PlayerEntity.heal(F)V",
+            ordinal = 1), method = "update")
+    private void silk$invokeSecondUpdateHeal(PlayerEntity player, CallbackInfo ci) {
+        ((ILivingEntityMixin) player).heal(1, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.SATIATED);
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "net.minecraft.entity.player.HungerManager.addExhaustion(F)V",
+            ordinal = 1), method = "update")
+    private void silk$invokeSecondUpdateAddExhaustion(PlayerEntity player, CallbackInfo ci) {
+        ((IPlayerEntityMixin) player).addExhaustion(((IPlayerEntityBridge) player.getWorld()).silk$getSpigotConfig().regenExhaustion, EntityExhaustionEvent.ExhaustionReason.REGEN);
+    }
+
+    // Todo: qyl27: add regen rate manipulation.
 }

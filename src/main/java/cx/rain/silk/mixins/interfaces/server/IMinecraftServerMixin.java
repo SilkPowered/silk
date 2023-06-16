@@ -18,5 +18,4 @@ public interface IMinecraftServerMixin  {
         return (Bukkit.getServer() instanceof CraftServer) ? ((CraftServer) Bukkit.getServer()).getServer() : null;
     }
 
-
 }

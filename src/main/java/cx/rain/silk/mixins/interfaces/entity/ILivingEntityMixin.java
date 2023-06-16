@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public interface ILivingEntityMixin {
+public interface ILivingEntityMixin extends IEntityMixin {
 
     float getBukkitYaw();
 
