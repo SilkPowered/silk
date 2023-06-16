@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
@@ -1012,11 +1013,11 @@ public class CraftEventFactory {
         return event;
     }
 
-    public static FoodLevelChangeEvent callFoodLevelChangeEvent(EntityHuman entity, int level) {
+    public static FoodLevelChangeEvent callFoodLevelChangeEvent(PlayerEntity entity, int level) {
         return callFoodLevelChangeEvent(entity, level, null);
     }
 
-    public static FoodLevelChangeEvent callFoodLevelChangeEvent(EntityHuman entity, int level, ItemStack item) {
+    public static FoodLevelChangeEvent callFoodLevelChangeEvent(PlayerEntity entity, int level, ItemStack item) {
         FoodLevelChangeEvent event = new FoodLevelChangeEvent(entity.getBukkitEntity(), level, (item == null) ? null : CraftItemStack.asBukkitCopy(item));
         entity.getBukkitEntity().getServer().getPluginManager().callEvent(event);
         return event;

@@ -6,6 +6,7 @@ import org.bukkit.craftbukkit.CraftServer;
 
 import java.util.Queue;
 
+@Deprecated
 public interface IMinecraftServerBridge {
     CraftServer silk$getCraftServer();
     void silk$setCraftServer(CraftServer server);

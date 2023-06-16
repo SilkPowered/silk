@@ -161,7 +161,7 @@ public class CraftEntityEquipment implements EntityEquipment {
     }
 
     private void setEquipment(net.minecraft.entity.EquipmentSlot slot, ItemStack stack, boolean silent) {
-        ((ILivingEntityMixin) entity.getHandle()).setItemSlot(slot, CraftItemStack.asNMSCopy(stack), silent);
+        ((ILivingEntityMixin) entity.getHandle()).equipStack(slot, CraftItemStack.asNMSCopy(stack), silent);
     }
 
     @Override
