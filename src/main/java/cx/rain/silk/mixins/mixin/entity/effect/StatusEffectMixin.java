@@ -19,31 +19,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(StatusEffect.class)
 public class StatusEffectMixin {
     @Inject(at = @At(value = "INVOKE", target = "net.minecraft.entity.LivingEntity.heal(F)V", ordinal = 0),
-            method = "applyUpdateEffect", cancellable = true)
+            method = "applyUpdateEffect")
     private void silk$beforeFirstApplyUpdateEffectHeal(LivingEntity entity, int amplifier, CallbackInfo ci) {
         ((ILivingEntityMixin) entity).heal(1, EntityRegainHealthEvent.RegainReason.MAGIC_REGEN);
-        ci.cancel();
     }
 
     @Inject(at = @At(value = "INVOKE", target = "net.minecraft.entity.LivingEntity.heal(F)V", ordinal = 1),
-            method = "applyUpdateEffect", cancellable = true)
+            method = "applyUpdateEffect")
     private void silk$beforeSecondApplyUpdateEffectHeal(LivingEntity entity, int amplifier, CallbackInfo ci) {
         ((ILivingEntityMixin) entity).heal(Math.max(4 << amplifier, 0), EntityRegainHealthEvent.RegainReason.MAGIC);
-        ci.cancel();
     }
 
     @Inject(at = @At(value = "INVOKE",
             target = "net.minecraft.entity.LivingEntity.damage(Lnet/minecraft/entity/damage/DamageSource;F)Z",
             ordinal = 0),
-            method = "applyUpdateEffect", cancellable = true)
+            method = "applyUpdateEffect")
     private void silk$beforeFirstApplyUpdateEffectDamage(LivingEntity entity, int amplifier, CallbackInfo ci) {
         entity.damage(((IDamageSourcesMixin) entity.getDamageSources()).poison(), 1);
-        ci.cancel();
     }
 
     @Inject(at = @At(value = "INVOKE",
             target = "net.minecraft.entity.player.PlayerEntity.getHungerManager()Lnet/minecraft/entity/player/HungerManager;"),
-            method = "applyUpdateEffect", cancellable = true)
+            method = "applyUpdateEffect")
     private void silk$beforeApplyUpdateEffectGetHungerManager(LivingEntity entity, int amplifier, CallbackInfo ci) {
         var player = (PlayerEntity) entity;
 
@@ -56,15 +53,13 @@ public class StatusEffectMixin {
         }
 
         ((ServerPlayerEntity) player).networkHandler.sendPacket(new HealthUpdateS2CPacket(((IServerPlayerEntityMixin) player).getBukkitEntity().getScaledHealth(), player.getHungerManager().getFoodLevel(), player.getHungerManager().getSaturationLevel()));
-        ci.cancel();
     }
 
     @Inject(at = @At(value = "INVOKE", target = "net.minecraft.entity.LivingEntity.heal(F)V", ordinal = 0),
-            method = "applyInstantEffect", cancellable = true)
+            method = "applyInstantEffect")
     private void silk$beforeFirstLivingEntityHeal(Entity source, Entity attacker, LivingEntity target,
                                                   int amplifier, double proximity, CallbackInfo ci) {
         int j = (int) (proximity * (double) (4 << amplifier) + 0.5D);
         ((ILivingEntityMixin) target).heal((float) j, EntityRegainHealthEvent.RegainReason.MAGIC);
-        ci.cancel();
     }
 }
