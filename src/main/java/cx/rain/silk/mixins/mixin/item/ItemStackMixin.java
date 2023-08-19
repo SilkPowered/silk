@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.Registries;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin extends ItemStack implements IItemStackMixin {
+public abstract class ItemStackMixin implements IItemStackMixin {
     @Mutable
     @Shadow @Final @Deprecated private @Nullable Item item;
 
@@ -34,9 +33,7 @@ public abstract class ItemStackMixin extends ItemStack implements IItemStackMixi
 
     @Shadow public abstract int getDamage();
 
-    public ItemStackMixin(ItemConvertible item) {
-        super(item);
-    }
+    @Shadow public abstract Item getItem();
 
     @Override
     public void setItem(@Nullable Item item) {

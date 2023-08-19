@@ -9,9 +9,9 @@ import org.bukkit.structure.Palette;
 
 public class CraftPalette implements Palette {
 
-    private final StructureTemplate.a palette;
+    private final StructureTemplate.PalettedBlockInfoList palette;
 
-    public CraftPalette(StructureTemplate.a palette) {
+    public CraftPalette(StructureTemplate.PalettedBlockInfoList palette) {
         this.palette = palette;
     }
 

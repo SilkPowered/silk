@@ -286,7 +286,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
     }
 
     @Override
-    public Pool<SpawnSettings.c> getEntitySpawnList(RegistryEntry<net.minecraft.world.biome.Biome> holder, StructureAccessor structuremanager, SpawnGroup enumcreaturetype, BlockPos blockposition) {
+    public Pool<SpawnSettings.SpawnEntry> getEntitySpawnList(RegistryEntry<net.minecraft.world.biome.Biome> holder, StructureAccessor structuremanager, SpawnGroup enumcreaturetype, BlockPos blockposition) {
         return delegate.getEntitySpawnList(holder, structuremanager, enumcreaturetype, blockposition);
     }
 

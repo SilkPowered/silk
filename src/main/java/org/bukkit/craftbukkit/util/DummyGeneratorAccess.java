@@ -119,7 +119,7 @@ public class DummyGeneratorAccess implements StructureWorldAccess {
     }
 
     @Override
-    public void gameEvent(GameEvent gameevent, Vec3d vec3d, GameEvent.a gameevent_a) {
+    public void emitGameEvent(GameEvent event, Vec3d emitterPos, GameEvent.Emitter emitter) {
         // Used by BlockComposter
     }
 

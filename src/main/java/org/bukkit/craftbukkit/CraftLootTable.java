@@ -80,7 +80,7 @@ public class CraftLootTable implements org.bukkit.loot.LootTable {
         Preconditions.checkArgument(loc.getWorld() != null, "LootContext.getLocation#getWorld cannot be null");
         ServerWorld handle = ((CraftWorld) loc.getWorld()).getHandle();
 
-        LootContextParameterSet.a builder = new LootContextParameterSet.a(handle);
+        LootContextParameterSet.Builder builder = new LootContextParameterSet.Builder(handle);
         if (random != null) {
             // builder = builder.withRandom(new RandomSourceWrapper(random));
         }
@@ -125,9 +125,9 @@ public class CraftLootTable implements org.bukkit.loot.LootTable {
         return builder.create(getHandle().getType());
     }
 
-    private <T> void setMaybe(LootContextParameterSet.a builder, LootContextParameter<T> param, T value) {
+    private <T> void setMaybe(LootContextParameterSet.Builder builder, LootContextParameter<T> param, T value) {
         if (getHandle().getType().getRequired().contains(param) || getHandle().getType().getAllowed().contains(param)) {
-            builder.withParameter(param, value);
+            builder.add(param, value);
         }
     }
 

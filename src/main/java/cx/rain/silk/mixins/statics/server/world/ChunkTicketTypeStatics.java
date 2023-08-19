@@ -2,7 +2,7 @@ package cx.rain.silk.mixins.statics.server.world;
 
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.util.Unit;
-import org.bukkit.unrealized.plugin.Plugin;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Comparator;
 

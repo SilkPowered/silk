@@ -13,8 +13,8 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
     private final double weirdness;
     private final MultiNoiseUtil.MultiNoiseSampler sampler;
 
-    public static BiomeParameterPoint createBiomeParameterPoint(MultiNoiseUtil.MultiNoiseSampler sampler, MultiNoiseUtil.h targetPoint) {
-        return new CraftBiomeParameterPoint(sampler, MultiNoiseUtil.toFloat(targetPoint.temperature()), MultiNoiseUtil.toFloat(targetPoint.humidity()), MultiNoiseUtil.toFloat(targetPoint.continentalness()), MultiNoiseUtil.toFloat(targetPoint.erosion()), MultiNoiseUtil.toFloat(targetPoint.depth()), MultiNoiseUtil.toFloat(targetPoint.weirdness()));
+    public static BiomeParameterPoint createBiomeParameterPoint(MultiNoiseUtil.MultiNoiseSampler sampler, MultiNoiseUtil.NoiseValuePoint targetPoint) {
+        return new CraftBiomeParameterPoint(sampler, MultiNoiseUtil.toFloat(targetPoint.temperatureNoise()), MultiNoiseUtil.toFloat(targetPoint.humidityNoise()), MultiNoiseUtil.toFloat(targetPoint.continentalnessNoise()), MultiNoiseUtil.toFloat(targetPoint.erosionNoise()), MultiNoiseUtil.toFloat(targetPoint.depth()), MultiNoiseUtil.toFloat(targetPoint.weirdnessNoise()));
     }
 
     private CraftBiomeParameterPoint(MultiNoiseUtil.MultiNoiseSampler sampler, double temperature, double humidity, double continentalness, double erosion, double depth, double weirdness) {
@@ -34,12 +34,12 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
 
     @Override
     public double getMaxTemperature() {
-        return this.sampler.comp_364().comp_378();
+        return this.sampler.temperature().maxValue();
     }
 
     @Override
     public double getMinTemperature() {
-        return this.sampler.comp_364().comp_377();
+        return this.sampler.temperature().minValue();
     }
 
     @Override
@@ -49,12 +49,12 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
 
     @Override
     public double getMaxHumidity() {
-        return this.sampler.comp_365().comp_378();
+        return this.sampler.humidity().maxValue();
     }
 
     @Override
     public double getMinHumidity() {
-        return this.sampler.comp_365().comp_377();
+        return this.sampler.humidity().minValue();
     }
 
     @Override
@@ -64,12 +64,12 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
 
     @Override
     public double getMaxContinentalness() {
-        return this.sampler.comp_366().comp_378();
+        return this.sampler.continentalness().maxValue();
     }
 
     @Override
     public double getMinContinentalness() {
-        return this.sampler.comp_366().comp_377();
+        return this.sampler.continentalness().minValue();
     }
 
     @Override
@@ -79,12 +79,12 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
 
     @Override
     public double getMaxErosion() {
-        return this.sampler.comp_367().comp_378();
+        return this.sampler.erosion().maxValue();
     }
 
     @Override
     public double getMinErosion() {
-        return this.sampler.comp_367().comp_377();
+        return this.sampler.erosion().minValue();
     }
 
     @Override
@@ -94,12 +94,12 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
 
     @Override
     public double getMaxDepth() {
-        return this.sampler.comp_368().comp_378();
+        return this.sampler.depth().maxValue();
     }
 
     @Override
     public double getMinDepth() {
-        return this.sampler.comp_368().comp_377();
+        return this.sampler.depth().minValue();
     }
 
     @Override
@@ -109,11 +109,11 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
 
     @Override
     public double getMaxWeirdness() {
-        return this.sampler.comp_369().comp_378();
+        return this.sampler.weirdness().maxValue();
     }
 
     @Override
     public double getMinWeirdness() {
-        return this.sampler.comp_369().comp_377();
+        return this.sampler.weirdness().minValue();
     }
 }
