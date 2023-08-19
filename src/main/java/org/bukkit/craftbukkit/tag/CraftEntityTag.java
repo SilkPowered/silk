@@ -18,11 +18,11 @@ public class CraftEntityTag extends CraftTag<net.minecraft.entity.EntityType<?>,
 
     @Override
     public boolean isTagged(EntityType entity) {
-        return registry.getHolderOrThrow(RegistryKey.create(RegistryKeys.ENTITY_TYPE, CraftNamespacedKey.toMinecraft(entity.getKey()))).is(tag);
+        return registry.getHolderOrThrow(RegistryKey.of(RegistryKeys.ENTITY_TYPE, CraftNamespacedKey.toMinecraft(entity.getKey()))).isIn(tag);
     }
 
     @Override
     public Set<EntityType> getValues() {
-        return getHandle().stream().map((nms) -> Registry.ENTITY_TYPE.get(CraftNamespacedKey.fromMinecraft(net.minecraft.entity.EntityType.getKey(nms.value())))).filter(Objects::nonNull).collect(Collectors.toUnmodifiableSet());
+        return getHandle().stream().map((nms) -> Registry.ENTITY_TYPE.get(CraftNamespacedKey.fromMinecraft(net.minecraft.entity.EntityType.getId(nms.comp_349())))).filter(Objects::nonNull).collect(Collectors.toUnmodifiableSet());
     }
 }

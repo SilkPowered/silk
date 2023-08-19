@@ -34,17 +34,17 @@ public class CraftBeehive extends CraftBlockEntityState<BeehiveBlockEntity> impl
 
     @Override
     public boolean isFull() {
-        return getSnapshot().isFull();
+        return getSnapshot().isFullOfBees();
     }
 
     @Override
     public boolean isSedated() {
-        return isPlaced() && getTileEntity().isSedated();
+        return isPlaced() && getTileEntity().isSmoked();
     }
 
     @Override
     public int getEntityCount() {
-        return getSnapshot().getOccupantCount();
+        return getSnapshot().getBeeCount();
     }
 
     @Override
@@ -79,6 +79,6 @@ public class CraftBeehive extends CraftBlockEntityState<BeehiveBlockEntity> impl
     public void addEntity(Bee entity) {
         Preconditions.checkArgument(entity != null, "Entity must not be null");
 
-        getSnapshot().addOccupant(((CraftBee) entity).getHandle(), false);
+        getSnapshot().tryEnterHive(((CraftBee) entity).getHandle(), false);
     }
 }

@@ -43,7 +43,7 @@ public class CraftAnimals extends CraftAgeable implements Animals {
     @Override
     public void setLoveModeTicks(int ticks) {
         Preconditions.checkArgument(ticks >= 0, "Love mode ticks must be positive or 0");
-        getHandle().setInLoveTime(ticks);
+        getHandle().setLoveTicks(ticks);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CraftAnimals extends CraftAgeable implements Animals {
 
     @Override
     public boolean isBreedItem(ItemStack itemStack) {
-        return getHandle().isFood(CraftItemStack.asNMSCopy(itemStack));
+        return getHandle().isBreedingItem(CraftItemStack.asNMSCopy(itemStack));
     }
 
     @Override

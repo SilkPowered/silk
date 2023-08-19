@@ -18,12 +18,12 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
 
     @Override
     public void setDamage(double damage) {
-        getHandle().setDamage((float) damage);
+        getHandle().setDamageWobbleStrength((float) damage);
     }
 
     @Override
     public double getDamage() {
-        return getHandle().getDamage();
+        return getHandle().getDamageWobbleStrength();
     }
 
     @Override
@@ -77,11 +77,11 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
     public void setDisplayBlock(MaterialData material) {
         if (material != null) {
             BlockState block = CraftMagicNumbers.getBlock(material);
-            this.getHandle().setDisplayBlockState(block);
+            this.getHandle().setCustomBlock(block);
         } else {
             // Set block to air (default) and set the flag to not have a display block.
-            this.getHandle().setDisplayBlockState(Blocks.AIR.defaultBlockState());
-            this.getHandle().setCustomDisplay(false);
+            this.getHandle().setCustomBlock(Blocks.AIR.getDefaultState());
+            this.getHandle().setCustomBlockPresent(false);
         }
     }
 
@@ -89,33 +89,33 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
     public void setDisplayBlockData(BlockData blockData) {
         if (blockData != null) {
             BlockState block = ((CraftBlockData) blockData).getState();
-            this.getHandle().setDisplayBlockState(block);
+            this.getHandle().setCustomBlock(block);
         } else {
             // Set block to air (default) and set the flag to not have a display block.
-            this.getHandle().setDisplayBlockState(Blocks.AIR.defaultBlockState());
-            this.getHandle().setCustomDisplay(false);
+            this.getHandle().setCustomBlock(Blocks.AIR.getDefaultState());
+            this.getHandle().setCustomBlockPresent(false);
         }
     }
 
     @Override
     public MaterialData getDisplayBlock() {
-        BlockState blockData = getHandle().getDisplayBlockState();
+        BlockState blockData = getHandle().getContainedBlock();
         return CraftMagicNumbers.getMaterial(blockData);
     }
 
     @Override
     public BlockData getDisplayBlockData() {
-        BlockState blockData = getHandle().getDisplayBlockState();
+        BlockState blockData = getHandle().getContainedBlock();
         return CraftBlockData.fromData(blockData);
     }
 
     @Override
     public void setDisplayBlockOffset(int offset) {
-        getHandle().setDisplayOffset(offset);
+        getHandle().setCustomBlockOffset(offset);
     }
 
     @Override
     public int getDisplayBlockOffset() {
-        return getHandle().getDisplayOffset();
+        return getHandle().getBlockOffset();
     }
 }

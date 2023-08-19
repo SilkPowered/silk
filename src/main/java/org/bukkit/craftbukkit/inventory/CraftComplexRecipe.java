@@ -18,12 +18,12 @@ public class CraftComplexRecipe implements CraftRecipe, ComplexRecipe {
 
     @Override
     public ItemStack getResult() {
-        return CraftItemStack.asCraftMirror(recipe.getResultItem(DynamicRegistryManager.EMPTY));
+        return CraftItemStack.asCraftMirror(recipe.a(DynamicRegistryManager.EMPTY));
     }
 
     @Override
     public NamespacedKey getKey() {
-        return CraftNamespacedKey.fromMinecraft(recipe.getId());
+        return CraftNamespacedKey.fromMinecraft(recipe.e());
     }
 
     @Override

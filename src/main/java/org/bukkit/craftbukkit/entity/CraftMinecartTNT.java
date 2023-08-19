@@ -17,12 +17,12 @@ public final class CraftMinecartTNT extends CraftMinecart implements ExplosiveMi
 
     @Override
     public int getFuseTicks() {
-        return getHandle().getFuse();
+        return getHandle().getFuseTicks();
     }
 
     @Override
     public void ignite() {
-        getHandle().primeFuse();
+        getHandle().prime();
     }
 
     @Override
@@ -32,7 +32,7 @@ public final class CraftMinecartTNT extends CraftMinecart implements ExplosiveMi
 
     @Override
     public void explode() {
-        getHandle().explode(getHandle().getDeltaMovement().horizontalDistanceSqr());
+        getHandle().explode(getHandle().getVelocity().horizontalLengthSquared());
     }
 
     @Override

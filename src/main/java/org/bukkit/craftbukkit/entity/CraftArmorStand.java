@@ -82,7 +82,7 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void setBodyPose(EulerAngle pose) {
-        getHandle().setBodyPose(toNMS(pose));
+        getHandle().setBodyRotation(toNMS(pose));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void setLeftArmPose(EulerAngle pose) {
-        getHandle().setLeftArmPose(toNMS(pose));
+        getHandle().setLeftArmRotation(toNMS(pose));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void setRightArmPose(EulerAngle pose) {
-        getHandle().setRightArmPose(toNMS(pose));
+        getHandle().setRightArmRotation(toNMS(pose));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void setLeftLegPose(EulerAngle pose) {
-        getHandle().setLeftLegPose(toNMS(pose));
+        getHandle().setLeftLegRotation(toNMS(pose));
     }
 
     @Override
@@ -122,7 +122,7 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void setRightLegPose(EulerAngle pose) {
-        getHandle().setRightLegPose(toNMS(pose));
+        getHandle().setRightLegRotation(toNMS(pose));
     }
 
     @Override
@@ -132,17 +132,17 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void setHeadPose(EulerAngle pose) {
-        getHandle().setHeadPose(toNMS(pose));
+        getHandle().setHeadRotation(toNMS(pose));
     }
 
     @Override
     public boolean hasBasePlate() {
-        return !getHandle().isNoBasePlate();
+        return !getHandle().shouldHideBasePlate();
     }
 
     @Override
     public void setBasePlate(boolean basePlate) {
-        getHandle().setNoBasePlate(!basePlate);
+        getHandle().setHideBasePlate(!basePlate);
     }
 
     @Override
@@ -159,12 +159,12 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void setVisible(boolean visible) {
-        getHandle().setInvisible(!visible);
+        getHandle().j(!visible);
     }
 
     @Override
     public boolean hasArms() {
-        return getHandle().isShowArms();
+        return getHandle().shouldShowArms();
     }
 
     @Override
@@ -184,9 +184,9 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     private static EulerAngle fromNMS(net.minecraft.util.math.EulerAngle old) {
         return new EulerAngle(
-            Math.toRadians(old.getX()),
-            Math.toRadians(old.getY()),
-            Math.toRadians(old.getZ())
+            Math.toRadians(old.getPitch()),
+            Math.toRadians(old.getYaw()),
+            Math.toRadians(old.getRoll())
         );
     }
 
@@ -210,16 +210,16 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public void addEquipmentLock(EquipmentSlot equipmentSlot, LockType lockType) {
-        getHandle().disabledSlots |= (1 << CraftEquipmentSlot.getNMS(equipmentSlot).getFilterFlag() + lockType.ordinal() * 8);
+        getHandle().disabledSlots |= (1 << CraftEquipmentSlot.getNMS(equipmentSlot).getArmorStandSlotId() + lockType.ordinal() * 8);
     }
 
     @Override
     public void removeEquipmentLock(EquipmentSlot equipmentSlot, LockType lockType) {
-        getHandle().disabledSlots &= ~(1 << CraftEquipmentSlot.getNMS(equipmentSlot).getFilterFlag() + lockType.ordinal() * 8);
+        getHandle().disabledSlots &= ~(1 << CraftEquipmentSlot.getNMS(equipmentSlot).getArmorStandSlotId() + lockType.ordinal() * 8);
     }
 
     @Override
     public boolean hasEquipmentLock(EquipmentSlot equipmentSlot, LockType lockType) {
-        return (getHandle().disabledSlots & (1 << CraftEquipmentSlot.getNMS(equipmentSlot).getFilterFlag() + lockType.ordinal() * 8)) != 0;
+        return (getHandle().disabledSlots & (1 << CraftEquipmentSlot.getNMS(equipmentSlot).getArmorStandSlotId() + lockType.ordinal() * 8)) != 0;
     }
 }

@@ -69,7 +69,7 @@ public class CraftIpBanList implements org.bukkit.ban.IpBanList {
     @Override
     public Set<BanEntry> getBanEntries() {
         ImmutableSet.Builder<BanEntry> builder = ImmutableSet.builder();
-        for (String target : list.getUserList()) {
+        for (String target : list.getNames()) {
             BannedIpEntry ipBanEntry = list.get(target);
             if (ipBanEntry != null) {
                 builder.add(new CraftIpBanEntry(target, ipBanEntry, list));
@@ -81,7 +81,7 @@ public class CraftIpBanList implements org.bukkit.ban.IpBanList {
     @Override
     public Set<BanEntry<InetAddress>> getEntries() {
         ImmutableSet.Builder<BanEntry<InetAddress>> builder = ImmutableSet.builder();
-        for (String target : list.getUserList()) {
+        for (String target : list.getNames()) {
             BannedIpEntry ipBanEntry = list.get(target);
             if (ipBanEntry != null) {
                 builder.add(new CraftIpBanEntry(target, ipBanEntry, list));

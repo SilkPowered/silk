@@ -18,7 +18,7 @@ public abstract class CraftTag<N, B extends Keyed> implements Tag<B> {
     public CraftTag(Registry<N> registry, TagKey<N> tag) {
         this.registry = registry;
         this.tag = tag;
-        this.handle = registry.getTag(this.tag).orElseThrow();
+        this.handle = registry.getEntryList(this.tag).orElseThrow();
     }
 
     protected RegistryEntryList.Named<N> getHandle() {
@@ -27,6 +27,6 @@ public abstract class CraftTag<N, B extends Keyed> implements Tag<B> {
 
     @Override
     public NamespacedKey getKey() {
-        return CraftNamespacedKey.fromMinecraft(tag.location());
+        return CraftNamespacedKey.fromMinecraft(tag.id());
     }
 }

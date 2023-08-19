@@ -40,12 +40,12 @@ public class CraftTextDisplay extends CraftDisplay implements TextDisplay {
 
     @Override
     public void setLineWidth(int width) {
-        getHandle().getEntityData().set(DisplayEntity.TextDisplayEntity.DATA_LINE_WIDTH_ID, width);
+        getHandle().getDataTracker().set(DisplayEntity.TextDisplayEntity.DATA_LINE_WIDTH_ID, width);
     }
 
     @Override
     public Color getBackgroundColor() {
-        int color = getHandle().getBackgroundColor();
+        int color = getHandle().getBackground();
 
         return (color == -1) ? null : Color.fromARGB(color);
     }
@@ -53,9 +53,9 @@ public class CraftTextDisplay extends CraftDisplay implements TextDisplay {
     @Override
     public void setBackgroundColor(Color color) {
         if (color == null) {
-            getHandle().getEntityData().set(DisplayEntity.TextDisplayEntity.DATA_BACKGROUND_COLOR_ID, -1);
+            getHandle().getDataTracker().set(DisplayEntity.TextDisplayEntity.DATA_BACKGROUND_COLOR_ID, -1);
         } else {
-            getHandle().getEntityData().set(DisplayEntity.TextDisplayEntity.DATA_BACKGROUND_COLOR_ID, color.asARGB());
+            getHandle().getDataTracker().set(DisplayEntity.TextDisplayEntity.DATA_BACKGROUND_COLOR_ID, color.asARGB());
         }
     }
 
@@ -101,7 +101,7 @@ public class CraftTextDisplay extends CraftDisplay implements TextDisplay {
 
     @Override
     public TextAlignment getAlignment() {
-        DisplayEntity.TextDisplayEntity.TextAlignment nms = DisplayEntity.TextDisplayEntity.getAlign(getHandle().getFlags());
+        DisplayEntity.TextDisplayEntity.TextAlignment nms = DisplayEntity.TextDisplayEntity.getAlignment(getHandle().getDisplayFlags());
         return TextAlignment.valueOf(nms.name());
     }
 
@@ -128,11 +128,11 @@ public class CraftTextDisplay extends CraftDisplay implements TextDisplay {
     }
 
     private boolean getFlag(int flag) {
-        return (getHandle().getFlags() & flag) != 0;
+        return (getHandle().getDisplayFlags() & flag) != 0;
     }
 
     private void setFlag(int flag, boolean set) {
-        byte flagBits = getHandle().getFlags();
+        byte flagBits = getHandle().getDisplayFlags();
 
         if (set) {
             flagBits |= flag;
@@ -140,6 +140,6 @@ public class CraftTextDisplay extends CraftDisplay implements TextDisplay {
             flagBits &= ~flag;
         }
 
-        getHandle().setFlags(flagBits);
+        getHandle().setDisplayFlags(flagBits);
     }
 }

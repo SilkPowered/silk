@@ -19,6 +19,6 @@ public class CraftDimensionUtil {
             return World.END;
         }
 
-        return world.dimension();
+        return world.getRegistryKey();
     }
 }

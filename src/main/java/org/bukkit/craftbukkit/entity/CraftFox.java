@@ -39,12 +39,12 @@ public class CraftFox extends CraftAnimals implements Fox {
 
     @Override
     public boolean isCrouching() {
-        return getHandle().isCrouching();
+        return getHandle().bU();
     }
 
     @Override
     public void setCrouching(boolean crouching) {
-        getHandle().setIsCrouching(crouching);
+        getHandle().setCrouching(crouching);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CraftFox extends CraftAnimals implements Fox {
 
     @Override
     public AnimalTamer getFirstTrustedPlayer() {
-        UUID uuid = getHandle().getEntityData().get(FoxEntity.DATA_TRUSTED_ID_0).orElse(null);
+        UUID uuid = getHandle().getDataTracker().get(FoxEntity.DATA_TRUSTED_ID_0).orElse(null);
         if (uuid == null) {
             return null;
         }
@@ -80,15 +80,15 @@ public class CraftFox extends CraftAnimals implements Fox {
     @Override
     public void setFirstTrustedPlayer(AnimalTamer player) {
         if (player == null) {
-            Preconditions.checkState(getHandle().getEntityData().get(FoxEntity.DATA_TRUSTED_ID_1).isEmpty(), "Must remove second trusted player first");
+            Preconditions.checkState(getHandle().getDataTracker().get(FoxEntity.DATA_TRUSTED_ID_1).isEmpty(), "Must remove second trusted player first");
         }
 
-        getHandle().getEntityData().set(FoxEntity.DATA_TRUSTED_ID_0, player == null ? Optional.empty() : Optional.of(player.getUniqueId()));
+        getHandle().getDataTracker().set(FoxEntity.DATA_TRUSTED_ID_0, player == null ? Optional.empty() : Optional.of(player.getUniqueId()));
     }
 
     @Override
     public AnimalTamer getSecondTrustedPlayer() {
-        UUID uuid = getHandle().getEntityData().get(FoxEntity.DATA_TRUSTED_ID_1).orElse(null);
+        UUID uuid = getHandle().getDataTracker().get(FoxEntity.DATA_TRUSTED_ID_1).orElse(null);
         if (uuid == null) {
             return null;
         }
@@ -104,14 +104,14 @@ public class CraftFox extends CraftAnimals implements Fox {
     @Override
     public void setSecondTrustedPlayer(AnimalTamer player) {
         if (player != null) {
-            Preconditions.checkState(getHandle().getEntityData().get(FoxEntity.DATA_TRUSTED_ID_0).isPresent(), "Must add first trusted player first");
+            Preconditions.checkState(getHandle().getDataTracker().get(FoxEntity.DATA_TRUSTED_ID_0).isPresent(), "Must add first trusted player first");
         }
 
-        getHandle().getEntityData().set(FoxEntity.DATA_TRUSTED_ID_1, player == null ? Optional.empty() : Optional.of(player.getUniqueId()));
+        getHandle().getDataTracker().set(FoxEntity.DATA_TRUSTED_ID_1, player == null ? Optional.empty() : Optional.of(player.getUniqueId()));
     }
 
     @Override
     public boolean isFaceplanted() {
-        return getHandle().isFaceplanted();
+        return getHandle().isWalking();
     }
 }

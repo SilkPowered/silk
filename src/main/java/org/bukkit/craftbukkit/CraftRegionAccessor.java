@@ -226,7 +226,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
 
     @Override
     public Biome getBiome(int x, int y, int z) {
-        return CraftBlock.biomeBaseToBiome(getHandle().registryAccess().registryOrThrow(RegistryKeys.BIOME), getHandle().getBiomeForNoiseGen(x >> 2, y >> 2, z >> 2));
+        return CraftBlock.biomeBaseToBiome(getHandle().getRegistryManager().get(RegistryKeys.BIOME), getHandle().getBiomeForNoiseGen(x >> 2, y >> 2, z >> 2));
     }
 
     @Override
@@ -237,7 +237,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
     @Override
     public void setBiome(int x, int y, int z, Biome biome) {
         Preconditions.checkArgument(biome != Biome.CUSTOM, "Cannot set the biome to %s", biome);
-        RegistryEntry<net.minecraft.world.biome.Biome> biomeBase = CraftBlock.biomeToBiomeBase(getHandle().registryAccess().registryOrThrow(RegistryKeys.BIOME), biome);
+        RegistryEntry<net.minecraft.world.biome.Biome> biomeBase = CraftBlock.biomeToBiomeBase(getHandle().getRegistryManager().get(RegistryKeys.BIOME), biome);
         setBiome(x, y, z, biomeBase);
     }
 
@@ -313,7 +313,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
 
     @Override
     public int getHighestBlockYAt(int x, int z, org.bukkit.HeightMap heightMap) {
-        return getHandle().getHeight(CraftHeightMap.toNMS(heightMap), x, z);
+        return getHandle().getTopY(CraftHeightMap.toNMS(heightMap), x, z);
     }
 
     @Override
@@ -324,7 +324,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
     @Override
     public boolean generateTree(Location location, Random random, TreeType treeType) {
         BlockPos pos = CraftLocation.toBlockPosition(location);
-        return generateTree(getHandle(), getHandle().getMinecraftWorld().getChunkSource().getGenerator(), pos, new RandomSourceWrapper(random), treeType);
+        return generateTree(getHandle(), getHandle().getMinecraftWorld().getChunkManager().getChunkGenerator(), pos, new RandomSourceWrapper(random), treeType);
     }
 
     @Override
@@ -339,7 +339,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
     public boolean generateTree(Location location, Random random, TreeType treeType, Predicate<BlockState> predicate) {
         BlockPos pos = CraftLocation.toBlockPosition(location);
         BlockStateListPopulator populator = new BlockStateListPopulator(getHandle());
-        boolean result = generateTree(populator, getHandle().getMinecraftWorld().getChunkSource().getGenerator(), pos, new RandomSourceWrapper(random), treeType);
+        boolean result = generateTree(populator, getHandle().getMinecraftWorld().getChunkManager().getChunkGenerator(), pos, new RandomSourceWrapper(random), treeType);
         populator.refreshTiles();
 
         for (BlockState blockState : populator.getList()) {
@@ -400,7 +400,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
                 gen = TreeConfiguredFeatures.SUPER_BIRCH_BEES_0002;
                 break;
             case CHORUS_PLANT:
-                ((ChorusFlowerBlock) Blocks.CHORUS_FLOWER).generatePlant(access, pos, random, 8);
+                ((ChorusFlowerBlock) Blocks.CHORUS_FLOWER).generate(access, pos, random, 8);
                 return true;
             case CRIMSON_FUNGUS:
                 gen = TreeConfiguredFeatures.CRIMSON_FUNGUS_PLANTED;
@@ -426,8 +426,8 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
                 break;
         }
 
-        RegistryEntry<ConfiguredFeature<?, ?>> holder = access.registryAccess().registryOrThrow(RegistryKeys.CONFIGURED_FEATURE).getHolder(gen).orElse(null);
-        return (holder != null) ? holder.value().place(access, chunkGenerator, random, pos) : false;
+        RegistryEntry<ConfiguredFeature<?, ?>> holder = access.getRegistryManager().get(RegistryKeys.CONFIGURED_FEATURE).getEntry(gen).orElse(null);
+        return (holder != null) ? holder.comp_349().generate(access, chunkGenerator, random, pos) : false;
     }
 
     @Override
@@ -557,7 +557,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
         Preconditions.checkArgument(entity != null, "Cannot spawn null entity");
 
         if (randomizeData && entity instanceof MobEntity) {
-            ((MobEntity) entity).finalizeSpawn(getHandle(), getHandle().getCurrentDifficultyAt(entity.blockPosition()), SpawnReason.COMMAND, (EntityData) null, null);
+            ((MobEntity) entity).initialize(getHandle(), getHandle().getLocalDifficulty(entity.di()), SpawnReason.COMMAND, (EntityData) null, null);
         }
 
         if (!isNormalWorld()) {
@@ -600,10 +600,10 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             } else {
                 entity = net.minecraft.entity.EntityType.BOAT.create(world);
             }
-            entity.moveTo(x, y, z, yaw, pitch);
+            entity.refreshPositionAndAngles(x, y, z, yaw, pitch);
         } else if (FallingBlock.class.isAssignableFrom(clazz)) {
-            BlockPos pos = BlockPos.containing(x, y, z);
-            entity = FallingBlockEntity.fall(world, pos, getHandle().getBlockState(pos));
+            BlockPos pos = BlockPos.ofFloored(x, y, z);
+            entity = FallingBlockEntity.spawnFromBlock(world, pos, getHandle().getBlockState(pos));
         } else if (Projectile.class.isAssignableFrom(clazz)) {
             if (Snowball.class.isAssignableFrom(clazz)) {
                 entity = new SnowballEntity(world, x, y, z);
@@ -620,13 +620,13 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
                 } else {
                     entity = net.minecraft.entity.EntityType.ARROW.create(world);
                 }
-                entity.moveTo(x, y, z, 0, 0);
+                entity.refreshPositionAndAngles(x, y, z, 0, 0);
             } else if (ThrownExpBottle.class.isAssignableFrom(clazz)) {
                 entity = net.minecraft.entity.EntityType.EXPERIENCE_BOTTLE.create(world);
-                entity.moveTo(x, y, z, 0, 0);
+                entity.refreshPositionAndAngles(x, y, z, 0, 0);
             } else if (EnderPearl.class.isAssignableFrom(clazz)) {
                 entity = net.minecraft.entity.EntityType.ENDER_PEARL.create(world);
-                entity.moveTo(x, y, z, 0, 0);
+                entity.refreshPositionAndAngles(x, y, z, 0, 0);
             } else if (ThrownPotion.class.isAssignableFrom(clazz)) {
                 if (LingeringPotion.class.isAssignableFrom(clazz)) {
                     entity = new PotionEntity(world, x, y, z);
@@ -645,15 +645,15 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
                 } else {
                     entity = net.minecraft.entity.EntityType.FIREBALL.create(world);
                 }
-                entity.moveTo(x, y, z, yaw, pitch);
+                entity.refreshPositionAndAngles(x, y, z, yaw, pitch);
                 Vector direction = location.getDirection().multiply(10);
                 ((ExplosiveProjectileEntity) entity).setDirection(direction.getX(), direction.getY(), direction.getZ());
             } else if (ShulkerBullet.class.isAssignableFrom(clazz)) {
                 entity = net.minecraft.entity.EntityType.SHULKER_BULLET.create(world);
-                entity.moveTo(x, y, z, yaw, pitch);
+                entity.refreshPositionAndAngles(x, y, z, yaw, pitch);
             } else if (LlamaSpit.class.isAssignableFrom(clazz)) {
                 entity = net.minecraft.entity.EntityType.LLAMA_SPIT.create(world);
-                entity.moveTo(x, y, z, yaw, pitch);
+                entity.refreshPositionAndAngles(x, y, z, yaw, pitch);
             } else if (Firework.class.isAssignableFrom(clazz)) {
                 entity = new FireworkRocketEntity(world, x, y, z, net.minecraft.item.ItemStack.EMPTY);
             }
@@ -677,7 +677,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             entity = new EyeOfEnderEntity(world, x, y, z);
         } else if (EnderCrystal.class.isAssignableFrom(clazz)) {
             entity = net.minecraft.entity.EntityType.END_CRYSTAL.create(world);
-            entity.moveTo(x, y, z, 0, 0);
+            entity.refreshPositionAndAngles(x, y, z, 0, 0);
         } else if (LivingEntity.class.isAssignableFrom(clazz)) {
             if (Chicken.class.isAssignableFrom(clazz)) {
                 entity = net.minecraft.entity.EntityType.CHICKEN.create(world);
@@ -881,13 +881,13 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             }
 
             if (entity != null) {
-                entity.absMoveTo(x, y, z, yaw, pitch);
-                entity.setYHeadRot(yaw); // SPIGOT-3587
+                entity.updatePositionAndAngles(x, y, z, yaw, pitch);
+                entity.setHeadYaw(yaw); // SPIGOT-3587
             }
         } else if (Hanging.class.isAssignableFrom(clazz)) {
             if (LeashHitch.class.isAssignableFrom(clazz)) {
                 // SPIGOT-5732: LeashHitch has no direction and is always centered at a block
-                entity = new LeashKnotEntity(world, BlockPos.containing(x, y, z));
+                entity = new LeashKnotEntity(world, BlockPos.ofFloored(x, y, z));
             } else {
                 BlockFace face = BlockFace.SELF;
                 BlockFace[] faces = new BlockFace[]{BlockFace.EAST, BlockFace.NORTH, BlockFace.WEST, BlockFace.SOUTH};
@@ -901,15 +901,15 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
                     faces = new BlockFace[]{BlockFace.EAST, BlockFace.NORTH, BlockFace.WEST, BlockFace.SOUTH, BlockFace.UP, BlockFace.DOWN};
                 }
 
-                final BlockPos pos = BlockPos.containing(x, y, z);
+                final BlockPos pos = BlockPos.ofFloored(x, y, z);
                 for (BlockFace dir : faces) {
-                    net.minecraft.block.BlockState nmsBlock = getHandle().getBlockState(pos.relative(CraftBlock.blockFaceToNotch(dir)));
-                    if (nmsBlock.isSolid() || AbstractRedstoneGateBlock.isDiode(nmsBlock)) {
+                    net.minecraft.block.BlockState nmsBlock = getHandle().getBlockState(pos.offset(CraftBlock.blockFaceToNotch(dir)));
+                    if (nmsBlock.isSolid() || AbstractRedstoneGateBlock.isRedstoneGate(nmsBlock)) {
                         boolean taken = false;
                         Box bb = (ItemFrame.class.isAssignableFrom(clazz))
                                 ? ItemFrameEntity.calculateBoundingBox(null, pos, CraftBlock.blockFaceToNotch(dir).getOpposite(), width, height)
                                 : AbstractDecorationEntity.calculateBoundingBox(null, pos, CraftBlock.blockFaceToNotch(dir).getOpposite(), width, height);
-                        List<net.minecraft.entity.Entity> list = (List<net.minecraft.entity.Entity>) getHandle().getEntities(null, bb);
+                        List<net.minecraft.entity.Entity> list = (List<net.minecraft.entity.Entity>) getHandle().getOtherEntities(null, bb);
                         for (Iterator<net.minecraft.entity.Entity> it = list.iterator(); !taken && it.hasNext(); ) {
                             net.minecraft.entity.Entity e = it.next();
                             if (e instanceof AbstractDecorationEntity) {
@@ -934,17 +934,17 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
                 Direction dir = CraftBlock.blockFaceToNotch(face).getOpposite();
                 if (Painting.class.isAssignableFrom(clazz)) {
                     if (isNormalWorld() && randomizeData) {
-                        entity = PaintingEntity.create(world, pos, dir).orElse(null);
+                        entity = PaintingEntity.placePainting(world, pos, dir).orElse(null);
                     } else {
                         entity = new PaintingEntity(net.minecraft.entity.EntityType.PAINTING, getHandle().getMinecraftWorld());
-                        entity.absMoveTo(x, y, z, yaw, pitch);
-                        ((PaintingEntity) entity).setDirection(dir);
+                        entity.updatePositionAndAngles(x, y, z, yaw, pitch);
+                        ((PaintingEntity) entity).setFacing(dir);
                     }
                 } else if (ItemFrame.class.isAssignableFrom(clazz)) {
                     if (GlowItemFrame.class.isAssignableFrom(clazz)) {
-                        entity = new net.minecraft.entity.decoration.GlowItemFrameEntity(world, BlockPos.containing(x, y, z), dir);
+                        entity = new net.minecraft.entity.decoration.GlowItemFrameEntity(world, BlockPos.ofFloored(x, y, z), dir);
                     } else {
-                        entity = new ItemFrameEntity(world, BlockPos.containing(x, y, z), dir);
+                        entity = new ItemFrameEntity(world, BlockPos.ofFloored(x, y, z), dir);
                     }
                 }
             }
@@ -954,17 +954,17 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             entity = new ExperienceOrbEntity(world, x, y, z, 0);
         } else if (LightningStrike.class.isAssignableFrom(clazz)) {
             entity = net.minecraft.entity.EntityType.LIGHTNING_BOLT.create(world);
-            entity.moveTo(location.getX(), location.getY(), location.getZ());
+            entity.refreshPositionAfterTeleport(location.getX(), location.getY(), location.getZ());
         } else if (AreaEffectCloud.class.isAssignableFrom(clazz)) {
             entity = new AreaEffectCloudEntity(world, x, y, z);
         } else if (EvokerFangs.class.isAssignableFrom(clazz)) {
             entity = new EvokerFangsEntity(world, x, y, z, (float) Math.toRadians(yaw), 0, null);
         } else if (Marker.class.isAssignableFrom(clazz)) {
             entity = net.minecraft.entity.EntityType.MARKER.create(world);
-            entity.setPos(x, y, z);
+            entity.setPosition(x, y, z);
         } else if (Interaction.class.isAssignableFrom(clazz)) {
             entity = net.minecraft.entity.EntityType.INTERACTION.create(world);
-            entity.setPos(x, y, z);
+            entity.setPosition(x, y, z);
         } else if (Display.class.isAssignableFrom(clazz)) {
             if (BlockDisplay.class.isAssignableFrom(clazz)) {
                 entity = net.minecraft.entity.EntityType.BLOCK_DISPLAY.create(world);
@@ -975,7 +975,7 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             }
 
             if (entity != null) {
-                entity.setPos(x, y, z);
+                entity.setPosition(x, y, z);
             }
         }
 

@@ -13,21 +13,21 @@ public class CraftCommandBlock extends CraftBlockEntityState<CommandBlockBlockEn
 
     @Override
     public String getCommand() {
-        return getSnapshot().getCommandBlock().getCommand();
+        return getSnapshot().getCommandExecutor().getCommand();
     }
 
     @Override
     public void setCommand(String command) {
-        getSnapshot().getCommandBlock().setCommand(command != null ? command : "");
+        getSnapshot().getCommandExecutor().setCommand(command != null ? command : "");
     }
 
     @Override
     public String getName() {
-        return CraftChatMessage.fromComponent(getSnapshot().getCommandBlock().getName());
+        return CraftChatMessage.fromComponent(getSnapshot().getCommandExecutor().getCustomName());
     }
 
     @Override
     public void setName(String name) {
-        getSnapshot().getCommandBlock().setName(CraftChatMessage.fromStringOrNull(name != null ? name : "@"));
+        getSnapshot().getCommandExecutor().setCustomName(CraftChatMessage.fromStringOrNull(name != null ? name : "@"));
     }
 }

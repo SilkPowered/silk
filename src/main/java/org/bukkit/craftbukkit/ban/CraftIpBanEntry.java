@@ -20,9 +20,9 @@ public final class CraftIpBanEntry implements BanEntry<InetAddress> {
     public CraftIpBanEntry(String target, BannedIpEntry entry, BannedIpList list) {
         this.list = list;
         this.target = target;
-        this.created = entry.getCreated() != null ? new Date(entry.getCreated().getTime()) : null;
+        this.created = entry.getCreationDate() != null ? new Date(entry.getCreationDate().getTime()) : null;
         this.source = entry.getSource();
-        this.expiration = entry.getExpires() != null ? new Date(entry.getExpires().getTime()) : null;
+        this.expiration = entry.getExpiryDate() != null ? new Date(entry.getExpiryDate().getTime()) : null;
         this.reason = entry.getReason();
     }
 

@@ -59,7 +59,7 @@ public final class CraftMapView implements MapView {
     @Override
     public World getWorld() {
         RegistryKey<net.minecraft.world.World> dimension = worldMap.dimension;
-        ServerWorld world = MinecraftServer.getServer().getLevel(dimension);
+        ServerWorld world = MinecraftServer.getServer().getWorld(dimension);
 
         if (world != null) {
             return world.getWorld();
@@ -73,7 +73,7 @@ public final class CraftMapView implements MapView {
 
     @Override
     public void setWorld(World world) {
-        worldMap.dimension = ((CraftWorld) world).getHandle().dimension();
+        worldMap.dimension = ((CraftWorld) world).getHandle().getRegistryKey();
         worldMap.uniqueId = world.getUID();
     }
 

@@ -15,11 +15,11 @@ public class CraftFluidTag extends CraftTag<net.minecraft.fluid.Fluid, Fluid> {
 
     @Override
     public boolean isTagged(Fluid fluid) {
-        return CraftMagicNumbers.getFluid(fluid).is(tag);
+        return CraftMagicNumbers.getFluid(fluid).isIn(tag);
     }
 
     @Override
     public Set<Fluid> getValues() {
-        return getHandle().stream().map((fluid) -> CraftMagicNumbers.getFluid(fluid.value())).collect(Collectors.toUnmodifiableSet());
+        return getHandle().stream().map((fluid) -> CraftMagicNumbers.getFluid(fluid.comp_349())).collect(Collectors.toUnmodifiableSet());
     }
 }

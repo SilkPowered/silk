@@ -116,9 +116,9 @@ public class CraftSign<T extends SignBlockEntity> extends CraftBlockEntityState<
         }
 
         SignBlockEntity handle = ((CraftSign<?>) sign).getTileEntity();
-        handle.setAllowedPlayerEditor(player.getUniqueId());
+        handle.setEditor(player.getUniqueId());
 
-        ((CraftPlayer) player).getHandle().openTextEdit(handle, Side.FRONT == side);
+        ((CraftPlayer) player).getHandle().a(handle, Side.FRONT == side);
     }
 
     public static Text[] sanitizeLines(String[] lines) {

@@ -51,23 +51,23 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
 
     @Override
     public double getJumpStrength() {
-        return getHandle().getCustomJump();
+        return getHandle().getJumpStrength();
     }
 
     @Override
     public void setJumpStrength(double strength) {
         Preconditions.checkArgument(strength >= 0, "Jump strength (%s) cannot be less than zero", strength);
-        getHandle().getAttribute(EntityAttributes.JUMP_STRENGTH).setBaseValue(strength);
+        getHandle().getAttributeInstance(EntityAttributes.JUMP_STRENGTH).setBaseValue(strength);
     }
 
     @Override
     public boolean isTamed() {
-        return getHandle().isTamed();
+        return getHandle().isTame();
     }
 
     @Override
     public void setTamed(boolean tamed) {
-        getHandle().setTamed(tamed);
+        getHandle().setTame(tamed);
     }
 
     @Override
@@ -89,21 +89,21 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
     }
 
     public UUID getOwnerUUID() {
-        return getHandle().getOwnerUUID();
+        return getHandle().U_();
     }
 
     public void setOwnerUUID(UUID uuid) {
-        getHandle().setOwnerUUID(uuid);
+        getHandle().setOwnerUuid(uuid);
     }
 
     @Override
     public boolean isEatingHaystack() {
-        return getHandle().isEating();
+        return getHandle().isEatingGrass();
     }
 
     @Override
     public void setEatingHaystack(boolean eatingHaystack) {
-        getHandle().setEating(eatingHaystack);
+        getHandle().setEatingGrass(eatingHaystack);
     }
 
     @Override

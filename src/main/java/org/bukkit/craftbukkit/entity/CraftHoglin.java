@@ -49,7 +49,7 @@ public class CraftHoglin extends CraftAnimals implements Hoglin, CraftEnemy {
 
     @Override
     public boolean isConverting() {
-        return getHandle().isConverting();
+        return getHandle().canConvert();
     }
 
     @Override

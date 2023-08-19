@@ -55,7 +55,7 @@ public class CraftInventoryCustom extends CraftInventory {
 
         public MinecraftInventory(InventoryHolder owner, int size, String title) {
             Preconditions.checkArgument(title != null, "title cannot be null");
-            this.items = DefaultedList.withSize(size, ItemStack.EMPTY);
+            this.items = DefaultedList.ofSize(size, ItemStack.EMPTY);
             this.title = title;
             this.viewers = new ArrayList<HumanEntity>();
             this.owner = owner;
@@ -63,56 +63,56 @@ public class CraftInventoryCustom extends CraftInventory {
         }
 
         @Override
-        public int getContainerSize() {
+        public int size() {
             return items.size();
         }
 
         @Override
-        public ItemStack getItem(int i) {
+        public ItemStack getStack(int i) {
             return items.get(i);
         }
 
         @Override
-        public ItemStack removeItem(int i, int j) {
-            ItemStack stack = this.getItem(i);
+        public ItemStack removeStack(int i, int j) {
+            ItemStack stack = this.getStack(i);
             ItemStack result;
             if (stack == ItemStack.EMPTY) return stack;
             if (stack.getCount() <= j) {
-                this.setItem(i, ItemStack.EMPTY);
+                this.setStack(i, ItemStack.EMPTY);
                 result = stack;
             } else {
                 result = CraftItemStack.copyNMSStack(stack, j);
-                stack.shrink(j);
+                stack.decrement(j);
             }
-            this.setChanged();
+            this.markDirty();
             return result;
         }
 
         @Override
-        public ItemStack removeItemNoUpdate(int i) {
-            ItemStack stack = this.getItem(i);
+        public ItemStack removeStack(int i) {
+            ItemStack stack = this.getStack(i);
             ItemStack result;
             if (stack == ItemStack.EMPTY) return stack;
             if (stack.getCount() <= 1) {
-                this.setItem(i, null);
+                this.setStack(i, null);
                 result = stack;
             } else {
                 result = CraftItemStack.copyNMSStack(stack, 1);
-                stack.shrink(1);
+                stack.decrement(1);
             }
             return result;
         }
 
         @Override
-        public void setItem(int i, ItemStack itemstack) {
+        public void setStack(int i, ItemStack itemstack) {
             items.set(i, itemstack);
-            if (itemstack != ItemStack.EMPTY && this.getMaxStackSize() > 0 && itemstack.getCount() > this.getMaxStackSize()) {
-                itemstack.setCount(this.getMaxStackSize());
+            if (itemstack != ItemStack.EMPTY && this.getMaxCountPerStack() > 0 && itemstack.getCount() > this.getMaxCountPerStack()) {
+                itemstack.setCount(this.getMaxCountPerStack());
             }
         }
 
         @Override
-        public int getMaxStackSize() {
+        public int getMaxCountPerStack() {
             return maxStack;
         }
 
@@ -122,10 +122,10 @@ public class CraftInventoryCustom extends CraftInventory {
         }
 
         @Override
-        public void setChanged() {}
+        public void markDirty() {}
 
         @Override
-        public boolean stillValid(PlayerEntity entityhuman) {
+        public boolean canPlayerUse(PlayerEntity entityhuman) {
             return true;
         }
 
@@ -159,22 +159,22 @@ public class CraftInventoryCustom extends CraftInventory {
         }
 
         @Override
-        public boolean canPlaceItem(int i, ItemStack itemstack) {
+        public boolean isValid(int i, ItemStack itemstack) {
             return true;
         }
 
         @Override
-        public void startOpen(PlayerEntity entityHuman) {
+        public void onOpen(PlayerEntity entityHuman) {
 
         }
 
         @Override
-        public void stopOpen(PlayerEntity entityHuman) {
+        public void onClose(PlayerEntity entityHuman) {
 
         }
 
         @Override
-        public void clearContent() {
+        public void clear() {
             items.clear();
         }
 

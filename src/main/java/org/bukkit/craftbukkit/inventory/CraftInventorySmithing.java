@@ -38,7 +38,7 @@ public class CraftInventorySmithing extends CraftResultInventory implements Smit
 
     @Override
     public Recipe getRecipe() {
-        net.minecraft.recipe.Recipe recipe = getResultInventory().getRecipeUsed();
+        net.minecraft.recipe.Recipe recipe = getResultInventory().d();
         return (recipe == null) ? null : recipe.toBukkitRecipe();
     }
 }

@@ -212,7 +212,7 @@ public enum CraftParticle {
                 source = new BlockPositionSource(CraftLocation.toBlockPosition(destination));
             } else if (vibration.getDestination() instanceof Vibration.Destination.EntityDestination) {
                 Entity destination = ((CraftEntity) ((Vibration.Destination.EntityDestination) vibration.getDestination()).getEntity()).getHandle();
-                source = new EntityPositionSource(destination, destination.getEyeHeight());
+                source = new EntityPositionSource(destination, destination.getStandingEyeHeight());
             } else {
                 throw new IllegalArgumentException("Unknown vibration destination " + vibration.getDestination());
             }
@@ -233,6 +233,6 @@ public enum CraftParticle {
     }
 
     public static Particle toBukkit(net.minecraft.particle.ParticleType nms) {
-        return particles.inverse().get(Registries.PARTICLE_TYPE.getKey(nms));
+        return particles.inverse().get(Registries.PARTICLE_TYPE.getId(nms));
     }
 }

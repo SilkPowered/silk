@@ -41,7 +41,7 @@ public class CraftChestBoat extends CraftBoat implements org.bukkit.entity.Chest
 
     @Override
     public LootTable getLootTable() {
-        Identifier nmsTable = getHandle().getLootTable();
+        Identifier nmsTable = getHandle().A();
         if (nmsTable == null) {
             return null; // return empty loot table?
         }
@@ -57,12 +57,12 @@ public class CraftChestBoat extends CraftBoat implements org.bukkit.entity.Chest
 
     @Override
     public long getSeed() {
-        return getHandle().getLootTableSeed();
+        return getHandle().C();
     }
 
     private void setLootTable(LootTable table, long seed) {
         Identifier newKey = (table == null) ? null : CraftNamespacedKey.toMinecraft(table.getKey());
-        getHandle().setLootTable(newKey);
-        getHandle().setLootTableSeed(seed);
+        getHandle().a(newKey);
+        getHandle().a(seed);
     }
 }

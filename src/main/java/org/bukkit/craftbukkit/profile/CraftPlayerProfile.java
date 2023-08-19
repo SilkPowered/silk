@@ -121,7 +121,7 @@ public final class CraftPlayerProfile implements PlayerProfile {
 
     @Override
     public CompletableFuture<PlayerProfile> update() {
-        return CompletableFuture.supplyAsync(this::getUpdatedProfile, Util.backgroundExecutor());
+        return CompletableFuture.supplyAsync(this::getUpdatedProfile, Util.getMainWorkerExecutor());
     }
 
     private CraftPlayerProfile getUpdatedProfile() {
@@ -130,7 +130,7 @@ public final class CraftPlayerProfile implements PlayerProfile {
 
         // If missing, look up the uuid by name:
         if (profile.getId() == null) {
-            profile = server.getProfileCache().get(profile.getName()).orElse(profile);
+            profile = server.getUserCache().findByName(profile.getName()).orElse(profile);
         }
 
         // Look up properties such as the textures:

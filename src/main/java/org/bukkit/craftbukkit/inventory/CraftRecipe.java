@@ -29,7 +29,7 @@ public interface CraftRecipe extends Recipe {
             throw new IllegalArgumentException("Unknown recipe stack instance " + bukkit);
         }
 
-        stack.getItems();
+        stack.getMatchingStacks();
         if (requireNotEmpty) {
             Preconditions.checkArgument(stack.itemStacks.length != 0, "Recipe requires at least one non-air choice");
         }
@@ -38,7 +38,7 @@ public interface CraftRecipe extends Recipe {
     }
 
     public static RecipeChoice toBukkit(Ingredient list) {
-        list.getItems();
+        list.getMatchingStacks();
 
         if (list.itemStacks.length == 0) {
             return null;

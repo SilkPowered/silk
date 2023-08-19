@@ -30,7 +30,7 @@ public class CraftBell extends CraftBlockEntityState<BellBlockEntity> implements
         net.minecraft.entity.Entity nmsEntity = (entity != null) ? ((CraftEntity) entity).getHandle() : null;
         Direction enumDirection = CraftBlock.blockFaceToNotch(direction);
 
-        return ((BellBlock) Blocks.BELL).attemptToRing(nmsEntity, world.getHandle(), getPosition(), enumDirection);
+        return ((BellBlock) Blocks.BELL).ring(nmsEntity, world.getHandle(), getPosition(), enumDirection);
     }
 
     @Override

@@ -49,17 +49,17 @@ public class CraftDragonBattle implements DragonBattle {
 
     @Override
     public boolean generateEndPortal(boolean withPortals) {
-        if (handle.portalLocation != null || handle.findExitPortal() != null) {
+        if (handle.portalLocation != null || handle.findEndPortal() != null) {
             return false;
         }
 
-        this.handle.spawnExitPortal(withPortals);
+        this.handle.generateEndPortal(withPortals);
         return true;
     }
 
     @Override
     public boolean hasBeenPreviouslyKilled() {
-        return handle.hasPreviouslyKilledDragon();
+        return handle.hasPreviouslyKilled();
     }
 
     @Override
@@ -72,9 +72,9 @@ public class CraftDragonBattle implements DragonBattle {
         if (hasBeenPreviouslyKilled() && getRespawnPhase() == RespawnPhase.NONE) {
             // Copy from EnderDragonBattle#tryRespawn for generate exit portal if not exists
             if (this.handle.portalLocation == null) {
-                BlockPattern.Result shapedetector_shapedetectorcollection = this.handle.findExitPortal();
+                BlockPattern.Result shapedetector_shapedetectorcollection = this.handle.findEndPortal();
                 if (shapedetector_shapedetectorcollection == null) {
-                    this.handle.spawnExitPortal(true);
+                    this.handle.generateEndPortal(true);
                 }
             }
 
@@ -106,13 +106,13 @@ public class CraftDragonBattle implements DragonBattle {
             return false;
         }
 
-        this.handle.setRespawnStage(toNMSRespawnPhase(phase));
+        this.handle.setSpawnState(toNMSRespawnPhase(phase));
         return true;
     }
 
     @Override
     public void resetCrystals() {
-        this.handle.resetSpikeCrystals();
+        this.handle.resetEndCrystals();
     }
 
     @Override

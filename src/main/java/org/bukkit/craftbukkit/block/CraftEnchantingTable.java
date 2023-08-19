@@ -14,7 +14,7 @@ public class CraftEnchantingTable extends CraftBlockEntityState<EnchantingTableB
     @Override
     public String getCustomName() {
         EnchantingTableBlockEntity enchant = this.getSnapshot();
-        return enchant.hasCustomName() ? CraftChatMessage.fromComponent(enchant.getCustomName()) : null;
+        return enchant.hasCustomName() ? CraftChatMessage.fromComponent(enchant.ab()) : null;
     }
 
     @Override

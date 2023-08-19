@@ -24,7 +24,7 @@ public class CraftDisplay extends CraftEntity implements Display {
 
     @Override
     public Transformation getTransformation() {
-        net.minecraft.util.math.AffineTransformation nms = net.minecraft.entity.decoration.DisplayEntity.createTransformation(getHandle().getEntityData());
+        net.minecraft.util.math.AffineTransformation nms = net.minecraft.entity.decoration.DisplayEntity.getTransformation(getHandle().getDataTracker());
 
         return new Transformation(nms.getTranslation(), nms.getLeftRotation(), nms.getScale(), nms.getRightRotation());
     }
@@ -85,44 +85,44 @@ public class CraftDisplay extends CraftEntity implements Display {
 
     @Override
     public float getDisplayWidth() {
-        return getHandle().getWidth();
+        return getHandle().getDisplayWidth();
     }
 
     @Override
     public void setDisplayWidth(float width) {
-        getHandle().setWidth(width);
+        getHandle().setDisplayWidth(width);
     }
 
     @Override
     public float getDisplayHeight() {
-        return getHandle().getHeight();
+        return getHandle().getDisplayHeight();
     }
 
     @Override
     public void setDisplayHeight(float height) {
-        getHandle().setHeight(height);
+        getHandle().setDisplayHeight(height);
     }
 
     @Override
     public int getInterpolationDelay() {
-        return getHandle().getInterpolationDelay();
+        return getHandle().getStartInterpolation();
     }
 
     @Override
     public void setInterpolationDelay(int ticks) {
-        getHandle().setInterpolationDelay(ticks);
+        getHandle().setStartInterpolation(ticks);
     }
 
     @Override
     public Billboard getBillboard() {
-        return Billboard.valueOf(getHandle().getBillboardConstraints().name());
+        return Billboard.valueOf(getHandle().getBillboardMode().name());
     }
 
     @Override
     public void setBillboard(Billboard billboard) {
         Preconditions.checkArgument(billboard != null, "Billboard cannot be null");
 
-        getHandle().setBillboardConstraints(net.minecraft.entity.decoration.DisplayEntity.BillboardMode.valueOf(billboard.name()));
+        getHandle().setBillboardMode(net.minecraft.entity.decoration.DisplayEntity.BillboardMode.valueOf(billboard.name()));
     }
 
     @Override
@@ -143,17 +143,17 @@ public class CraftDisplay extends CraftEntity implements Display {
 
     @Override
     public Brightness getBrightness() {
-        net.minecraft.entity.decoration.Brightness nms = getHandle().getBrightnessOverride();
+        net.minecraft.entity.decoration.Brightness nms = getHandle().getBrightnessUnpacked();
 
-        return (nms != null) ? new Brightness(nms.block(), nms.sky()) : null;
+        return (nms != null) ? new Brightness(nms.comp_1240(), nms.comp_1241()) : null;
     }
 
     @Override
     public void setBrightness(Brightness brightness) {
         if (brightness != null) {
-            getHandle().setBrightnessOverride(new net.minecraft.entity.decoration.Brightness(brightness.getBlockLight(), brightness.getSkyLight()));
+            getHandle().setBrightness(new net.minecraft.entity.decoration.Brightness(brightness.getBlockLight(), brightness.getSkyLight()));
         } else {
-            getHandle().setBrightnessOverride(null);
+            getHandle().setBrightness(null);
         }
     }
 }

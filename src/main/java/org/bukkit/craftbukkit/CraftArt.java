@@ -14,8 +14,8 @@ public class CraftArt {
 
     static {
         ImmutableBiMap.Builder<RegistryEntry<PaintingVariant>, Art> artworkBuilder = ImmutableBiMap.builder();
-        for (RegistryKey<PaintingVariant> key : Registries.PAINTING_VARIANT.registryKeySet()) {
-            artworkBuilder.put(Registries.PAINTING_VARIANT.getHolderOrThrow(key), Art.getByName(key.location().getPath()));
+        for (RegistryKey<PaintingVariant> key : Registries.PAINTING_VARIANT.getKeys()) {
+            artworkBuilder.put(Registries.PAINTING_VARIANT.getHolderOrThrow(key), Art.getByName(key.getValue().getPath()));
         }
 
         artwork = artworkBuilder.build();

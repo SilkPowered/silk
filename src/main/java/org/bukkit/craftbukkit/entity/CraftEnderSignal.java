@@ -27,13 +27,13 @@ public class CraftEnderSignal extends CraftEntity implements EnderSignal {
 
     @Override
     public Location getTargetLocation() {
-        return new Location(getWorld(), getHandle().tx, getHandle().ty, getHandle().tz, getHandle().getYRot(), getHandle().getXRot());
+        return new Location(getWorld(), getHandle().tx, getHandle().ty, getHandle().tz, getHandle().getYaw(), getHandle().getPitch());
     }
 
     @Override
     public void setTargetLocation(Location location) {
         Preconditions.checkArgument(getWorld().equals(location.getWorld()), "Cannot target EnderSignal across worlds");
-        getHandle().signalTo(CraftLocation.toBlockPosition(location));
+        getHandle().initTargetPos(CraftLocation.toBlockPosition(location));
     }
 
     @Override
@@ -48,12 +48,12 @@ public class CraftEnderSignal extends CraftEntity implements EnderSignal {
 
     @Override
     public ItemStack getItem() {
-        return CraftItemStack.asBukkitCopy(getHandle().getItem());
+        return CraftItemStack.asBukkitCopy(getHandle().j());
     }
 
     @Override
     public void setItem(ItemStack item) {
-        getHandle().setItem(item != null ? CraftItemStack.asNMSCopy(item) : Items.ENDER_EYE.getDefaultInstance());
+        getHandle().setItem(item != null ? CraftItemStack.asNMSCopy(item) : Items.ENDER_EYE.getDefaultStack());
     }
 
     @Override

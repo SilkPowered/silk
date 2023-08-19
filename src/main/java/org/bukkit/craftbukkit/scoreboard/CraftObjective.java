@@ -75,13 +75,13 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         ScoreboardObjective objective = this.objective;
 
         for (int i = 0; i < CraftScoreboardTranslations.MAX_DISPLAY_SLOT; i++) {
-            if (board.getDisplayObjective(i) == objective) {
-                board.setDisplayObjective(i, null);
+            if (board.getObjectiveForSlot(i) == objective) {
+                board.setObjectiveSlot(i, null);
             }
         }
         if (slot != null) {
             int slotNumber = CraftScoreboardTranslations.fromBukkitSlot(slot);
-            board.setDisplayObjective(slotNumber, getHandle());
+            board.setObjectiveSlot(slotNumber, getHandle());
         }
     }
 
@@ -92,7 +92,7 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
         ScoreboardObjective objective = this.objective;
 
         for (int i = 0; i < CraftScoreboardTranslations.MAX_DISPLAY_SLOT; i++) {
-            if (board.getDisplayObjective(i) == objective) {
+            if (board.getObjectiveForSlot(i) == objective) {
                 return CraftScoreboardTranslations.toBukkitSlot(i);
             }
         }
@@ -140,7 +140,7 @@ final class CraftObjective extends CraftScoreboardComponent implements Objective
 
     @Override
     CraftScoreboard checkState() {
-        Preconditions.checkState(getScoreboard().board.getObjective(objective.getName()) != null, "Unregistered scoreboard component");
+        Preconditions.checkState(getScoreboard().board.getNullableObjective(objective.getName()) != null, "Unregistered scoreboard component");
 
         return getScoreboard();
     }

@@ -14,7 +14,7 @@ public class CraftCreeper extends CraftMonster implements Creeper {
 
     @Override
     public boolean isPowered() {
-        return getHandle().isPowered();
+        return getHandle().a();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CraftCreeper extends CraftMonster implements Creeper {
 
     @Override
     public void explode() {
-        getHandle().explodeCreeper();
+        getHandle().explode();
     }
 
     @Override

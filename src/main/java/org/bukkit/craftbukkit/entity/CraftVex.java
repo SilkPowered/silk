@@ -31,22 +31,22 @@ public class CraftVex extends CraftMonster implements Vex {
 
     @Override
     public void setCharging(boolean charging) {
-        getHandle().setIsCharging(charging);
+        getHandle().setCharging(charging);
     }
 
     @Override
     public Location getBound() {
-        BlockPos blockPosition = getHandle().getBoundOrigin();
+        BlockPos blockPosition = getHandle().getBounds();
         return (blockPosition == null) ? null : CraftLocation.toBukkit(blockPosition, getWorld());
     }
 
     @Override
     public void setBound(Location location) {
         if (location == null) {
-            getHandle().setBoundOrigin(null);
+            getHandle().setBounds(null);
         } else {
             Preconditions.checkArgument(getWorld().equals(location.getWorld()), "The bound world cannot be different to the entity's world.");
-            getHandle().setBoundOrigin(CraftLocation.toBlockPosition(location));
+            getHandle().setBounds(CraftLocation.toBlockPosition(location));
         }
     }
 
@@ -57,7 +57,7 @@ public class CraftVex extends CraftMonster implements Vex {
 
     @Override
     public void setLifeTicks(int lifeTicks) {
-        getHandle().setLimitedLife(lifeTicks);
+        getHandle().setLifeTicks(lifeTicks);
         if (lifeTicks < 0) {
             getHandle().hasLimitedLife = false;
         }

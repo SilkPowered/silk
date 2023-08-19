@@ -22,9 +22,9 @@ public class CraftWorldInfo implements WorldInfo {
         this.name = worldDataServer.getLevelName();
         this.uuid = WorldUUID.getUUID(session.levelDirectory.path().toFile());
         this.environment = environment;
-        this.seed = ((LevelProperties) worldDataServer).worldGenOptions().seed();
-        this.minHeight = dimensionManager.minY();
-        this.maxHeight = dimensionManager.minY() + dimensionManager.height();
+        this.seed = ((LevelProperties) worldDataServer).A().getSeed();
+        this.minHeight = dimensionManager.comp_651();
+        this.maxHeight = dimensionManager.comp_651() + dimensionManager.comp_652();
     }
 
     public CraftWorldInfo(String name, UUID uuid, World.Environment environment, long seed, int minHeight, int maxHeight) {

@@ -137,7 +137,7 @@ public class CraftMapColorCache implements MapPalette.MapColorCache {
 
             cached = true;
             logger.info("Map color cache build successfully");
-        }, Util.backgroundExecutor());
+        }, Util.getMainWorkerExecutor());
     }
 
     private int toInt(Color color) {

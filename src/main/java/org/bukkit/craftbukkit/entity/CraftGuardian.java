@@ -30,7 +30,7 @@ public class CraftGuardian extends CraftMonster implements Guardian {
 
         // clean up laser target, when target is removed
         if (target == null) {
-            getHandle().setActiveAttackTarget(0);
+            getHandle().setBeamTarget(0);
         }
     }
 
@@ -42,9 +42,9 @@ public class CraftGuardian extends CraftMonster implements Guardian {
                 return false;
             }
 
-            getHandle().setActiveAttackTarget(target.getEntityId());
+            getHandle().setBeamTarget(target.getEntityId());
         } else {
-            getHandle().setActiveAttackTarget(0);
+            getHandle().setBeamTarget(0);
         }
 
         return true;
@@ -52,12 +52,12 @@ public class CraftGuardian extends CraftMonster implements Guardian {
 
     @Override
     public boolean hasLaser() {
-        return getHandle().hasActiveAttackTarget();
+        return getHandle().hasBeamTarget();
     }
 
     @Override
     public int getLaserDuration() {
-        return getHandle().getAttackDuration();
+        return getHandle().getWarmupTime();
     }
 
     @Override
@@ -88,6 +88,6 @@ public class CraftGuardian extends CraftMonster implements Guardian {
 
     @Override
     public boolean isMoving() {
-        return getHandle().isMoving();
+        return getHandle().areSpikesRetracted();
     }
 }

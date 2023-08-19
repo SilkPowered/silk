@@ -28,12 +28,12 @@ public class CraftSkeletonHorse extends CraftAbstractHorse implements SkeletonHo
 
     @Override
     public boolean isTrapped() {
-        return getHandle().isTrap();
+        return getHandle().isTrapped();
     }
 
     @Override
     public void setTrapped(boolean trapped) {
-        getHandle().setTrap(trapped);
+        getHandle().setTrapped(trapped);
     }
 
     @Override

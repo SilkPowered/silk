@@ -22,11 +22,11 @@ public class CraftGhast extends CraftFlying implements Ghast, CraftEnemy {
 
     @Override
     public boolean isCharging() {
-        return getHandle().isCharging();
+        return getHandle().isShooting();
     }
 
     @Override
     public void setCharging(boolean flag) {
-        getHandle().setCharging(flag);
+        getHandle().setShooting(flag);
     }
 }

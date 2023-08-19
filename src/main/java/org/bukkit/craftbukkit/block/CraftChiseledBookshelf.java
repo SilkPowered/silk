@@ -65,6 +65,6 @@ public class CraftChiseledBookshelf extends CraftBlockEntityState<ChiseledBooksh
             return -1;
         }
 
-        return ChiseledBookshelfBlock.getHitSlot(faceVector);
+        return ChiseledBookshelfBlock.getSlotForHitPos(faceVector);
     }
 }

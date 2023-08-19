@@ -24,27 +24,27 @@ public class CraftInteraction extends CraftEntity implements Interaction {
 
     @Override
     public float getInteractionWidth() {
-        return getHandle().getWidth();
+        return getHandle().getInteractionWidth();
     }
 
     @Override
     public void setInteractionWidth(float width) {
-        getHandle().setWidth(width);
+        getHandle().setInteractionWidth(width);
     }
 
     @Override
     public float getInteractionHeight() {
-        return getHandle().getHeight();
+        return getHandle().getInteractionHeight();
     }
 
     @Override
     public void setInteractionHeight(float height) {
-        getHandle().setHeight(height);
+        getHandle().setInteractionHeight(height);
     }
 
     @Override
     public boolean isResponsive() {
-        return getHandle().getResponse();
+        return getHandle().shouldRespond();
     }
 
     @Override
@@ -56,14 +56,14 @@ public class CraftInteraction extends CraftEntity implements Interaction {
     public PreviousInteraction getLastAttack() {
         net.minecraft.entity.decoration.InteractionEntity.Interaction last = getHandle().attack;
 
-        return (last != null) ? new CraftPreviousInteraction(last.player(), last.timestamp()) : null;
+        return (last != null) ? new CraftPreviousInteraction(last.comp_1284(), last.comp_1285()) : null;
     }
 
     @Override
     public PreviousInteraction getLastInteraction() {
         net.minecraft.entity.decoration.InteractionEntity.Interaction last = getHandle().interaction;
 
-        return (last != null) ? new CraftPreviousInteraction(last.player(), last.timestamp()) : null;
+        return (last != null) ? new CraftPreviousInteraction(last.comp_1284(), last.comp_1285()) : null;
     }
 
     private static class CraftPreviousInteraction implements PreviousInteraction {

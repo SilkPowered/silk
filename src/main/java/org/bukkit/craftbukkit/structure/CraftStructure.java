@@ -68,7 +68,7 @@ public class CraftStructure implements Structure {
         definedstructureinfo.palette = palette;
 
         BlockPos blockPosition = CraftBlockVector.toBlockPosition(location);
-        structure.placeInWorld(((CraftRegionAccessor) regionAccessor).getHandle(), blockPosition, blockPosition, definedstructureinfo, randomSource, 2);
+        structure.place(((CraftRegionAccessor) regionAccessor).getHandle(), blockPosition, blockPosition, definedstructureinfo, randomSource, 2);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class CraftStructure implements Structure {
         Preconditions.checkArgument(size != null, "BlockVector size cannot be null");
         Preconditions.checkArgument(size.getBlockX() >= 1 && size.getBlockY() >= 1 && size.getBlockZ() >= 1, "Size must be at least 1x1x1 but was %sx%sx%s", size.getBlockX(), size.getBlockY(), size.getBlockZ());
 
-        structure.fillFromWorld(((CraftWorld) world).getHandle(), CraftLocation.toBlockPosition(origin), CraftBlockVector.toBlockPosition(size), includeEntities, Blocks.STRUCTURE_VOID);
+        structure.saveFromWorld(((CraftWorld) world).getHandle(), CraftLocation.toBlockPosition(origin), CraftBlockVector.toBlockPosition(size), includeEntities, Blocks.STRUCTURE_VOID);
     }
 
     @Override
@@ -103,8 +103,8 @@ public class CraftStructure implements Structure {
     public List<Entity> getEntities() {
         List<Entity> entities = new ArrayList<>();
         for (StructureTemplate.StructureEntityInfo entity : structure.entityInfoList) {
-            EntityType.create(entity.nbt, ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle()).ifPresent(dummyEntity -> {
-                dummyEntity.setPos(entity.pos.x, entity.pos.y, entity.pos.z);
+            EntityType.getEntityFromNbt(entity.nbt, ((CraftWorld) Bukkit.getServer().getWorlds().get(0)).getHandle()).ifPresent(dummyEntity -> {
+                dummyEntity.setPosition(entity.pos.x, entity.pos.y, entity.pos.z);
                 entities.add(dummyEntity.getBukkitEntity());
             });
         }

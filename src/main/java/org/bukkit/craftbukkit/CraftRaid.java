@@ -26,7 +26,7 @@ public final class CraftRaid implements Raid {
 
     @Override
     public boolean isStarted() {
-        return handle.isStarted();
+        return handle.hasStarted();
     }
 
     @Override
@@ -41,7 +41,7 @@ public final class CraftRaid implements Raid {
 
     @Override
     public void setBadOmenLevel(int badOmenLevel) {
-        int max = handle.getMaxBadOmenLevel();
+        int max = handle.getMaxAcceptableBadOmenLevel();
         Preconditions.checkArgument(0 <= badOmenLevel && badOmenLevel <= max, "Bad Omen level must be between 0 and %s", max);
         handle.badOmenLevel = badOmenLevel;
     }
@@ -49,17 +49,17 @@ public final class CraftRaid implements Raid {
     @Override
     public Location getLocation() {
         BlockPos pos = handle.getCenter();
-        World world = handle.getLevel();
+        World world = handle.getWorld();
         return CraftLocation.toBukkit(pos, world.getWorld());
     }
 
     @Override
     public RaidStatus getStatus() {
-        if (handle.isStopped()) {
+        if (handle.hasStopped()) {
             return RaidStatus.STOPPED;
-        } else if (handle.isVictory()) {
+        } else if (handle.hasWon()) {
             return RaidStatus.VICTORY;
-        } else if (handle.isLoss()) {
+        } else if (handle.hasLost()) {
             return RaidStatus.LOSS;
         } else {
             return RaidStatus.ONGOING;
@@ -83,7 +83,7 @@ public final class CraftRaid implements Raid {
 
     @Override
     public float getTotalHealth() {
-        return handle.getHealthOfLivingRaiders();
+        return handle.getCurrentRaiderHealth();
     }
 
     @Override

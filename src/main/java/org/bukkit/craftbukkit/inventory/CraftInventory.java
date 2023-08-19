@@ -43,12 +43,12 @@ public class CraftInventory implements Inventory {
 
     @Override
     public int getSize() {
-        return getInventory().getContainerSize();
+        return getInventory().size();
     }
 
     @Override
     public ItemStack getItem(int index) {
-        net.minecraft.item.ItemStack item = getInventory().getItem(index);
+        net.minecraft.item.ItemStack item = getInventory().getStack(index);
         return item.isEmpty() ? null : CraftItemStack.asCraftMirror(item);
     }
 
@@ -96,7 +96,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public void setItem(int index, ItemStack item) {
-        getInventory().setItem(index, CraftItemStack.asNMSCopy(item));
+        getInventory().setStack(index, CraftItemStack.asNMSCopy(item));
     }
 
     @Override
@@ -394,7 +394,7 @@ public class CraftInventory implements Inventory {
     }
 
     private int getMaxItemStack() {
-        return getInventory().getMaxStackSize();
+        return getInventory().getMaxCountPerStack();
     }
 
     @Override
@@ -453,7 +453,7 @@ public class CraftInventory implements Inventory {
     public InventoryType getType() {
         // Thanks to Droppers extending Dispensers, Blast Furnaces & Smokers extending Furnace, order is important.
         if (inventory instanceof RecipeInputInventory) {
-            return inventory.getContainerSize() >= 9 ? InventoryType.WORKBENCH : InventoryType.CRAFTING;
+            return inventory.size() >= 9 ? InventoryType.WORKBENCH : InventoryType.CRAFTING;
         } else if (inventory instanceof PlayerInventory) {
             return InventoryType.PLAYER;
         } else if (inventory instanceof DropperBlockEntity) {
@@ -516,7 +516,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public int getMaxStackSize() {
-        return inventory.getMaxStackSize();
+        return inventory.getMaxCountPerStack();
     }
 
     @Override

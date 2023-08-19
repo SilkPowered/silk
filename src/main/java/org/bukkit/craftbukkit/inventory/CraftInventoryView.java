@@ -59,9 +59,9 @@ public class CraftInventoryView extends InventoryView {
     public void setItem(int slot, ItemStack item) {
         net.minecraft.item.ItemStack stack = CraftItemStack.asNMSCopy(item);
         if (slot >= 0) {
-            container.getSlot(slot).set(stack);
+            container.getSlot(slot).setStackNoCallbacks(stack);
         } else {
-            player.getHandle().drop(stack, false);
+            player.getHandle().dropItem(stack, false);
         }
     }
 
@@ -70,7 +70,7 @@ public class CraftInventoryView extends InventoryView {
         if (slot < 0) {
             return null;
         }
-        return CraftItemStack.asCraftMirror(container.getSlot(slot).getItem());
+        return CraftItemStack.asCraftMirror(container.getSlot(slot).getStack());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class CraftInventoryView extends InventoryView {
         final ServerPlayerEntity entityPlayer = (ServerPlayerEntity) ((CraftHumanEntity) view.getPlayer()).getHandle();
         final int containerId = entityPlayer.containerMenu.containerId;
         final ScreenHandlerType<?> windowType = CraftContainer.getNotchInventoryType(view.getTopInventory());
-        entityPlayer.connection.send(new OpenScreenS2CPacket(containerId, windowType, CraftChatMessage.fromString(title)[0]));
+        entityPlayer.connection.a(new OpenScreenS2CPacket(containerId, windowType, CraftChatMessage.fromString(title)[0]));
         ((Player) view.getPlayer()).updateInventory();
     }
 }

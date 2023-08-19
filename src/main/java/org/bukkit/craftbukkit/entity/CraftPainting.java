@@ -31,11 +31,11 @@ public class CraftPainting extends CraftHanging implements Painting {
         PaintingEntity painting = this.getHandle();
         RegistryEntry<PaintingVariant> oldArt = painting.getVariant();
         painting.setVariant(CraftArt.BukkitToNotch(art));
-        painting.setDirection(painting.getDirection());
-        if (!force && !getHandle().generation && !painting.survives()) {
+        painting.setFacing(painting.cB());
+        if (!force && !getHandle().generation && !painting.canStayAttached()) {
             // Revert painting since it doesn't fit
             painting.setVariant(oldArt);
-            painting.setDirection(painting.getDirection());
+            painting.setFacing(painting.cB());
             return false;
         }
         this.update();

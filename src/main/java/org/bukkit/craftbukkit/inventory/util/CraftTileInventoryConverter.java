@@ -48,7 +48,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            AbstractFurnaceBlockEntity furnace = new FurnaceBlockEntity(BlockPos.ZERO, Blocks.FURNACE.defaultBlockState()); // TODO: customize this if required
+            AbstractFurnaceBlockEntity furnace = new FurnaceBlockEntity(BlockPos.ZERO, Blocks.FURNACE.getDefaultState()); // TODO: customize this if required
             return furnace;
         }
 
@@ -69,7 +69,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            return new BrewingStandBlockEntity(BlockPos.ZERO, Blocks.BREWING_STAND.defaultBlockState());
+            return new BrewingStandBlockEntity(BlockPos.ZERO, Blocks.BREWING_STAND.getDefaultState());
         }
 
         @Override
@@ -92,7 +92,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            return new DispenserBlockEntity(BlockPos.ZERO, Blocks.DISPENSER.defaultBlockState());
+            return new DispenserBlockEntity(BlockPos.ZERO, Blocks.DISPENSER.getDefaultState());
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            return new DropperBlockEntity(BlockPos.ZERO, Blocks.DROPPER.defaultBlockState());
+            return new DropperBlockEntity(BlockPos.ZERO, Blocks.DROPPER.getDefaultState());
         }
     }
 
@@ -108,7 +108,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            return new HopperBlockEntity(BlockPos.ZERO, Blocks.HOPPER.defaultBlockState());
+            return new HopperBlockEntity(BlockPos.ZERO, Blocks.HOPPER.getDefaultState());
         }
     }
 
@@ -116,7 +116,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            return new BlastFurnaceBlockEntity(BlockPos.ZERO, Blocks.BLAST_FURNACE.defaultBlockState());
+            return new BlastFurnaceBlockEntity(BlockPos.ZERO, Blocks.BLAST_FURNACE.getDefaultState());
         }
     }
 
@@ -124,7 +124,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            return new LecternBlockEntity(BlockPos.ZERO, Blocks.LECTERN.defaultBlockState()).bookAccess;
+            return new LecternBlockEntity(BlockPos.ZERO, Blocks.LECTERN.getDefaultState()).bookAccess;
         }
     }
 
@@ -132,7 +132,7 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
 
         @Override
         public net.minecraft.inventory.Inventory getTileEntity() {
-            return new SmokerBlockEntity(BlockPos.ZERO, Blocks.SMOKER.defaultBlockState());
+            return new SmokerBlockEntity(BlockPos.ZERO, Blocks.SMOKER.getDefaultState());
         }
     }
 }

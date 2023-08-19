@@ -145,11 +145,11 @@ public final class CraftChunkData implements ChunkGenerator.ChunkData {
 
     public BlockState getTypeId(int x, int y, int z) {
         if (x != (x & 0xf) || y < minHeight || y >= maxHeight || z != (z & 0xf)) {
-            return Blocks.AIR.defaultBlockState();
+            return Blocks.AIR.getDefaultState();
         }
 
         Chunk access = getHandle();
-        return access.getBlockState(new BlockPos(access.getPos().getMinBlockX() + x, y, access.getPos().getMinBlockZ() + z));
+        return access.getBlockState(new BlockPos(access.getPos().getStartX() + x, y, access.getPos().getStartZ() + z));
     }
 
     @Override
@@ -163,11 +163,11 @@ public final class CraftChunkData implements ChunkGenerator.ChunkData {
         }
 
         Chunk access = getHandle();
-        BlockPos blockPosition = new BlockPos(access.getPos().getMinBlockX() + x, y, access.getPos().getMinBlockZ() + z);
+        BlockPos blockPosition = new BlockPos(access.getPos().getStartX() + x, y, access.getPos().getStartZ() + z);
         BlockState oldBlockData = access.setBlockState(blockPosition, type, false);
 
         if (type.hasBlockEntity()) {
-            BlockEntity tileEntity = ((BlockEntityProvider) type.getBlock()).newBlockEntity(blockPosition, type);
+            BlockEntity tileEntity = ((BlockEntityProvider) type.getBlock()).createBlockEntity(blockPosition, type);
 
             // createTile can return null, currently only the case with material MOVING_PISTON
             if (tileEntity == null) {

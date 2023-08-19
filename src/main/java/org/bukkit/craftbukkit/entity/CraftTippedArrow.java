@@ -37,7 +37,7 @@ public class CraftTippedArrow extends CraftArrow implements Arrow {
         int effectId = effect.getType().getId();
         StatusEffectInstance existing = null;
         for (StatusEffectInstance mobEffect : getHandle().effects) {
-            if (StatusEffect.getId(mobEffect.getEffect()) == effectId) {
+            if (StatusEffect.getRawId(mobEffect.getEffectType()) == effectId) {
                 existing = mobEffect;
             }
         }
@@ -48,14 +48,14 @@ public class CraftTippedArrow extends CraftArrow implements Arrow {
             getHandle().effects.remove(existing);
         }
         getHandle().addEffect(CraftPotionUtil.fromBukkit(effect));
-        getHandle().updateColor();
+        getHandle().initColor();
         return true;
     }
 
     @Override
     public void clearCustomEffects() {
         getHandle().effects.clear();
-        getHandle().updateColor();
+        getHandle().initColor();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CraftTippedArrow extends CraftArrow implements Arrow {
     @Override
     public boolean hasCustomEffect(PotionEffectType type) {
         for (StatusEffectInstance effect : getHandle().effects) {
-            if (CraftPotionUtil.equals(effect.getEffect(), type)) {
+            if (CraftPotionUtil.equals(effect.getEffectType(), type)) {
                 return true;
             }
         }
@@ -87,7 +87,7 @@ public class CraftTippedArrow extends CraftArrow implements Arrow {
         int effectId = effect.getId();
         StatusEffectInstance existing = null;
         for (StatusEffectInstance mobEffect : getHandle().effects) {
-            if (StatusEffect.getId(mobEffect.getEffect()) == effectId) {
+            if (StatusEffect.getRawId(mobEffect.getEffectType()) == effectId) {
                 existing = mobEffect;
             }
         }
@@ -95,25 +95,25 @@ public class CraftTippedArrow extends CraftArrow implements Arrow {
             return false;
         }
         getHandle().effects.remove(existing);
-        getHandle().updateColor();
+        getHandle().initColor();
         return true;
     }
 
     @Override
     public void setBasePotionData(PotionData data) {
         Preconditions.checkArgument(data != null, "PotionData cannot be null");
-        this.getHandle().potion = Registries.POTION.get(new Identifier(CraftPotionUtil.fromBukkit(data)));
+        this.getHandle().potion = Registries.POTION.a(new Identifier(CraftPotionUtil.fromBukkit(data)));
     }
 
     @Override
     public PotionData getBasePotionData() {
-        return CraftPotionUtil.toBukkit(Registries.POTION.getKey(this.getHandle().potion).toString());
+        return CraftPotionUtil.toBukkit(Registries.POTION.b(this.getHandle().potion).toString());
     }
 
     @Override
     public void setColor(Color color) {
         int colorRGB = (color == null) ? -1 : color.asRGB();
-        getHandle().setFixedColor(colorRGB);
+        getHandle().setColor(colorRGB);
     }
 
     @Override

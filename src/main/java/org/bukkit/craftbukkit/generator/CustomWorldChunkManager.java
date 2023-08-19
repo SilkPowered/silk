@@ -38,7 +38,7 @@ public class CustomWorldChunkManager extends BiomeSource {
     }
 
     @Override
-    protected Codec<? extends BiomeSource> codec() {
+    protected Codec<? extends BiomeSource> getCodec() {
         throw new UnsupportedOperationException("Cannot serialize CustomWorldChunkManager");
     }
 
@@ -51,7 +51,7 @@ public class CustomWorldChunkManager extends BiomeSource {
     }
 
     @Override
-    protected Stream<RegistryEntry<net.minecraft.world.biome.Biome>> collectPossibleBiomes() {
+    protected Stream<RegistryEntry<net.minecraft.world.biome.Biome>> biomeStream() {
         return biomeListToBiomeBaseList(biomeProvider.getBiomes(worldInfo), registry).stream();
     }
 }

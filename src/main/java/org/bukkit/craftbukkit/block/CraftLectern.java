@@ -16,12 +16,12 @@ public class CraftLectern extends CraftBlockEntityState<LecternBlockEntity> impl
 
     @Override
     public int getPage() {
-        return getSnapshot().getPage();
+        return getSnapshot().getCurrentPage();
     }
 
     @Override
     public void setPage(int page) {
-        getSnapshot().setPage(page);
+        getSnapshot().setCurrentPage(page);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CraftLectern extends CraftBlockEntityState<LecternBlockEntity> impl
         boolean result = super.update(force, applyPhysics);
 
         if (result && this.getType() == Material.LECTERN && getWorldHandle() instanceof net.minecraft.world.World) {
-            LecternBlock.signalPageChange(this.world.getHandle(), this.getPosition(), this.getHandle());
+            LecternBlock.setPowered(this.world.getHandle(), this.getPosition(), this.getHandle());
         }
 
         return result;

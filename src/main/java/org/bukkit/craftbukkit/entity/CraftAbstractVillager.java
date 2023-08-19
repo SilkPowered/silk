@@ -30,7 +30,7 @@ public class CraftAbstractVillager extends CraftAgeable implements AbstractVilla
 
     @Override
     public Inventory getInventory() {
-        return new CraftInventory(getHandle().getInventory());
+        return new CraftInventory(getHandle().w());
     }
 
     private CraftMerchant getMerchant() {

@@ -44,12 +44,12 @@ public class CraftPanda extends CraftAnimals implements Panda {
 
     @Override
     public boolean isRolling() {
-        return getHandle().isRolling();
+        return getHandle().isPlaying();
     }
 
     @Override
     public void setRolling(boolean flag) {
-        getHandle().roll(flag);
+        getHandle().setPlaying(flag);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class CraftPanda extends CraftAnimals implements Panda {
 
     @Override
     public void setSneezing(boolean flag) {
-        getHandle().sneeze(flag);
+        getHandle().setSneezing(flag);
     }
 
     @Override
@@ -69,17 +69,17 @@ public class CraftPanda extends CraftAnimals implements Panda {
 
     @Override
     public void setSitting(boolean flag) {
-        getHandle().sit(flag);
+        getHandle().setSitting(flag);
     }
 
     @Override
     public boolean isOnBack() {
-        return getHandle().isOnBack();
+        return getHandle().isLyingOnBack();
     }
 
     @Override
     public void setOnBack(boolean flag) {
-        getHandle().setOnBack(flag);
+        getHandle().setLyingOnBack(flag);
     }
 
     @Override
@@ -89,17 +89,17 @@ public class CraftPanda extends CraftAnimals implements Panda {
 
     @Override
     public void setEating(boolean flag) {
-        getHandle().eat(flag);
+        getHandle().setEating(flag);
     }
 
     @Override
     public boolean isScared() {
-        return getHandle().isScared();
+        return getHandle().isScaredByThunderstorm();
     }
 
     @Override
     public int getUnhappyTicks() {
-        return getHandle().getUnhappyCounter();
+        return getHandle().getAskForBambooTicks();
     }
 
     public static Gene fromNms(PandaEntity.Gene gene) {

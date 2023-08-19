@@ -15,8 +15,8 @@ public class CraftEnderChest extends CraftBlockEntityState<EnderChestBlockEntity
     public void open() {
         requirePlaced();
         if (!getTileEntity().openersCounter.opened && getWorldHandle() instanceof net.minecraft.world.World) {
-            BlockState block = getTileEntity().getBlockState();
-            int openCount = getTileEntity().openersCounter.getOpenerCount();
+            BlockState block = getTileEntity().getCachedState();
+            int openCount = getTileEntity().openersCounter.getViewerCount();
 
             getTileEntity().openersCounter.onAPIOpen((net.minecraft.world.World) getWorldHandle(), getPosition(), block);
             getTileEntity().openersCounter.openerAPICountChanged((net.minecraft.world.World) getWorldHandle(), getPosition(), block, openCount, openCount + 1);
@@ -28,8 +28,8 @@ public class CraftEnderChest extends CraftBlockEntityState<EnderChestBlockEntity
     public void close() {
         requirePlaced();
         if (getTileEntity().openersCounter.opened && getWorldHandle() instanceof net.minecraft.world.World) {
-            BlockState block = getTileEntity().getBlockState();
-            int openCount = getTileEntity().openersCounter.getOpenerCount();
+            BlockState block = getTileEntity().getCachedState();
+            int openCount = getTileEntity().openersCounter.getViewerCount();
 
             getTileEntity().openersCounter.onAPIClose((net.minecraft.world.World) getWorldHandle(), getPosition(), block);
             getTileEntity().openersCounter.openerAPICountChanged((net.minecraft.world.World) getWorldHandle(), getPosition(), block, openCount, 0);

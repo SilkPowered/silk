@@ -54,7 +54,7 @@ public class RestartCommand extends Command
                 WatchdogThread.doStop();
 
                 // Kick all players
-                for ( ServerPlayerEntity p : (List<ServerPlayerEntity>) MinecraftServer.getServer().getPlayerList().players )
+                for ( ServerPlayerEntity p : (List<ServerPlayerEntity>) MinecraftServer.getServer().getPlayerManager().players )
                 {
                     p.connection.disconnect(SpigotConfig.restartMessage);
                 }
@@ -66,7 +66,7 @@ public class RestartCommand extends Command
                 {
                 }
                 // Close the socket so we can rebind with the new process
-                MinecraftServer.getServer().getConnection().stop();
+                MinecraftServer.getServer().getNetworkIo().stop();
 
                 // Give time for it to kick in
                 try

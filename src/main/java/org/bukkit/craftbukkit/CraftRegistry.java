@@ -25,16 +25,16 @@ public class CraftRegistry<B extends Keyed, M> implements Registry<B> {
 
     public static <B extends Keyed> Registry<?> createRegistry(Class<B> bukkitClass, DynamicRegistryManager registryHolder) {
         if (bukkitClass == Structure.class) {
-            return new CraftRegistry<>(registryHolder.registryOrThrow(RegistryKeys.STRUCTURE), CraftStructure::new);
+            return new CraftRegistry<>(registryHolder.get(RegistryKeys.STRUCTURE), CraftStructure::new);
         }
         if (bukkitClass == StructureType.class) {
             return new CraftRegistry<>(Registries.STRUCTURE_TYPE, CraftStructureType::new);
         }
         if (bukkitClass == TrimMaterial.class) {
-            return new CraftRegistry<>(registryHolder.registryOrThrow(RegistryKeys.TRIM_MATERIAL), CraftTrimMaterial::new);
+            return new CraftRegistry<>(registryHolder.get(RegistryKeys.TRIM_MATERIAL), CraftTrimMaterial::new);
         }
         if (bukkitClass == TrimPattern.class) {
-            return new CraftRegistry<>(registryHolder.registryOrThrow(RegistryKeys.TRIM_PATTERN), CraftTrimPattern::new);
+            return new CraftRegistry<>(registryHolder.get(RegistryKeys.TRIM_PATTERN), CraftTrimPattern::new);
         }
 
         return null;
@@ -56,7 +56,7 @@ public class CraftRegistry<B extends Keyed, M> implements Registry<B> {
             return cached;
         }
 
-        B bukkit = createBukkit(namespacedKey, minecraftRegistry.getOptional(CraftNamespacedKey.toMinecraft(namespacedKey)).orElse(null));
+        B bukkit = createBukkit(namespacedKey, minecraftRegistry.getOrEmpty(CraftNamespacedKey.toMinecraft(namespacedKey)).orElse(null));
         if (bukkit == null) {
             return null;
         }
@@ -80,6 +80,6 @@ public class CraftRegistry<B extends Keyed, M> implements Registry<B> {
     }
 
     public Stream<B> values() {
-        return minecraftRegistry.keySet().stream().map(minecraftKey -> get(CraftNamespacedKey.fromMinecraft(minecraftKey)));
+        return minecraftRegistry.getIds().stream().map(minecraftKey -> get(CraftNamespacedKey.fromMinecraft(minecraftKey)));
     }
 }

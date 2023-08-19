@@ -33,11 +33,11 @@ public class CraftBarrel extends CraftLootable<BarrelBlockEntity> implements Bar
     public void open() {
         requirePlaced();
         if (!getTileEntity().openersCounter.opened) {
-            BlockState blockData = getTileEntity().getBlockState();
-            boolean open = blockData.getValue(BarrelBlock.OPEN);
+            BlockState blockData = getTileEntity().getCachedState();
+            boolean open = blockData.get(BarrelBlock.OPEN);
 
             if (!open) {
-                getTileEntity().updateBlockState(blockData, true);
+                getTileEntity().setOpen(blockData, true);
                 if (getWorldHandle() instanceof net.minecraft.world.World) {
                     getTileEntity().playSound(blockData, SoundEvents.BARREL_OPEN);
                 }
@@ -50,8 +50,8 @@ public class CraftBarrel extends CraftLootable<BarrelBlockEntity> implements Bar
     public void close() {
         requirePlaced();
         if (getTileEntity().openersCounter.opened) {
-            BlockState blockData = getTileEntity().getBlockState();
-            getTileEntity().updateBlockState(blockData, false);
+            BlockState blockData = getTileEntity().getCachedState();
+            getTileEntity().setOpen(blockData, false);
             if (getWorldHandle() instanceof net.minecraft.world.World) {
                 getTileEntity().playSound(blockData, SoundEvents.BARREL_CLOSE);
             }

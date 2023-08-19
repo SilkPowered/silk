@@ -21,9 +21,9 @@ public final class CraftProfileBanEntry implements BanEntry<PlayerProfile> {
     public CraftProfileBanEntry(GameProfile profile, BannedPlayerEntry entry, BannedPlayerList list) {
         this.list = list;
         this.profile = profile;
-        this.created = entry.getCreated() != null ? new Date(entry.getCreated().getTime()) : null;
+        this.created = entry.getCreationDate() != null ? new Date(entry.getCreationDate().getTime()) : null;
         this.source = entry.getSource();
-        this.expiration = entry.getExpires() != null ? new Date(entry.getExpires().getTime()) : null;
+        this.expiration = entry.getExpiryDate() != null ? new Date(entry.getExpiryDate().getTime()) : null;
         this.reason = entry.getReason();
     }
 

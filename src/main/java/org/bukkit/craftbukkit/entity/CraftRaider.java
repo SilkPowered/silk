@@ -29,12 +29,12 @@ public abstract class CraftRaider extends CraftMonster implements Raider {
 
     @Override
     public void setRaid(Raid raid) {
-        getHandle().setCurrentRaid(raid != null ? ((CraftRaid) raid).getHandle() : null);
+        getHandle().setRaid(raid != null ? ((CraftRaid) raid).getHandle() : null);
     }
 
     @Override
     public Raid getRaid() {
-        return getHandle().getCurrentRaid() == null ? null : new CraftRaid(getHandle().getCurrentRaid());
+        return getHandle().getRaid() == null ? null : new CraftRaid(getHandle().getRaid());
     }
 
     @Override
@@ -50,7 +50,7 @@ public abstract class CraftRaider extends CraftMonster implements Raider {
 
     @Override
     public Block getPatrolTarget() {
-        return getHandle().getPatrolTarget() == null ? null : CraftBlock.at(getHandle().level(), getHandle().getPatrolTarget());
+        return getHandle().getPatrolTarget() == null ? null : CraftBlock.at(getHandle().getWorld(), getHandle().getPatrolTarget());
     }
 
     @Override
@@ -80,7 +80,7 @@ public abstract class CraftRaider extends CraftMonster implements Raider {
 
     @Override
     public void setCanJoinRaid(boolean join) {
-        getHandle().setCanJoinRaid(join);
+        getHandle().setAbleToJoinRaid(join);
     }
 
     @Override
@@ -95,17 +95,17 @@ public abstract class CraftRaider extends CraftMonster implements Raider {
 
     @Override
     public int getTicksOutsideRaid() {
-        return getHandle().getTicksOutsideRaid();
+        return getHandle().getOutOfRaidCounter();
     }
 
     @Override
     public void setTicksOutsideRaid(int ticks) {
         Preconditions.checkArgument(ticks >= 0, "ticks must be >= 0");
-        getHandle().setTicksOutsideRaid(ticks);
+        getHandle().setOutOfRaidCounter(ticks);
     }
 
     @Override
     public Sound getCelebrationSound() {
-        return CraftSound.getBukkit(getHandle().getCelebrateSound());
+        return CraftSound.getBukkit(getHandle().getCelebratingSound());
     }
 }

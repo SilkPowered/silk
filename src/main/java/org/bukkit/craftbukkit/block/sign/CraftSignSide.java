@@ -47,12 +47,12 @@ public class CraftSignSide implements SignSide {
 
     @Override
     public boolean isGlowingText() {
-        return signText.hasGlowingText();
+        return signText.isGlowing();
     }
 
     @Override
     public void setGlowingText(boolean glowing) {
-        signText = signText.setHasGlowingText(glowing);
+        signText = signText.withGlowing(glowing);
     }
 
     @Nullable
@@ -63,7 +63,7 @@ public class CraftSignSide implements SignSide {
 
     @Override
     public void setColor(@NotNull DyeColor color) {
-        signText = signText.setColor(net.minecraft.util.DyeColor.byId(color.getWoolData()));
+        signText = signText.withColor(net.minecraft.util.DyeColor.byId(color.getWoolData()));
     }
 
     public SignText applyLegacyStringToSignSide() {
@@ -73,7 +73,7 @@ public class CraftSignSide implements SignSide {
                 if (line.equals(originalLines[i])) {
                     continue; // The line contents are still the same, skip.
                 }
-                signText = signText.setMessage(i, CraftChatMessage.fromString(line)[0]);
+                signText = signText.withMessage(i, CraftChatMessage.fromString(line)[0]);
             }
         }
 

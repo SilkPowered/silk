@@ -134,11 +134,11 @@ public final class OldCraftChunkData implements ChunkGenerator.ChunkData {
 
     public BlockState getTypeId(int x, int y, int z) {
         if (x != (x & 0xf) || y < minHeight || y >= maxHeight || z != (z & 0xf)) {
-            return Blocks.AIR.defaultBlockState();
+            return Blocks.AIR.getDefaultState();
         }
         ChunkSection section = getChunkSection(y, false);
         if (section == null) {
-            return Blocks.AIR.defaultBlockState();
+            return Blocks.AIR.getDefaultState();
         } else {
             return section.getBlockState(x, y & 0xf, z);
         }
@@ -157,7 +157,7 @@ public final class OldCraftChunkData implements ChunkGenerator.ChunkData {
         section.setBlockState(x, y & 0xf, z, type);
 
         // SPIGOT-1753: Capture light blocks, for light updates
-        if (type.getLightEmission() > 0) {
+        if (type.getLuminance() > 0) {
             lights.add(new BlockPos(x, y, z));
         } else {
             lights.remove(new BlockPos(x, y, z));

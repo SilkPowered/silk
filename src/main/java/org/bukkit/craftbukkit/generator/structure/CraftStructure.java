@@ -15,7 +15,7 @@ public class CraftStructure extends Structure {
             return null;
         }
 
-        return Registry.STRUCTURE.get(CraftNamespacedKey.fromMinecraft(registryHolder.registryOrThrow(RegistryKeys.STRUCTURE).getKey(minecraft)));
+        return Registry.STRUCTURE.get(CraftNamespacedKey.fromMinecraft(registryHolder.get(RegistryKeys.STRUCTURE).getId(minecraft)));
     }
 
     public static net.minecraft.world.gen.structure.Structure bukkitToMinecraft(Structure bukkit) {
@@ -33,7 +33,7 @@ public class CraftStructure extends Structure {
     public CraftStructure(NamespacedKey key, net.minecraft.world.gen.structure.Structure structure) {
         this.key = key;
         this.structure = structure;
-        this.structureType = CraftStructureType.minecraftToBukkit(structure.type());
+        this.structureType = CraftStructureType.minecraftToBukkit(structure.getType());
     }
 
     public net.minecraft.world.gen.structure.Structure getHandle() {

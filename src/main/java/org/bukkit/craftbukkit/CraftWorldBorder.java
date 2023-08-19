@@ -14,7 +14,7 @@ public class CraftWorldBorder implements WorldBorder {
 
     public CraftWorldBorder(CraftWorld world) {
         this.world = world;
-        this.handle = world.getHandle().getWorldBorder();
+        this.handle = world.getHandle().w_();
     }
 
     public CraftWorldBorder(net.minecraft.world.border.WorldBorder handle) {
@@ -54,7 +54,7 @@ public class CraftWorldBorder implements WorldBorder {
         Preconditions.checkArgument(newSize >= 1.0D && newSize <= this.getMaxSize(), "newSize must be between 1.0D and %s", this.getMaxSize());
 
         if (time > 0L) {
-            this.handle.lerpSizeBetween(this.handle.getSize(), newSize, unit.toMillis(time));
+            this.handle.interpolateSize(this.handle.getSize(), newSize, unit.toMillis(time));
         } else {
             this.handle.setSize(newSize);
         }
@@ -83,12 +83,12 @@ public class CraftWorldBorder implements WorldBorder {
 
     @Override
     public double getDamageBuffer() {
-        return this.handle.getDamageSafeZone();
+        return this.handle.getSafeZone();
     }
 
     @Override
     public void setDamageBuffer(double blocks) {
-        this.handle.setDamageSafeZone(blocks);
+        this.handle.setSafeZone(blocks);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class CraftWorldBorder implements WorldBorder {
     public boolean isInside(Location location) {
         Preconditions.checkArgument(location != null, "location cannot be null");
 
-        return (world == null || location.getWorld().equals(this.world)) && this.handle.isWithinBounds(BlockPos.containing(location.getX(), location.getY(), location.getZ()));
+        return (world == null || location.getWorld().equals(this.world)) && this.handle.contains(BlockPos.ofFloored(location.getX(), location.getY(), location.getZ()));
     }
 
     @Override

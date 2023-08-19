@@ -30,7 +30,7 @@ public abstract class CraftContainer<T extends LockableContainerBlockEntity> ext
     @Override
     public String getCustomName() {
         T container = this.getSnapshot();
-        return container.name != null ? CraftChatMessage.fromComponent(container.getCustomName()) : null;
+        return container.name != null ? CraftChatMessage.fromComponent(container.ab()) : null;
     }
 
     @Override

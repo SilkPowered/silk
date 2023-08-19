@@ -28,6 +28,6 @@ public class CraftGlowSquid extends CraftSquid implements GlowSquid {
     @Override
     public void setDarkTicksRemaining(int darkTicksRemaining) {
         Preconditions.checkArgument(darkTicksRemaining >= 0, "darkTicksRemaining must be >= 0");
-        getHandle().setDarkTicks(darkTicksRemaining);
+        getHandle().setDarkTicksRemaining(darkTicksRemaining);
     }
 }

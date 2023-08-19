@@ -14,17 +14,17 @@ public class CraftPig extends CraftAnimals implements Pig {
 
     @Override
     public boolean hasSaddle() {
-        return getHandle().isSaddled();
+        return getHandle().i();
     }
 
     @Override
     public void setSaddle(boolean saddled) {
-        getHandle().steering.setSaddle(saddled);
+        getHandle().steering.setSaddled(saddled);
     }
 
     @Override
     public int getBoostTicks() {
-        return getHandle().steering.boosting ? getHandle().steering.boostTimeTotal() : 0;
+        return getHandle().steering.boosting ? getHandle().steering.getBoostTime() : 0;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CraftPig extends CraftAnimals implements Pig {
             return;
         }
 
-        int max = getHandle().steering.boostTimeTotal();
+        int max = getHandle().steering.getBoostTime();
         Preconditions.checkArgument(ticks >= 0 && ticks <= max, "boost ticks must not exceed 0 or %d (inclusive)", max);
 
         this.getHandle().steering.boostTime = ticks;

@@ -19,7 +19,7 @@ public class CraftPalette implements Palette {
     public List<BlockState> getBlocks() {
         List<BlockState> blocks = new ArrayList<>();
         for (StructureTemplate.StructureBlockInfo blockInfo : palette.blocks()) {
-            blocks.add(CraftBlockStates.getBlockState(blockInfo.pos(), blockInfo.state(), blockInfo.nbt()));
+            blocks.add(CraftBlockStates.getBlockState(blockInfo.comp_1341(), blockInfo.comp_1342(), blockInfo.comp_1343()));
         }
         return blocks;
     }

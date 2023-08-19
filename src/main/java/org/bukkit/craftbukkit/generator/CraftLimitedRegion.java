@@ -83,7 +83,7 @@ public class CraftLimitedRegion extends CraftRegionAccessor implements LimitedRe
             for (int z = -(buffer >> 4); z <= (buffer >> 4); z++) {
                 ProtoChunk chunk = (ProtoChunk) access.getChunk(centerChunkX + x, centerChunkZ + z);
                 for (NbtCompound compound : chunk.getEntities()) {
-                    EntityType.loadEntityRecursive(compound, access.getMinecraftWorld(), (entity) -> {
+                    EntityType.loadEntityWithPassengers(compound, access.getMinecraftWorld(), (entity) -> {
                         if (region.contains(entity.getX(), entity.getY(), entity.getZ())) {
                             entity.generation = true;
                             entities.add(entity);
@@ -115,12 +115,12 @@ public class CraftLimitedRegion extends CraftRegionAccessor implements LimitedRe
             if (entity.isAlive()) {
                 // check if entity is still in region or if it got teleported outside it
                 Preconditions.checkState(region.contains(entity.getX(), entity.getY(), entity.getZ()), "Entity %s is not in the region", entity);
-                access.addFreshEntity(entity);
+                access.spawnEntity(entity);
             }
         }
 
         for (net.minecraft.entity.Entity entity : outsideEntities) {
-            access.addFreshEntity(entity);
+            access.spawnEntity(entity);
         }
     }
 
@@ -150,7 +150,7 @@ public class CraftLimitedRegion extends CraftRegionAccessor implements LimitedRe
         for (int x = -(buffer >> 4); x <= (buffer >> 4); x++) {
             for (int z = -(buffer >> 4); z <= (buffer >> 4); z++) {
                 ProtoChunk chunk = (ProtoChunk) getHandle().getChunk(centerChunkX + x, centerChunkZ + z);
-                for (BlockPos position : chunk.getBlockEntitiesPos()) {
+                for (BlockPos position : chunk.getBlockEntityPositions()) {
                     blockStates.add(getBlockState(position.getX(), position.getY(), position.getZ()));
                 }
             }

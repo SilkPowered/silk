@@ -57,8 +57,8 @@ public class CraftStructureManager implements StructureManager {
 
         Optional<StructureTemplate> structure = structureManager.structureRepository.get(minecraftKey);
         structure = structure == null ? Optional.empty() : structure;
-        structure = structure.isPresent() ? structure : structureManager.loadFromGenerated(minecraftKey);
-        structure = structure.isPresent() ? structure : structureManager.loadFromResource(minecraftKey);
+        structure = structure.isPresent() ? structure : structureManager.loadTemplateFromFile(minecraftKey);
+        structure = structure.isPresent() ? structure : structureManager.loadTemplateFromResource(minecraftKey);
 
         if (register) {
             structureManager.structureRepository.put(minecraftKey, structure);
@@ -76,7 +76,7 @@ public class CraftStructureManager implements StructureManager {
     public void saveStructure(NamespacedKey structureKey) {
         Identifier minecraftKey = createAndValidateMinecraftStructureKey(structureKey);
 
-        structureManager.save(minecraftKey);
+        structureManager.saveTemplate(minecraftKey);
     }
 
     @Override
@@ -121,14 +121,14 @@ public class CraftStructureManager implements StructureManager {
         if (unregister) {
             structureManager.structureRepository.remove(key);
         }
-        Path path = structureManager.getPathToGeneratedStructure(key, ".nbt");
+        Path path = structureManager.getTemplatePath(key, ".nbt");
         Files.deleteIfExists(path);
     }
 
     @Override
     public File getStructureFile(NamespacedKey structureKey) {
         Identifier minecraftKey = createAndValidateMinecraftStructureKey(structureKey);
-        return structureManager.getPathToGeneratedStructure(minecraftKey, ".nbt").toFile();
+        return structureManager.getTemplatePath(minecraftKey, ".nbt").toFile();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class CraftStructureManager implements StructureManager {
     public Structure loadStructure(InputStream inputStream) throws IOException {
         Preconditions.checkArgument(inputStream != null, "inputStream cannot be null");
 
-        return new CraftStructure(structureManager.readStructure(inputStream));
+        return new CraftStructure(structureManager.readTemplate(inputStream));
     }
 
     @Override
@@ -160,7 +160,7 @@ public class CraftStructureManager implements StructureManager {
         Preconditions.checkArgument(outputStream != null, "outputStream cannot be null");
         Preconditions.checkArgument(structure != null, "structure cannot be null");
 
-        NbtCompound nbttagcompound = ((CraftStructure) structure).getHandle().save(new NbtCompound());
+        NbtCompound nbttagcompound = ((CraftStructure) structure).getHandle().writeNbt(new NbtCompound());
         NbtIo.writeCompressed(nbttagcompound, outputStream);
     }
 
@@ -180,6 +180,6 @@ public class CraftStructureManager implements StructureManager {
     @Override
     public Structure copy(Structure structure) {
         Preconditions.checkArgument(structure != null, "Structure cannot be null");
-        return new CraftStructure(structureManager.readStructure(((CraftStructure) structure).getHandle().save(new NbtCompound())));
+        return new CraftStructure(structureManager.createTemplate(((CraftStructure) structure).getHandle().writeNbt(new NbtCompound())));
     }
 }

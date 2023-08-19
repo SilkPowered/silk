@@ -12,12 +12,12 @@ public final class RandomSourceWrapper implements net.minecraft.util.math.random
     }
 
     @Override
-    public net.minecraft.util.math.random.Random fork() {
+    public net.minecraft.util.math.random.Random split() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public RandomSplitter forkPositional() {
+    public RandomSplitter nextSplitter() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -113,7 +113,7 @@ public final class RandomSourceWrapper implements net.minecraft.util.math.random
 
         @Override
         public int nextInt(int var0, int var1) {
-            return random.nextInt(var0, var1);
+            return random.nextBetweenExclusive(var0, var1);
         }
     }
 }

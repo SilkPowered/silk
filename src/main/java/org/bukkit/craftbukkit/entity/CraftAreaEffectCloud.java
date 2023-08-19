@@ -103,12 +103,12 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
 
     @Override
     public void setRadiusPerTick(float radius) {
-        getHandle().setRadiusPerTick(radius);
+        getHandle().setRadiusGrowth(radius);
     }
 
     @Override
     public Particle getParticle() {
-        return CraftParticle.toBukkit(getHandle().getParticle());
+        return CraftParticle.toBukkit(getHandle().getParticleType());
     }
 
     @Override
@@ -118,7 +118,7 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
 
     @Override
     public <T> void setParticle(Particle particle, T data) {
-        getHandle().setParticle(CraftParticle.toNMS(particle, data));
+        getHandle().setParticleType(CraftParticle.toNMS(particle, data));
     }
 
     @Override
@@ -128,7 +128,7 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
 
     @Override
     public void setColor(Color color) {
-        getHandle().setFixedColor(color.asRGB());
+        getHandle().setColor(color.asRGB());
     }
 
     @Override
@@ -136,7 +136,7 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
         int effectId = effect.getType().getId();
         StatusEffectInstance existing = null;
         for (StatusEffectInstance mobEffect : getHandle().effects) {
-            if (StatusEffect.getId(mobEffect.getEffect()) == effectId) {
+            if (StatusEffect.getRawId(mobEffect.getEffectType()) == effectId) {
                 existing = mobEffect;
             }
         }
@@ -169,7 +169,7 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
     @Override
     public boolean hasCustomEffect(PotionEffectType type) {
         for (StatusEffectInstance effect : getHandle().effects) {
-            if (CraftPotionUtil.equals(effect.getEffect(), type)) {
+            if (CraftPotionUtil.equals(effect.getEffectType(), type)) {
                 return true;
             }
         }
@@ -186,7 +186,7 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
         int effectId = effect.getId();
         StatusEffectInstance existing = null;
         for (StatusEffectInstance mobEffect : getHandle().effects) {
-            if (StatusEffect.getId(mobEffect.getEffect()) == effectId) {
+            if (StatusEffect.getRawId(mobEffect.getEffectType()) == effectId) {
                 existing = mobEffect;
             }
         }
@@ -201,12 +201,12 @@ public class CraftAreaEffectCloud extends CraftEntity implements AreaEffectCloud
     @Override
     public void setBasePotionData(PotionData data) {
         Preconditions.checkArgument(data != null, "PotionData cannot be null");
-        getHandle().setPotion(Registries.POTION.get(new Identifier(CraftPotionUtil.fromBukkit(data))));
+        getHandle().setPotion(Registries.POTION.a(new Identifier(CraftPotionUtil.fromBukkit(data))));
     }
 
     @Override
     public PotionData getBasePotionData() {
-        return CraftPotionUtil.toBukkit((Registries.POTION.getKey(getHandle().potion)).toString());
+        return CraftPotionUtil.toBukkit((Registries.POTION.b(getHandle().potion)).toString());
     }
 
     @Override

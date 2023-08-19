@@ -26,14 +26,14 @@ public class CraftCat extends CraftTameableAnimal implements Cat {
 
     @Override
     public Type getCatType() {
-        return Type.values()[Registries.CAT_VARIANT.getId(getHandle().getVariant())];
+        return Type.values()[Registries.CAT_VARIANT.a(getHandle().getVariant())];
     }
 
     @Override
     public void setCatType(Type type) {
         Preconditions.checkArgument(type != null, "Cannot have null Type");
 
-        getHandle().setVariant(Registries.CAT_VARIANT.byId(type.ordinal()));
+        getHandle().setVariant(Registries.CAT_VARIANT.get(type.ordinal()));
     }
 
     @Override

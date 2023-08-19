@@ -43,7 +43,7 @@ public class CraftEnderDragon extends CraftMob implements EnderDragon, CraftEnem
 
     @Override
     public Phase getPhase() {
-        return Phase.values()[getHandle().getEntityData().get(EnderDragonEntity.DATA_PHASE)];
+        return Phase.values()[getHandle().getDataTracker().get(EnderDragonEntity.DATA_PHASE)];
     }
 
     @Override
@@ -52,11 +52,11 @@ public class CraftEnderDragon extends CraftMob implements EnderDragon, CraftEnem
     }
 
     public static Phase getBukkitPhase(PhaseType phase) {
-        return Phase.values()[phase.getId()];
+        return Phase.values()[phase.getTypeId()];
     }
 
     public static PhaseType getMinecraftPhase(Phase phase) {
-        return PhaseType.getById(phase.ordinal());
+        return PhaseType.getFromId(phase.ordinal());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CraftEnderDragon extends CraftMob implements EnderDragon, CraftEnem
 
     @Override
     public DragonBattle getDragonBattle() {
-        return getHandle().getDragonFight() != null ? new CraftDragonBattle(getHandle().getDragonFight()) : null;
+        return getHandle().getFight() != null ? new CraftDragonBattle(getHandle().getFight()) : null;
     }
 
     @Override

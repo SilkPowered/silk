@@ -40,7 +40,7 @@ public class CraftMerchantRecipe extends MerchantRecipe {
 
     @Override
     public int getSpecialPrice() {
-        return handle.getSpecialPriceDiff();
+        return handle.getSpecialPrice();
     }
 
     @Override

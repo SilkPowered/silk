@@ -51,13 +51,13 @@ public class CraftEnderman extends CraftMonster implements Enderman {
 
     @Override
     public boolean teleport() {
-        return getHandle().teleport();
+        return getHandle().teleportRandomly();
     }
 
     @Override
     public boolean teleportTowards(Entity entity) {
         Preconditions.checkArgument(entity != null, "entity cannot be null");
 
-        return getHandle().teleportTowards(((CraftEntity) entity).getHandle());
+        return getHandle().teleportTo(((CraftEntity) entity).getHandle());
     }
 }

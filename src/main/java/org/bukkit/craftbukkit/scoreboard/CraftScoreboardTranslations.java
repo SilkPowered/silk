@@ -37,7 +37,7 @@ final class CraftScoreboardTranslations {
     }
 
     static int fromBukkitSlot(DisplaySlot slot) {
-        return Scoreboard.getDisplaySlotByName(SLOTS.get(slot));
+        return Scoreboard.getDisplaySlotId(SLOTS.get(slot));
     }
 
     static RenderType toBukkitRender(ScoreboardCriterion.RenderType display) {

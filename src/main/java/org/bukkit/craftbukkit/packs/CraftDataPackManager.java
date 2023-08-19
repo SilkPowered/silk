@@ -32,9 +32,9 @@ public class CraftDataPackManager implements DataPackManager {
     @Override
     public Collection<DataPack> getDataPacks() {
         // Based in the command for datapacks need reload for get the updated list of datapacks
-        this.getHandle().reload();
+        this.getHandle().scanPacks();
 
-        Collection<ResourcePackProfile> availablePacks = this.getHandle().getAvailablePacks();
+        Collection<ResourcePackProfile> availablePacks = this.getHandle().getProfiles();
         return availablePacks.stream().map(CraftDataPack::new).collect(Collectors.toUnmodifiableList());
     }
 
@@ -42,7 +42,7 @@ public class CraftDataPackManager implements DataPackManager {
     public DataPack getDataPack(NamespacedKey namespacedKey) {
         Preconditions.checkArgument(namespacedKey != null, "namespacedKey cannot be null");
 
-        return new CraftDataPack(this.getHandle().getPack(namespacedKey.getKey()));
+        return new CraftDataPack(this.getHandle().getProfile(namespacedKey.getKey()));
     }
 
     @Override
@@ -50,8 +50,8 @@ public class CraftDataPackManager implements DataPackManager {
         Preconditions.checkArgument(world != null, "world cannot be null");
 
         CraftWorld craftWorld = ((CraftWorld) world);
-        return craftWorld.getHandle().serverLevelData.getDataConfiguration().dataPacks().getEnabled().stream().map(packName -> {
-            ResourcePackProfile resourcePackLoader = this.getHandle().getPack(packName);
+        return craftWorld.getHandle().serverLevelData.F().comp_1010().getEnabled().stream().map(packName -> {
+            ResourcePackProfile resourcePackLoader = this.getHandle().getProfile(packName);
             if (resourcePackLoader != null) {
                 return new CraftDataPack(resourcePackLoader);
             }
@@ -64,8 +64,8 @@ public class CraftDataPackManager implements DataPackManager {
         Preconditions.checkArgument(world != null, "world cannot be null");
 
         CraftWorld craftWorld = ((CraftWorld) world);
-        return craftWorld.getHandle().serverLevelData.getDataConfiguration().dataPacks().getDisabled().stream().map(packName -> {
-            ResourcePackProfile resourcePackLoader = this.getHandle().getPack(packName);
+        return craftWorld.getHandle().serverLevelData.F().comp_1010().getDisabled().stream().map(packName -> {
+            ResourcePackProfile resourcePackLoader = this.getHandle().getProfile(packName);
             if (resourcePackLoader != null) {
                 return new CraftDataPack(resourcePackLoader);
             }
@@ -81,9 +81,9 @@ public class CraftDataPackManager implements DataPackManager {
 
         CraftWorld craftWorld = ((CraftWorld) world);
         if (material.isItem()) {
-            return CraftMagicNumbers.getItem(material).isEnabled(craftWorld.getHandle().enabledFeatures());
+            return CraftMagicNumbers.getItem(material).isEnabled(craftWorld.getHandle().G());
         } else if (material.isBlock()) {
-            return CraftMagicNumbers.getBlock(material).isEnabled(craftWorld.getHandle().enabledFeatures());
+            return CraftMagicNumbers.getBlock(material).isEnabled(craftWorld.getHandle().G());
         }
         return false;
     }
@@ -95,7 +95,7 @@ public class CraftDataPackManager implements DataPackManager {
         Preconditions.checkArgument(entityType != EntityType.UNKNOWN, "EntityType.UNKNOWN its not allowed here");
 
         CraftWorld craftWorld = ((CraftWorld) world);
-        net.minecraft.entity.EntityType<?> nmsEntity = Registries.ENTITY_TYPE.get(new Identifier(entityType.getKey().getKey()));
-        return nmsEntity.isEnabled(craftWorld.getHandle().enabledFeatures());
+        net.minecraft.entity.EntityType<?> nmsEntity = Registries.ENTITY_TYPE.a(new Identifier(entityType.getKey().getKey()));
+        return nmsEntity.isEnabled(craftWorld.getHandle().G());
     }
 }

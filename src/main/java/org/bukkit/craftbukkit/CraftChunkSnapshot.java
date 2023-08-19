@@ -72,7 +72,7 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
 
         Predicate<BlockState> nms = Predicates.equalTo(((CraftBlockData) block).getState());
         for (PalettedContainer<BlockState> palette : blockids) {
-            if (palette.maybeHas(nms)) {
+            if (palette.a(nms)) {
                 return true;
             }
         }
@@ -86,7 +86,7 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
 
         Predicate<RegistryEntry<net.minecraft.world.biome.Biome>> nms = Predicates.equalTo(CraftBlock.biomeToBiomeBase(this.biomeRegistry, biome));
         for (ReadableContainer<RegistryEntry<net.minecraft.world.biome.Biome>> palette : this.biome) {
-            if (palette.maybeHas(nms)) {
+            if (palette.hasAny(nms)) {
                 return true;
             }
         }
@@ -98,21 +98,21 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
     public Material getBlockType(int x, int y, int z) {
         validateChunkCoordinates(x, y, z);
 
-        return CraftMagicNumbers.getMaterial(blockids[getSectionIndex(y)].get(x, y & 0xF, z).getBlock());
+        return CraftMagicNumbers.getMaterial(blockids[getSectionIndex(y)].a(x, y & 0xF, z).getBlock());
     }
 
     @Override
     public final BlockData getBlockData(int x, int y, int z) {
         validateChunkCoordinates(x, y, z);
 
-        return CraftBlockData.fromData(blockids[getSectionIndex(y)].get(x, y & 0xF, z));
+        return CraftBlockData.fromData(blockids[getSectionIndex(y)].a(x, y & 0xF, z));
     }
 
     @Override
     public final int getData(int x, int y, int z) {
         validateChunkCoordinates(x, y, z);
 
-        return CraftMagicNumbers.toLegacyData(blockids[getSectionIndex(y)].get(x, y & 0xF, z));
+        return CraftMagicNumbers.toLegacyData(blockids[getSectionIndex(y)].a(x, y & 0xF, z));
     }
 
     @Override
@@ -136,7 +136,7 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
         Preconditions.checkState(hmap != null, "ChunkSnapshot created without height map. Please call getSnapshot with includeMaxblocky=true");
         validateChunkCoordinates(x, 0, z);
 
-        return hmap.getHighestTaken(x, z);
+        return hmap.method_35334(x, z);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class CraftChunkSnapshot implements ChunkSnapshot {
         validateChunkCoordinates(x, y, z);
 
         ReadableContainer<RegistryEntry<net.minecraft.world.biome.Biome>> biome = this.biome[getSectionIndex(y)]; // SPIGOT-7188: Don't need to convert y to biome coordinate scale since it is bound to the block chunk section
-        return biome.get(x >> 2, (y & 0xF) >> 2, z >> 2).value().getTemperature(new BlockPos((this.x << 4) | x, y, (this.z << 4) | z));
+        return biome.get(x >> 2, (y & 0xF) >> 2, z >> 2).comp_349().getTemperature(new BlockPos((this.x << 4) | x, y, (this.z << 4) | z));
     }
 
     @Override

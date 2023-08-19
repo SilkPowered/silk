@@ -67,8 +67,8 @@ public class CraftProfileBanList implements ProfileBanList {
     @Override
     public Set<BanEntry> getBanEntries() {
         ImmutableSet.Builder<BanEntry> builder = ImmutableSet.builder();
-        for (BannedPlayerEntry entry : list.getEntries()) {
-            GameProfile profile = entry.getUser();
+        for (BannedPlayerEntry entry : list.values()) {
+            GameProfile profile = entry.getKey();
             builder.add(new CraftProfileBanEntry(profile, entry, list));
         }
 
@@ -78,8 +78,8 @@ public class CraftProfileBanList implements ProfileBanList {
     @Override
     public Set<BanEntry<PlayerProfile>> getEntries() {
         ImmutableSet.Builder<BanEntry<PlayerProfile>> builder = ImmutableSet.builder();
-        for (BannedPlayerEntry entry : list.getEntries()) {
-            GameProfile profile = entry.getUser();
+        for (BannedPlayerEntry entry : list.values()) {
+            GameProfile profile = entry.getKey();
             builder.add(new CraftProfileBanEntry(profile, entry, list));
         }
 
@@ -146,7 +146,7 @@ public class CraftProfileBanList implements ProfileBanList {
     }
 
     private boolean isBanned(GameProfile profile) {
-        return profile != null && list.isBanned(profile);
+        return profile != null && list.contains(profile);
     }
 
     static GameProfile getProfile(String target) {
@@ -161,10 +161,10 @@ public class CraftProfileBanList implements ProfileBanList {
     }
 
     static GameProfile getProfileByUUID(UUID uuid) {
-        return (MinecraftServer.getServer() != null) ? MinecraftServer.getServer().getProfileCache().get(uuid).orElse(null) : null;
+        return (MinecraftServer.getServer() != null) ? MinecraftServer.getServer().getUserCache().getByUuid(uuid).orElse(null) : null;
     }
 
     static GameProfile getProfileByName(String name) {
-        return (MinecraftServer.getServer() != null) ? MinecraftServer.getServer().getProfileCache().get(name).orElse(null) : null;
+        return (MinecraftServer.getServer() != null) ? MinecraftServer.getServer().getUserCache().findByName(name).orElse(null) : null;
     }
 }

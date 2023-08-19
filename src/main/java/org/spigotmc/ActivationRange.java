@@ -118,21 +118,21 @@ public class ActivationRange
         maxRange = Math.max( maxRange, miscActivationRange );
         maxRange = Math.min( ( world.spigotConfig.simulationDistance << 4 ) - 8, maxRange );
 
-        for ( PlayerEntity player : world.players() )
+        for ( PlayerEntity player : world.getPlayers() )
         {
             player.activatedTick = MinecraftServer.currentTick;
-            if ( world.spigotConfig.ignoreSpectatorActivation && player.isSpectator() )
+            if ( world.spigotConfig.ignoreSpectatorActivation && player.G_() )
             {
                 continue;
             }
 
-            maxBB = player.getBoundingBox().inflate( maxRange, 256, maxRange );
-            ActivationType.MISC.boundingBox = player.getBoundingBox().inflate( miscActivationRange, 256, miscActivationRange );
-            ActivationType.RAIDER.boundingBox = player.getBoundingBox().inflate( raiderActivationRange, 256, raiderActivationRange );
-            ActivationType.ANIMAL.boundingBox = player.getBoundingBox().inflate( animalActivationRange, 256, animalActivationRange );
-            ActivationType.MONSTER.boundingBox = player.getBoundingBox().inflate( monsterActivationRange, 256, monsterActivationRange );
+            maxBB = player.cE().expand( maxRange, 256, maxRange );
+            ActivationType.MISC.boundingBox = player.cE().expand( miscActivationRange, 256, miscActivationRange );
+            ActivationType.RAIDER.boundingBox = player.cE().expand( raiderActivationRange, 256, raiderActivationRange );
+            ActivationType.ANIMAL.boundingBox = player.cE().expand( animalActivationRange, 256, animalActivationRange );
+            ActivationType.MONSTER.boundingBox = player.cE().expand( monsterActivationRange, 256, monsterActivationRange );
 
-            world.getEntities().get(maxBB, ActivationRange::activateEntity);
+            world.getEntityLookup().forEachIntersects(maxBB, ActivationRange::activateEntity);
         }
         SpigotTimings.entityActivationCheckTimer.stopTiming();
     }
@@ -151,7 +151,7 @@ public class ActivationRange
                 entity.activatedTick = MinecraftServer.currentTick;
                 return;
             }
-            if ( entity.activationType.boundingBox.intersects( entity.getBoundingBox() ) )
+            if ( entity.activationType.boundingBox.intersects( entity.cE() ) )
             {
                 entity.activatedTick = MinecraftServer.currentTick;
             }
@@ -168,13 +168,13 @@ public class ActivationRange
     public static boolean checkEntityImmunities(Entity entity)
     {
         // quick checks.
-        if ( entity.wasTouchingWater || entity.getRemainingFireTicks() > 0 )
+        if ( entity.wasTouchingWater || entity.getFireTicks() > 0 )
         {
             return true;
         }
         if ( !( entity instanceof PersistentProjectileEntity ) )
         {
-            if ( !entity.onGround() || !entity.passengers.isEmpty() || entity.isPassenger() )
+            if ( !entity.isOnGround() || !entity.passengers.isEmpty() || entity.hasVehicle() )
             {
                 return true;
             }
@@ -190,18 +190,18 @@ public class ActivationRange
             {
                 return true;
             }
-            if ( entity instanceof PathAwareEntity && ( (PathAwareEntity) entity ).getTarget() != null )
+            if ( entity instanceof PathAwareEntity && ( (PathAwareEntity) entity ).j() != null )
             {
                 return true;
             }
-            if ( entity instanceof VillagerEntity && ( (VillagerEntity) entity ).canBreed() )
+            if ( entity instanceof VillagerEntity && ( (VillagerEntity) entity ).P_() )
             {
                 return true;
             }
             if ( entity instanceof AnimalEntity )
             {
                 AnimalEntity animal = (AnimalEntity) entity;
-                if ( animal.isBaby() || animal.isInLove() )
+                if ( animal.h_() || animal.isInLove() )
                 {
                     return true;
                 }

@@ -46,12 +46,12 @@ public class CraftMerchantCustom extends CraftMerchant {
         }
 
         @Override
-        public void setTradingPlayer(PlayerEntity entityhuman) {
+        public void setCustomer(PlayerEntity entityhuman) {
             this.tradingPlayer = entityhuman;
         }
 
         @Override
-        public PlayerEntity getTradingPlayer() {
+        public PlayerEntity getCustomer() {
             return this.tradingPlayer;
         }
 
@@ -61,13 +61,13 @@ public class CraftMerchantCustom extends CraftMerchant {
         }
 
         @Override
-        public void notifyTrade(TradeOffer merchantrecipe) {
+        public void trade(TradeOffer merchantrecipe) {
             // increase recipe's uses
-            merchantrecipe.increaseUses();
+            merchantrecipe.use();
         }
 
         @Override
-        public void notifyTradeUpdated(ItemStack itemstack) {
+        public void onSellingItem(ItemStack itemstack) {
         }
 
         public Text getScoreboardDisplayName() {
@@ -75,30 +75,30 @@ public class CraftMerchantCustom extends CraftMerchant {
         }
 
         @Override
-        public int getVillagerXp() {
+        public int getExperience() {
             return 0; // xp
         }
 
         @Override
-        public void overrideXp(int i) {
+        public void setExperienceFromServer(int i) {
         }
 
         @Override
-        public boolean showProgressBar() {
+        public boolean isLeveledMerchant() {
             return false; // is-regular-villager flag (hides some gui elements: xp bar, name suffix)
         }
 
         @Override
-        public SoundEvent getNotifyTradeSound() {
+        public SoundEvent getYesSound() {
             return SoundEvents.VILLAGER_YES;
         }
 
         @Override
-        public void overrideOffers(TradeOfferList merchantrecipelist) {
+        public void setOffersFromServer(TradeOfferList merchantrecipelist) {
         }
 
         @Override
-        public boolean isClientSide() {
+        public boolean isClient() {
             return false;
         }
     }

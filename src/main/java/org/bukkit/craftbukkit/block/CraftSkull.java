@@ -71,7 +71,7 @@ public class CraftSkull extends CraftBlockEntityState<SkullBlockEntity> implemen
             return false;
         }
 
-        GameProfile profile = MinecraftServer.getServer().getProfileCache().get(name).orElse(null);
+        GameProfile profile = MinecraftServer.getServer().getUserCache().findByName(name).orElse(null);
         if (profile == null) {
             return false;
         }

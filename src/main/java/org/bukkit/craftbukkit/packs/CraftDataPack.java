@@ -25,12 +25,12 @@ public class CraftDataPack implements DataPack {
     }
 
     public String getRawId() {
-        return getHandle().getId();
+        return getHandle().getName();
     }
 
     @Override
     public String getTitle() {
-        return CraftChatMessage.fromComponent(this.getHandle().getTitle());
+        return CraftChatMessage.fromComponent(this.getHandle().getDisplayName());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CraftDataPack implements DataPack {
 
     @Override
     public boolean isRequired() {
-        return getHandle().isRequired();
+        return getHandle().isAlwaysEnabled();
     }
 
     @Override
@@ -60,18 +60,18 @@ public class CraftDataPack implements DataPack {
 
     @Override
     public boolean isEnabled() {
-        return ((CraftServer) Bukkit.getServer()).getServer().getPackRepository().getSelectedIds().contains(getRawId());
+        return ((CraftServer) Bukkit.getServer()).getServer().getDataPackManager().getEnabledNames().contains(getRawId());
     }
 
     @Override
     public DataPack.Source getSource() {
-        if (this.getHandle().getPackSource() == ResourcePackSource.BUILT_IN) {
+        if (this.getHandle().getSource() == ResourcePackSource.BUILT_IN) {
             return Source.BUILT_IN;
-        } else if (this.getHandle().getPackSource() == ResourcePackSource.FEATURE) {
+        } else if (this.getHandle().getSource() == ResourcePackSource.FEATURE) {
             return Source.FEATURE;
-        } else if (this.getHandle().getPackSource() == ResourcePackSource.WORLD) {
+        } else if (this.getHandle().getSource() == ResourcePackSource.WORLD) {
             return Source.WORLD;
-        } else if (this.getHandle().getPackSource() == ResourcePackSource.SERVER) {
+        } else if (this.getHandle().getSource() == ResourcePackSource.SERVER) {
             return Source.SERVER;
         }
         return Source.DEFAULT;

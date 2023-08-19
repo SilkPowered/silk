@@ -33,18 +33,18 @@ public class CraftHorse extends CraftAbstractHorse implements Horse {
     @Override
     public void setColor(Color color) {
         Preconditions.checkArgument(color != null, "Color cannot be null");
-        getHandle().setVariantAndMarkings(HorseColor.byId(color.ordinal()), getHandle().getMarkings());
+        getHandle().setHorseVariant(HorseColor.byId(color.ordinal()), getHandle().getMarking());
     }
 
     @Override
     public Style getStyle() {
-        return Style.values()[getHandle().getMarkings().getId()];
+        return Style.values()[getHandle().getMarking().getId()];
     }
 
     @Override
     public void setStyle(Style style) {
         Preconditions.checkArgument(style != null, "Style cannot be null");
-        getHandle().setVariantAndMarkings(getHandle().getVariant(), HorseMarking.byId(style.ordinal()));
+        getHandle().setHorseVariant(getHandle().getVariant(), HorseMarking.byIndex(style.ordinal()));
     }
 
     @Override

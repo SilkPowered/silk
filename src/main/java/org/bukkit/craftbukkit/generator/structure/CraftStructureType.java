@@ -13,7 +13,7 @@ public class CraftStructureType extends StructureType {
             return null;
         }
 
-        return Registry.STRUCTURE_TYPE.get(CraftNamespacedKey.fromMinecraft(Registries.STRUCTURE_TYPE.getKey(minecraft)));
+        return Registry.STRUCTURE_TYPE.get(CraftNamespacedKey.fromMinecraft(Registries.STRUCTURE_TYPE.getId(minecraft)));
     }
 
     public static net.minecraft.world.gen.structure.StructureType<?> bukkitToMinecraft(StructureType bukkit) {

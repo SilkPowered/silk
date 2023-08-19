@@ -53,7 +53,7 @@ public class CraftDispenser extends CraftLootable<DispenserBlockEntity> implemen
             CraftWorld world = (CraftWorld) this.getWorld();
             DispenserBlock dispense = (DispenserBlock) Blocks.DISPENSER;
 
-            dispense.dispenseFrom(world.getHandle(), this.getPosition());
+            dispense.dispense(world.getHandle(), this.getPosition());
             return true;
         } else {
             return false;

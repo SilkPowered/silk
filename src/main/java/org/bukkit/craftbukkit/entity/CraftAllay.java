@@ -28,7 +28,7 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
 
     @Override
     public Inventory getInventory() {
-        return new CraftInventory(getHandle().getInventory());
+        return new CraftInventory(getHandle().w());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
 
     @Override
     public void resetDuplicationCooldown() {
-        getHandle().resetDuplicationCooldown();
+        getHandle().startDuplicationCooldown();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
     public void startDancing(Location location) {
         Preconditions.checkArgument(location != null, "Location cannot be null");
         Preconditions.checkArgument(location.getBlock().getType().equals(Material.JUKEBOX), "The Block in the Location need to be a JukeBox");
-        getHandle().setJukeboxPlaying(CraftLocation.toBlockPosition(location), true);
+        getHandle().updateJukeboxPos(CraftLocation.toBlockPosition(location), true);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class CraftAllay extends CraftCreature implements org.bukkit.entity.Allay
     public void stopDancing() {
         getHandle().forceDancing = false;
         getHandle().jukeboxPos = null;
-        getHandle().setJukeboxPlaying(null, false);
+        getHandle().updateJukeboxPos(null, false);
     }
 
     @Override

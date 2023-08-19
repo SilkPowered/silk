@@ -75,22 +75,22 @@ public final class CraftScoreboardManager implements ScoreboardManager {
         // Old objective tracking
         HashSet<ScoreboardObjective> removed = new HashSet<>();
         for (int i = 0; i < 3; ++i) {
-            ScoreboardObjective scoreboardobjective = oldboard.getDisplayObjective(i);
+            ScoreboardObjective scoreboardobjective = oldboard.getObjectiveForSlot(i);
             if (scoreboardobjective != null && !removed.contains(scoreboardobjective)) {
-                entityplayer.connection.send(new ScoreboardObjectiveUpdateS2CPacket(scoreboardobjective, 1));
+                entityplayer.connection.a(new ScoreboardObjectiveUpdateS2CPacket(scoreboardobjective, 1));
                 removed.add(scoreboardobjective);
             }
         }
 
         // Old team tracking
-        Iterator<?> iterator = oldboard.getPlayerTeams().iterator();
+        Iterator<?> iterator = oldboard.getTeams().iterator();
         while (iterator.hasNext()) {
             Team scoreboardteam = (Team) iterator.next();
-            entityplayer.connection.send(TeamS2CPacket.createRemovePacket(scoreboardteam));
+            entityplayer.connection.a(TeamS2CPacket.updateRemovedTeam(scoreboardteam));
         }
 
         // The above is the reverse of the below method.
-        server.getPlayerList().updateEntireScoreboard((ServerScoreboard) newboard, player.getHandle());
+        server.getPlayerManager().sendScoreboard((ServerScoreboard) newboard, player.getHandle());
     }
 
     // CraftBukkit method
@@ -102,7 +102,7 @@ public final class CraftScoreboardManager implements ScoreboardManager {
     public void getScoreboardScores(ScoreboardCriterion criteria, String name, Consumer<ScoreboardPlayerScore> consumer) {
         for (CraftScoreboard scoreboard : scoreboards) {
             Scoreboard board = scoreboard.board;
-            board.forAllObjectives(criteria, name, (score) -> consumer.accept(score));
+            board.forEachScore(criteria, name, (score) -> consumer.accept(score));
         }
     }
 }

@@ -175,7 +175,7 @@ public class CraftContainer extends ScreenHandler {
             case CHEST:
             case ENDER_CHEST:
             case BARREL:
-                delegate = new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
+                delegate = new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9x3, windowId, bottom, top, top.size() / 9);
                 break;
             case DISPENSER:
             case DROPPER:
@@ -322,12 +322,12 @@ public class CraftContainer extends ScreenHandler {
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity entityhuman, int i) {
-        return (delegate != null) ? delegate.quickMoveStack(entityhuman, i) : ItemStack.EMPTY;
+    public ItemStack quickMove(PlayerEntity entityhuman, int i) {
+        return (delegate != null) ? delegate.quickMove(entityhuman, i) : ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(PlayerEntity entity) {
+    public boolean canUse(PlayerEntity entity) {
         return true;
     }
 

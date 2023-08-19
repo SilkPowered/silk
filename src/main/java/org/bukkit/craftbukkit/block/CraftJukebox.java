@@ -40,13 +40,13 @@ public class CraftJukebox extends CraftBlockEntityState<JukeboxBlockEntity> impl
 
         if (result && this.isPlaced() && this.getType() == Material.JUKEBOX) {
             Material record = this.getPlaying();
-            getWorldHandle().setBlock(this.getPosition(), data, 3);
+            getWorldHandle().setBlockState(this.getPosition(), data, 3);
 
             BlockEntity tileEntity = this.getTileEntityFromWorld();
             if (tileEntity instanceof JukeboxBlockEntity jukebox) {
                 CraftWorld world = (CraftWorld) this.getWorld();
                 if (record.isAir()) {
-                    jukebox.setRecordWithoutPlaying(ItemStack.EMPTY);
+                    jukebox.setDisc(ItemStack.EMPTY);
                     world.playEffect(this.getLocation(), Effect.IRON_DOOR_CLOSE, 0); // TODO: Fix this enum constant. This stops jukeboxes
                 } else {
                     world.playEffect(this.getLocation(), Effect.RECORD_PLAY, record);
@@ -73,12 +73,12 @@ public class CraftJukebox extends CraftBlockEntityState<JukeboxBlockEntity> impl
 
     @Override
     public boolean hasRecord() {
-        return getHandle().getValue(JukeboxBlock.HAS_RECORD) && !getPlaying().isAir();
+        return getHandle().get(JukeboxBlock.HAS_RECORD) && !getPlaying().isAir();
     }
 
     @Override
     public org.bukkit.inventory.ItemStack getRecord() {
-        ItemStack record = this.getSnapshot().getFirstItem();
+        ItemStack record = this.getSnapshot().getStack();
         return CraftItemStack.asBukkitCopy(record);
     }
 
@@ -87,11 +87,11 @@ public class CraftJukebox extends CraftBlockEntityState<JukeboxBlockEntity> impl
         ItemStack nms = CraftItemStack.asNMSCopy(record);
 
         JukeboxBlockEntity snapshot = this.getSnapshot();
-        snapshot.setRecordWithoutPlaying(nms);
+        snapshot.setDisc(nms);
         snapshot.recordStartedTick = snapshot.tickCount;
         snapshot.isPlaying = !nms.isEmpty();
 
-        this.data = this.data.setValue(JukeboxBlock.HAS_RECORD, !nms.isEmpty());
+        this.data = this.data.with(JukeboxBlock.HAS_RECORD, !nms.isEmpty());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class CraftJukebox extends CraftBlockEntityState<JukeboxBlockEntity> impl
         requirePlaced();
 
         BlockEntity tileEntity = this.getTileEntityFromWorld();
-        return tileEntity instanceof JukeboxBlockEntity jukebox && jukebox.isRecordPlaying();
+        return tileEntity instanceof JukeboxBlockEntity jukebox && jukebox.isPlayingRecord();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class CraftJukebox extends CraftBlockEntityState<JukeboxBlockEntity> impl
             return false;
         }
 
-        ItemStack record = jukebox.getFirstItem();
+        ItemStack record = jukebox.getStack();
         if (record.isEmpty() || isPlaying()) {
             return false;
         }
@@ -143,8 +143,8 @@ public class CraftJukebox extends CraftBlockEntityState<JukeboxBlockEntity> impl
         if (!(tileEntity instanceof JukeboxBlockEntity)) return false;
 
         JukeboxBlockEntity jukebox = (JukeboxBlockEntity) tileEntity;
-        boolean result = !jukebox.getFirstItem().isEmpty();
-        jukebox.popOutRecord();
+        boolean result = !jukebox.getStack().isEmpty();
+        jukebox.dropRecord();
         return result;
     }
 }

@@ -40,7 +40,7 @@ public class CraftAdvancementDisplay implements org.bukkit.advancement.Advanceme
 
     @Override
     public boolean shouldAnnounceChat() {
-        return handle.shouldAnnounceChat();
+        return handle.shouldAnnounceToChat();
     }
 
     @Override

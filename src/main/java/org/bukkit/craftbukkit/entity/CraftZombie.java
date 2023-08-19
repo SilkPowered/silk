@@ -25,12 +25,12 @@ public class CraftZombie extends CraftMonster implements Zombie {
 
     @Override
     public boolean isBaby() {
-        return getHandle().isBaby();
+        return getHandle().h_();
     }
 
     @Override
     public void setBaby(boolean flag) {
-        getHandle().setBaby(flag);
+        getHandle().a(flag);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CraftZombie extends CraftMonster implements Zombie {
 
     @Override
     public boolean isConverting() {
-        return getHandle().isUnderWaterConverting();
+        return getHandle().isConvertingInWater();
     }
 
     @Override
@@ -69,20 +69,20 @@ public class CraftZombie extends CraftMonster implements Zombie {
     public void setConversionTime(int time) {
         if (time < 0) {
             getHandle().conversionTime = -1;
-            getHandle().getEntityData().set(ZombieEntity.DATA_DROWNED_CONVERSION_ID, false);
+            getHandle().getDataTracker().set(ZombieEntity.DATA_DROWNED_CONVERSION_ID, false);
         } else {
-            getHandle().startUnderWaterConversion(time);
+            getHandle().setTicksUntilWaterConversion(time);
         }
     }
 
     @Override
     public int getAge() {
-        return getHandle().isBaby() ? -1 : 0;
+        return getHandle().h_() ? -1 : 0;
     }
 
     @Override
     public void setAge(int i) {
-        getHandle().setBaby(i < 0);
+        getHandle().a(i < 0);
     }
 
     @Override
@@ -96,17 +96,17 @@ public class CraftZombie extends CraftMonster implements Zombie {
 
     @Override
     public void setBaby() {
-        getHandle().setBaby(true);
+        getHandle().a(true);
     }
 
     @Override
     public void setAdult() {
-        getHandle().setBaby(false);
+        getHandle().a(false);
     }
 
     @Override
     public boolean isAdult() {
-        return !getHandle().isBaby();
+        return !getHandle().h_();
     }
 
     @Override

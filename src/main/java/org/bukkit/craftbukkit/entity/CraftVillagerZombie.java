@@ -31,24 +31,24 @@ public class CraftVillagerZombie extends CraftZombie implements ZombieVillager {
 
     @Override
     public Villager.Profession getVillagerProfession() {
-        return Villager.Profession.valueOf(Registries.VILLAGER_PROFESSION.getKey(getHandle().getVillagerData().getProfession()).getPath().toUpperCase(Locale.ROOT));
+        return Villager.Profession.valueOf(Registries.VILLAGER_PROFESSION.b(getHandle().gj().getProfession()).getPath().toUpperCase(Locale.ROOT));
     }
 
     @Override
     public void setVillagerProfession(Villager.Profession profession) {
         Preconditions.checkArgument(profession != null, "Villager.Profession cannot be null");
-        getHandle().setVillagerData(getHandle().getVillagerData().setProfession(Registries.VILLAGER_PROFESSION.get(new Identifier(profession.name().toLowerCase(Locale.ROOT)))));
+        getHandle().a(getHandle().gj().withProfession(Registries.VILLAGER_PROFESSION.a(new Identifier(profession.name().toLowerCase(Locale.ROOT)))));
     }
 
     @Override
     public Villager.Type getVillagerType() {
-        return Villager.Type.valueOf(Registries.VILLAGER_TYPE.getKey(getHandle().getVillagerData().getType()).getPath().toUpperCase(Locale.ROOT));
+        return Villager.Type.valueOf(Registries.VILLAGER_TYPE.b(getHandle().gj().getType()).getPath().toUpperCase(Locale.ROOT));
     }
 
     @Override
     public void setVillagerType(Villager.Type type) {
         Preconditions.checkArgument(type != null, "Villager.Type cannot be null");
-        getHandle().setVillagerData(getHandle().getVillagerData().setType(Registries.VILLAGER_TYPE.get(CraftNamespacedKey.toMinecraft(type.getKey()))));
+        getHandle().a(getHandle().gj().withType(Registries.VILLAGER_TYPE.a(CraftNamespacedKey.toMinecraft(type.getKey()))));
     }
 
     @Override
@@ -67,11 +67,11 @@ public class CraftVillagerZombie extends CraftZombie implements ZombieVillager {
     public void setConversionTime(int time) {
         if (time < 0) {
             getHandle().villagerConversionTime = -1;
-            getHandle().getEntityData().set(ZombieVillagerEntity.DATA_CONVERTING_ID, false);
+            getHandle().getDataTracker().set(ZombieVillagerEntity.DATA_CONVERTING_ID, false);
             getHandle().conversionStarter = null;
             getHandle().removeEffect(StatusEffects.DAMAGE_BOOST, org.bukkit.event.entity.EntityPotionEffectEvent.Cause.CONVERSION);
         } else {
-            getHandle().startConverting(null, time);
+            getHandle().setConverting(null, time);
         }
     }
 

@@ -123,7 +123,7 @@ public enum CraftStatistic {
     public static org.bukkit.Statistic getBukkitStatistic(net.minecraft.stat.Stat<?> statistic) {
         Preconditions.checkArgument(statistic != null, "NMS Statistic cannot be null");
         Registry statRegistry = statistic.getType().getRegistry();
-        Identifier nmsKey = Registries.STAT_TYPE.getKey(statistic.getType());
+        Identifier nmsKey = Registries.STAT_TYPE.getId(statistic.getType());
 
         if (statRegistry == Registries.CUSTOM_STAT) {
             nmsKey = (Identifier) statistic.getValue();
@@ -135,7 +135,7 @@ public enum CraftStatistic {
     public static net.minecraft.stat.Stat getNMSStatistic(org.bukkit.Statistic bukkit) {
         Preconditions.checkArgument(bukkit.getType() == Statistic.Type.UNTYPED, "This method only accepts untyped statistics");
 
-        net.minecraft.stat.Stat<Identifier> nms = Stats.CUSTOM.get(statistics.inverse().get(bukkit));
+        net.minecraft.stat.Stat<Identifier> nms = Stats.CUSTOM.getOrCreateStat(statistics.inverse().get(bukkit));
         Preconditions.checkArgument(nms != null, "NMS Statistic %s does not exist", bukkit);
 
         return nms;
@@ -144,22 +144,22 @@ public enum CraftStatistic {
     public static net.minecraft.stat.Stat getMaterialStatistic(org.bukkit.Statistic stat, Material material) {
         try {
             if (stat == Statistic.MINE_BLOCK) {
-                return Stats.BLOCK_MINED.get(CraftMagicNumbers.getBlock(material));
+                return Stats.BLOCK_MINED.getOrCreateStat(CraftMagicNumbers.getBlock(material));
             }
             if (stat == Statistic.CRAFT_ITEM) {
-                return Stats.ITEM_CRAFTED.get(CraftMagicNumbers.getItem(material));
+                return Stats.ITEM_CRAFTED.getOrCreateStat(CraftMagicNumbers.getItem(material));
             }
             if (stat == Statistic.USE_ITEM) {
-                return Stats.ITEM_USED.get(CraftMagicNumbers.getItem(material));
+                return Stats.ITEM_USED.getOrCreateStat(CraftMagicNumbers.getItem(material));
             }
             if (stat == Statistic.BREAK_ITEM) {
-                return Stats.ITEM_BROKEN.get(CraftMagicNumbers.getItem(material));
+                return Stats.ITEM_BROKEN.getOrCreateStat(CraftMagicNumbers.getItem(material));
             }
             if (stat == Statistic.PICKUP) {
-                return Stats.ITEM_PICKED_UP.get(CraftMagicNumbers.getItem(material));
+                return Stats.ITEM_PICKED_UP.getOrCreateStat(CraftMagicNumbers.getItem(material));
             }
             if (stat == Statistic.DROP) {
-                return Stats.ITEM_DROPPED.get(CraftMagicNumbers.getItem(material));
+                return Stats.ITEM_DROPPED.getOrCreateStat(CraftMagicNumbers.getItem(material));
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
@@ -170,13 +170,13 @@ public enum CraftStatistic {
     public static net.minecraft.stat.Stat getEntityStatistic(org.bukkit.Statistic stat, EntityType entity) {
         Preconditions.checkArgument(entity != null, "EntityType cannot be null");
         if (entity.getName() != null) {
-            net.minecraft.entity.EntityType<?> nmsEntity = Registries.ENTITY_TYPE.get(new Identifier(entity.getName()));
+            net.minecraft.entity.EntityType<?> nmsEntity = Registries.ENTITY_TYPE.a(new Identifier(entity.getName()));
 
             if (stat == org.bukkit.Statistic.KILL_ENTITY) {
-                return net.minecraft.stat.Stats.ENTITY_KILLED.get(nmsEntity);
+                return net.minecraft.stat.Stats.ENTITY_KILLED.getOrCreateStat(nmsEntity);
             }
             if (stat == org.bukkit.Statistic.ENTITY_KILLED_BY) {
-                return net.minecraft.stat.Stats.ENTITY_KILLED_BY.get(nmsEntity);
+                return net.minecraft.stat.Stats.ENTITY_KILLED_BY.getOrCreateStat(nmsEntity);
             }
         }
         return null;
@@ -184,7 +184,7 @@ public enum CraftStatistic {
 
     public static EntityType getEntityTypeFromStatistic(net.minecraft.stat.Stat<net.minecraft.entity.EntityType<?>> statistic) {
         Preconditions.checkArgument(statistic != null, "NMS Statistic cannot be null");
-        Identifier name = net.minecraft.entity.EntityType.getKey(statistic.getValue());
+        Identifier name = net.minecraft.entity.EntityType.getId(statistic.getValue());
         return EntityType.fromName(name.getPath());
     }
 
@@ -209,7 +209,7 @@ public enum CraftStatistic {
     public static int getStatistic(ServerStatHandler manager, Statistic statistic) {
         Preconditions.checkArgument(statistic != null, "Statistic cannot be null");
         Preconditions.checkArgument(statistic.getType() == Type.UNTYPED, "Must supply additional parameter for this statistic");
-        return manager.getValue(CraftStatistic.getNMSStatistic(statistic));
+        return manager.getStat(CraftStatistic.getNMSStatistic(statistic));
     }
 
     public static void incrementStatistic(ServerStatHandler manager, Statistic statistic, int amount) {
@@ -227,7 +227,7 @@ public enum CraftStatistic {
         Preconditions.checkArgument(statistic.getType() == Type.UNTYPED, "Must supply additional parameter for this statistic");
         Preconditions.checkArgument(newValue >= 0, "Value must be greater than or equal to 0");
         net.minecraft.stat.Stat nmsStatistic = CraftStatistic.getNMSStatistic(statistic);
-        manager.setValue(null, nmsStatistic, newValue);;
+        manager.a(null, nmsStatistic, newValue);;
     }
 
     public static void incrementStatistic(ServerStatHandler manager, Statistic statistic, Material material) {
@@ -244,7 +244,7 @@ public enum CraftStatistic {
         Preconditions.checkArgument(statistic.getType() == Type.BLOCK || statistic.getType() == Type.ITEM, "This statistic does not take a Material parameter");
         net.minecraft.stat.Stat nmsStatistic = CraftStatistic.getMaterialStatistic(statistic, material);
         Preconditions.checkArgument(nmsStatistic != null, "The supplied Material %s does not have a corresponding statistic", material);
-        return manager.getValue(nmsStatistic);
+        return manager.getStat(nmsStatistic);
     }
 
     public static void incrementStatistic(ServerStatHandler manager, Statistic statistic, Material material, int amount) {
@@ -264,7 +264,7 @@ public enum CraftStatistic {
         Preconditions.checkArgument(statistic.getType() == Type.BLOCK || statistic.getType() == Type.ITEM, "This statistic does not take a Material parameter");
         net.minecraft.stat.Stat nmsStatistic = CraftStatistic.getMaterialStatistic(statistic, material);
         Preconditions.checkArgument(nmsStatistic != null, "The supplied Material %s does not have a corresponding statistic", material);
-        manager.setValue(null, nmsStatistic, newValue);
+        manager.a(null, nmsStatistic, newValue);
     }
 
     public static void incrementStatistic(ServerStatHandler manager, Statistic statistic, EntityType entityType) {
@@ -281,7 +281,7 @@ public enum CraftStatistic {
         Preconditions.checkArgument(statistic.getType() == Type.ENTITY, "This statistic does not take an EntityType parameter");
         net.minecraft.stat.Stat nmsStatistic = CraftStatistic.getEntityStatistic(statistic, entityType);
         Preconditions.checkArgument(nmsStatistic != null, "The supplied EntityType %s does not have a corresponding statistic", entityType);
-        return manager.getValue(nmsStatistic);
+        return manager.getStat(nmsStatistic);
     }
 
     public static void incrementStatistic(ServerStatHandler manager, Statistic statistic, EntityType entityType, int amount) {
@@ -301,6 +301,6 @@ public enum CraftStatistic {
         Preconditions.checkArgument(statistic.getType() == Type.ENTITY, "This statistic does not take an EntityType parameter");
         net.minecraft.stat.Stat nmsStatistic = CraftStatistic.getEntityStatistic(statistic, entityType);
         Preconditions.checkArgument(nmsStatistic != null, "The supplied EntityType %s does not have a corresponding statistic", entityType);
-        manager.setValue(null, nmsStatistic, newValue);
+        manager.a(null, nmsStatistic, newValue);
     }
 }

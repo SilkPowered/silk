@@ -39,7 +39,7 @@ public class CraftPiglinAbstract extends CraftMonster implements PiglinAbstract 
 
     @Override
     public boolean isConverting() {
-        return getHandle().isConverting();
+        return getHandle().shouldZombify();
     }
 
     @Override

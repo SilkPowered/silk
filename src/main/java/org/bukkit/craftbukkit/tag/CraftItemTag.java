@@ -24,11 +24,11 @@ public class CraftItemTag extends CraftTag<Item, Material> {
             return false;
         }
 
-        return minecraft.builtInRegistryHolder().is(tag);
+        return minecraft.builtInRegistryHolder().isIn(tag);
     }
 
     @Override
     public Set<Material> getValues() {
-        return getHandle().stream().map((item) -> CraftMagicNumbers.getMaterial(item.value())).collect(Collectors.toUnmodifiableSet());
+        return getHandle().stream().map((item) -> CraftMagicNumbers.getMaterial(item.comp_349())).collect(Collectors.toUnmodifiableSet());
     }
 }

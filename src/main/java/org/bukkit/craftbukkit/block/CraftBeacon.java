@@ -29,7 +29,7 @@ public class CraftBeacon extends CraftBlockEntityState<BeaconBlockEntity> implem
         if (tileEntity instanceof BeaconBlockEntity) {
             BeaconBlockEntity beacon = (BeaconBlockEntity) tileEntity;
 
-            Collection<PlayerEntity> nms = BeaconBlockEntity.getHumansInRange(beacon.getLevel(), beacon.getBlockPos(), beacon.levels);
+            Collection<PlayerEntity> nms = BeaconBlockEntity.getHumansInRange(beacon.getWorld(), beacon.getPos(), beacon.levels);
             Collection<LivingEntity> bukkit = new ArrayList<LivingEntity>(nms.size());
 
             for (PlayerEntity human : nms) {
@@ -55,7 +55,7 @@ public class CraftBeacon extends CraftBlockEntityState<BeaconBlockEntity> implem
 
     @Override
     public void setPrimaryEffect(PotionEffectType effect) {
-        this.getSnapshot().primaryPower = (effect != null) ? StatusEffect.byId(effect.getId()) : null;
+        this.getSnapshot().primaryPower = (effect != null) ? StatusEffect.byRawId(effect.getId()) : null;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CraftBeacon extends CraftBlockEntityState<BeaconBlockEntity> implem
 
     @Override
     public void setSecondaryEffect(PotionEffectType effect) {
-        this.getSnapshot().secondaryPower = (effect != null) ? StatusEffect.byId(effect.getId()) : null;
+        this.getSnapshot().secondaryPower = (effect != null) ? StatusEffect.byRawId(effect.getId()) : null;
     }
 
     @Override

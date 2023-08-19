@@ -26,7 +26,7 @@ public class CraftEffect {
             break;
         case RECORD_PLAY:
             Preconditions.checkArgument(data == Material.AIR || ((Material) data).isRecord(), "Invalid record type for Material %s!", data);
-            datavalue = Item.getId(CraftMagicNumbers.getItem((Material) data));
+            datavalue = Item.getRawId(CraftMagicNumbers.getItem((Material) data));
             break;
         case SMOKE:
             switch ((BlockFace) data) {
@@ -60,7 +60,7 @@ public class CraftEffect {
             break;
         case STEP_SOUND:
             Preconditions.checkArgument(((Material) data).isBlock(), "Material %s is not a block!", data);
-            datavalue = Block.getId(CraftMagicNumbers.getBlock((Material) data).defaultBlockState());
+            datavalue = Block.getRawIdFromState(CraftMagicNumbers.getBlock((Material) data).getDefaultState());
             break;
         case COMPOSTER_FILL_ATTEMPT:
             datavalue = ((Boolean) data) ? 1 : 0;

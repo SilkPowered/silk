@@ -27,53 +27,53 @@ public class CraftWarden extends CraftMonster implements org.bukkit.entity.Warde
 
     @Override
     public int getAnger() {
-        return getHandle().getAngerManagement().getActiveAnger(getHandle().getTarget());
+        return getHandle().getAngerManager().getAngerFor(getHandle().j());
     }
 
     @Override
     public int getAnger(Entity entity) {
         Preconditions.checkArgument(entity != null, "Entity cannot be null");
 
-        return getHandle().getAngerManagement().getActiveAnger(((CraftEntity) entity).getHandle());
+        return getHandle().getAngerManager().getAngerFor(((CraftEntity) entity).getHandle());
     }
 
     @Override
     public void increaseAnger(Entity entity, int increase) {
         Preconditions.checkArgument(entity != null, "Entity cannot be null");
 
-        getHandle().getAngerManagement().increaseAnger(((CraftEntity) entity).getHandle(), increase);
+        getHandle().getAngerManager().increaseAngerAt(((CraftEntity) entity).getHandle(), increase);
     }
 
     @Override
     public void setAnger(Entity entity, int anger) {
         Preconditions.checkArgument(entity != null, "Entity cannot be null");
 
-        getHandle().clearAnger(((CraftEntity) entity).getHandle());
-        getHandle().getAngerManagement().increaseAnger(((CraftEntity) entity).getHandle(), anger);
+        getHandle().removeSuspect(((CraftEntity) entity).getHandle());
+        getHandle().getAngerManager().increaseAngerAt(((CraftEntity) entity).getHandle(), anger);
     }
 
     @Override
     public void clearAnger(Entity entity) {
         Preconditions.checkArgument(entity != null, "Entity cannot be null");
 
-        getHandle().clearAnger(((CraftEntity) entity).getHandle());
+        getHandle().removeSuspect(((CraftEntity) entity).getHandle());
     }
 
     @Override
     public LivingEntity getEntityAngryAt() {
-        return (LivingEntity) getHandle().getEntityAngryAt().map(net.minecraft.entity.Entity::getBukkitEntity).orElse(null);
+        return (LivingEntity) getHandle().getPrimeSuspect().map(net.minecraft.entity.Entity::getBukkitEntity).orElse(null);
     }
 
     @Override
     public void setDisturbanceLocation(Location location) {
         Preconditions.checkArgument(location != null, "Location cannot be null");
 
-        WardenBrain.setDisturbanceLocation(getHandle(), BlockPos.containing(location.getX(), location.getY(), location.getZ()));
+        WardenBrain.lookAtDisturbance(getHandle(), BlockPos.ofFloored(location.getX(), location.getY(), location.getZ()));
     }
 
     @Override
     public AngerLevel getAngerLevel() {
-        return switch (getHandle().getAngerLevel()) {
+        return switch (getHandle().getAngriness()) {
             case CALM -> AngerLevel.CALM;
             case AGITATED -> AngerLevel.AGITATED;
             case ANGRY -> AngerLevel.ANGRY;

@@ -41,30 +41,30 @@ public class CraftWither extends CraftMonster implements Wither {
         Preconditions.checkArgument(head != null, "head cannot be null");
 
         int entityId = (livingEntity != null) ? livingEntity.getEntityId() : 0;
-        getHandle().setAlternativeTarget(head.ordinal(), entityId);
+        getHandle().setTrackedEntityId(head.ordinal(), entityId);
     }
 
     @Override
     public LivingEntity getTarget(Head head) {
         Preconditions.checkArgument(head != null, "head cannot be null");
 
-        int entityId = getHandle().getAlternativeTarget(head.ordinal());
+        int entityId = getHandle().getTrackedEntityId(head.ordinal());
         if (entityId == 0) {
             return null;
         }
-        Entity target = getHandle().level().getEntity(entityId);
+        Entity target = getHandle().getWorld().getEntityById(entityId);
         return (target != null) ? (LivingEntity) target.getBukkitEntity() : null;
     }
 
     @Override
     public int getInvulnerabilityTicks() {
-        return getHandle().getInvulnerableTicks();
+        return getHandle().getInvulnerableTimer();
     }
 
     @Override
     public void setInvulnerabilityTicks(int ticks) {
         Preconditions.checkArgument(ticks >= 0, "ticks must be >=0");
 
-        getHandle().setInvulnerableTicks(ticks);
+        getHandle().setInvulTimer(ticks);
     }
 }

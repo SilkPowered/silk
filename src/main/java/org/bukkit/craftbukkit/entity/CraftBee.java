@@ -38,14 +38,14 @@ public class CraftBee extends CraftAnimals implements Bee {
 
     @Override
     public Location getFlower() {
-        BlockPos flower = getHandle().getSavedFlowerPos();
+        BlockPos flower = getHandle().getFlowerPos();
         return (flower == null) ? null : CraftLocation.toBukkit(flower, getWorld());
     }
 
     @Override
     public void setFlower(Location location) {
         Preconditions.checkArgument(location == null || this.getWorld().equals(location.getWorld()), "Flower must be in same world");
-        getHandle().setSavedFlowerPos(location == null ? null : CraftLocation.toBlockPosition(location));
+        getHandle().setFlowerPos(location == null ? null : CraftLocation.toBlockPosition(location));
     }
 
     @Override
@@ -70,12 +70,12 @@ public class CraftBee extends CraftAnimals implements Bee {
 
     @Override
     public int getAnger() {
-        return getHandle().getRemainingPersistentAngerTime();
+        return getHandle().a();
     }
 
     @Override
     public void setAnger(int anger) {
-        getHandle().setRemainingPersistentAngerTime(anger);
+        getHandle().a(anger);
     }
 
     @Override
@@ -85,6 +85,6 @@ public class CraftBee extends CraftAnimals implements Bee {
 
     @Override
     public void setCannotEnterHiveTicks(int ticks) {
-        getHandle().setStayOutOfHiveCountdown(ticks);
+        getHandle().setCannotEnterHiveTicks(ticks);
     }
 }

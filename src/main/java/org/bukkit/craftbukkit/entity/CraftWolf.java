@@ -12,15 +12,15 @@ public class CraftWolf extends CraftTameableAnimal implements Wolf {
 
     @Override
     public boolean isAngry() {
-        return getHandle().isAngry();
+        return getHandle().hasAngerTime();
     }
 
     @Override
     public void setAngry(boolean angry) {
         if (angry) {
-            getHandle().startPersistentAngerTimer();
+            getHandle().c();
         } else {
-            getHandle().stopBeingAngry();
+            getHandle().stopAnger();
         }
     }
 
@@ -41,7 +41,7 @@ public class CraftWolf extends CraftTameableAnimal implements Wolf {
 
     @Override
     public boolean isWet() {
-        return getHandle().isWet();
+        return getHandle().isFurWet();
     }
 
     @Override
@@ -51,11 +51,11 @@ public class CraftWolf extends CraftTameableAnimal implements Wolf {
 
     @Override
     public boolean isInterested() {
-        return getHandle().isInterested();
+        return getHandle().isBegging();
     }
 
     @Override
     public void setInterested(boolean flag) {
-        getHandle().setIsInterested(flag);
+        getHandle().setBegging(flag);
     }
 }

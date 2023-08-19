@@ -22,12 +22,12 @@ public class CraftItem extends CraftEntity implements Item {
 
     @Override
     public ItemStack getItemStack() {
-        return CraftItemStack.asCraftMirror(item.getItem());
+        return CraftItemStack.asCraftMirror(item.getStack());
     }
 
     @Override
     public void setItemStack(ItemStack stack) {
-        item.setItem(CraftItemStack.asNMSCopy(stack));
+        item.setStack(CraftItemStack.asNMSCopy(stack));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CraftItem extends CraftEntity implements Item {
 
     @Override
     public void setOwner(UUID uuid) {
-        item.setTarget(uuid);
+        item.setOwner(uuid);
     }
 
     @Override

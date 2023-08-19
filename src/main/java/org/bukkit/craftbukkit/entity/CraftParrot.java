@@ -26,7 +26,7 @@ public class CraftParrot extends CraftTameableAnimal implements Parrot {
     public void setVariant(Variant variant) {
         Preconditions.checkArgument(variant != null, "variant");
 
-        getHandle().setVariant(ParrotEntity.Variant.byId(variant.ordinal()));
+        getHandle().setVariant(ParrotEntity.Variant.byIndex(variant.ordinal()));
     }
 
     @Override
@@ -36,6 +36,6 @@ public class CraftParrot extends CraftTameableAnimal implements Parrot {
 
     @Override
     public boolean isDancing() {
-        return getHandle().isPartyParrot();
+        return getHandle().isSongPlaying();
     }
 }

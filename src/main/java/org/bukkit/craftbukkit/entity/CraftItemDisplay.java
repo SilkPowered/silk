@@ -35,13 +35,13 @@ public class CraftItemDisplay extends CraftDisplay implements ItemDisplay {
 
     @Override
     public ItemDisplayTransform getItemDisplayTransform() {
-        return ItemDisplayTransform.values()[getHandle().getItemTransform().ordinal()];
+        return ItemDisplayTransform.values()[getHandle().getTransformationMode().ordinal()];
     }
 
     @Override
     public void setItemDisplayTransform(ItemDisplayTransform display) {
         Preconditions.checkArgument(display != null, "Display cannot be null");
 
-        getHandle().setItemTransform(ModelTransformationMode.BY_ID.apply(display.ordinal()));
+        getHandle().setTransformationMode(ModelTransformationMode.BY_ID.apply(display.ordinal()));
     }
 }

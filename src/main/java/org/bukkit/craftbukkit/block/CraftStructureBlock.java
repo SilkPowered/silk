@@ -25,13 +25,13 @@ public class CraftStructureBlock extends CraftBlockEntityState<StructureBlockBlo
 
     @Override
     public String getStructureName() {
-        return getSnapshot().getStructureName();
+        return getSnapshot().getTemplateName();
     }
 
     @Override
     public void setStructureName(String name) {
         Preconditions.checkArgument(name != null, "Structure name cannot be null");
-        getSnapshot().setStructureName(name);
+        getSnapshot().setTemplateName(name);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CraftStructureBlock extends CraftBlockEntityState<StructureBlockBlo
     @Override
     public void setAuthor(LivingEntity entity) {
         Preconditions.checkArgument(entity != null, "Structure Block author entity cannot be null");
-        getSnapshot().createdBy(((CraftLivingEntity) entity).getHandle());
+        getSnapshot().setAuthor(((CraftLivingEntity) entity).getHandle());
     }
 
     @Override
@@ -187,8 +187,8 @@ public class CraftStructureBlock extends CraftBlockEntityState<StructureBlockBlo
             // Custom handle during world generation
             // From TileEntityStructure#setUsageMode(BlockPropertyStructureMode)
             net.minecraft.block.BlockState data = access.getBlockState(this.getPosition());
-            if (data.is(net.minecraft.block.Blocks.STRUCTURE_BLOCK)) {
-                access.setBlock(this.getPosition(), data.setValue(net.minecraft.block.StructureBlock.MODE, tileEntity.getMode()), 2);
+            if (data.isOf(net.minecraft.block.Blocks.STRUCTURE_BLOCK)) {
+                access.setBlockState(this.getPosition(), data.with(net.minecraft.block.StructureBlock.MODE, tileEntity.getMode()), 2);
             }
         }
     }

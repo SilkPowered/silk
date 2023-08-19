@@ -13,7 +13,7 @@ public class CraftSkeleton extends CraftAbstractSkeleton implements Skeleton {
 
     @Override
     public boolean isConverting() {
-        return this.getHandle().isFreezeConverting();
+        return this.getHandle().isConverting();
     }
 
     @Override
@@ -26,9 +26,9 @@ public class CraftSkeleton extends CraftAbstractSkeleton implements Skeleton {
     public void setConversionTime(int time) {
         if (time < 0) {
             this.getHandle().conversionTime = -1;
-            this.getHandle().getEntityData().set(SkeletonEntity.DATA_STRAY_CONVERSION_ID, false);
+            this.getHandle().getDataTracker().set(SkeletonEntity.DATA_STRAY_CONVERSION_ID, false);
         } else {
-            this.getHandle().startFreezeConversion(time);
+            this.getHandle().setConversionTime(time);
         }
     }
 

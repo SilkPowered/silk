@@ -28,7 +28,7 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
 
     @Override
     public ItemStack getItemInMainHand() {
-        return CraftItemStack.asCraftMirror(getInventory().getSelected());
+        return CraftItemStack.asCraftMirror(getInventory().getMainHandStack());
     }
 
     @Override
@@ -102,14 +102,14 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
         // to reverse the order of the index from 8. That means we need 0 to correspond to 8, 1 to correspond to 7,
         // 2 to correspond to 6, and 3 to correspond to 5. We do this simply by taking the result of (index - 36) and
         // subtracting that value from 8.
-        if (index < PlayerInventory.getSelectionSize()) {
+        if (index < PlayerInventory.getHotbarSize()) {
             index += 36;
         } else if (index > 39) {
             index += 5; // Off hand
         } else if (index > 35) {
             index = 8 - (index - 36);
         }
-        player.connection.send(new ScreenHandlerSlotUpdateS2CPacket(player.inventoryMenu.containerId, player.inventoryMenu.incrementStateId(), index, CraftItemStack.asNMSCopy(item)));
+        player.connection.a(new ScreenHandlerSlotUpdateS2CPacket(player.inventoryMenu.containerId, player.inventoryMenu.nextRevision(), index, CraftItemStack.asNMSCopy(item)));
     }
 
     @Override
@@ -174,9 +174,9 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
 
     @Override
     public void setHeldItemSlot(int slot) {
-        Preconditions.checkArgument(slot >= 0 && slot < PlayerInventory.getSelectionSize(), "Slot (%s) is not between 0 and %s inclusive", slot, PlayerInventory.getSelectionSize() - 1);
+        Preconditions.checkArgument(slot >= 0 && slot < PlayerInventory.getHotbarSize(), "Slot (%s) is not between 0 and %s inclusive", slot, PlayerInventory.getHotbarSize() - 1);
         this.getInventory().selected = slot;
-        ((CraftPlayer) this.getHolder()).getHandle().connection.send(new UpdateSelectedSlotS2CPacket(slot));
+        ((CraftPlayer) this.getHolder()).getHandle().connection.a(new UpdateSelectedSlotS2CPacket(slot));
     }
 
     @Override

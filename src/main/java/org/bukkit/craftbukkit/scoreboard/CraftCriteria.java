@@ -54,7 +54,7 @@ public final class CraftCriteria implements Criteria {
     }
 
     static CraftCriteria getFromNMS(ScoreboardObjective objective) {
-        return DEFAULTS.get(objective.getCriteria().getName());
+        return DEFAULTS.get(objective.getCriterion().getName());
     }
 
     public static CraftCriteria getFromBukkit(String name) {
@@ -63,7 +63,7 @@ public final class CraftCriteria implements Criteria {
             return criteria;
         }
 
-        return ScoreboardCriterion.byName(name).map(CraftCriteria::new).orElseGet(() -> new CraftCriteria(name));
+        return ScoreboardCriterion.getOrCreateStatCriterion(name).map(CraftCriteria::new).orElseGet(() -> new CraftCriteria(name));
     }
 
     @Override

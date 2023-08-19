@@ -44,9 +44,9 @@ public class CraftCamel extends CraftAbstractHorse implements Camel {
     @Override
     public void setSitting(boolean sitting) {
         if (sitting) {
-            getHandle().sitDown();
+            getHandle().startSitting();
         } else {
-            getHandle().standUp();
+            getHandle().startStanding();
         }
     }
 }

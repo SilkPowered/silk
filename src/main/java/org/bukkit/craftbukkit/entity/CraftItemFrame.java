@@ -20,14 +20,14 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
     @Override
     public boolean setFacingDirection(BlockFace face, boolean force) {
         AbstractDecorationEntity hanging = getHandle();
-        Direction oldDir = hanging.getDirection();
+        Direction oldDir = hanging.cB();
         Direction newDir = CraftBlock.blockFaceToNotch(face);
 
         Preconditions.checkArgument(newDir != null, "%s is not a valid facing direction", face);
 
-        getHandle().setDirection(newDir);
-        if (!force && !getHandle().generation && !hanging.survives()) {
-            hanging.setDirection(oldDir);
+        getHandle().a(newDir);
+        if (!force && !getHandle().generation && !hanging.canStayAttached()) {
+            hanging.setFacing(oldDir);
             return false;
         }
 
@@ -41,12 +41,12 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
         super.update();
 
         // mark dirty, so that the client gets updated with item and rotation
-        getHandle().getEntityData().markDirty(ItemFrameEntity.DATA_ITEM);
-        getHandle().getEntityData().markDirty(ItemFrameEntity.DATA_ROTATION);
+        getHandle().getDataTracker().markDirty(ItemFrameEntity.DATA_ITEM);
+        getHandle().getDataTracker().markDirty(ItemFrameEntity.DATA_ROTATION);
 
         // update redstone
         if (!getHandle().generation) {
-            getHandle().level().updateNeighbourForOutputSignal(getHandle().pos, Blocks.AIR);
+            getHandle().getWorld().updateComparators(getHandle().pos, Blocks.AIR);
         }
     }
 
@@ -63,7 +63,7 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
 
     @Override
     public org.bukkit.inventory.ItemStack getItem() {
-        return CraftItemStack.asBukkitCopy(getHandle().getItem());
+        return CraftItemStack.asBukkitCopy(getHandle().getHeldItemStack());
     }
 
     @Override

@@ -47,9 +47,9 @@ public class CraftBossBar implements BossBar {
 
     private void initialize() {
         this.flags = new HashMap<>();
-        this.flags.put(BarFlag.DARKEN_SKY, new FlagContainer(handle::shouldDarkenScreen, handle::setDarkenScreen));
-        this.flags.put(BarFlag.PLAY_BOSS_MUSIC, new FlagContainer(handle::shouldPlayBossMusic, handle::setPlayBossMusic));
-        this.flags.put(BarFlag.CREATE_FOG, new FlagContainer(handle::shouldCreateWorldFog, handle::setCreateWorldFog));
+        this.flags.put(BarFlag.DARKEN_SKY, new FlagContainer(handle::shouldDarkenSky, handle::a));
+        this.flags.put(BarFlag.PLAY_BOSS_MUSIC, new FlagContainer(handle::hasDragonMusic, handle::b));
+        this.flags.put(BarFlag.CREATE_FOG, new FlagContainer(handle::shouldThickenFog, handle::c));
     }
 
     private BarColor convertColor(net.minecraft.entity.boss.BossBar.Color color) {
@@ -102,7 +102,7 @@ public class CraftBossBar implements BossBar {
     @Override
     public void setTitle(String title) {
         handle.name = CraftChatMessage.fromString(title, true)[0];
-        handle.broadcast(BossBarS2CPacket::createUpdateNamePacket);
+        handle.sendPacket(BossBarS2CPacket::updateName);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class CraftBossBar implements BossBar {
     @Override
     public void setColor(BarColor color) {
         handle.color = convertColor(color);
-        handle.broadcast(BossBarS2CPacket::createUpdateStylePacket);
+        handle.sendPacket(BossBarS2CPacket::updateStyle);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CraftBossBar implements BossBar {
     @Override
     public void setStyle(BarStyle style) {
         handle.overlay = convertStyle(style);
-        handle.broadcast(BossBarS2CPacket::createUpdateStylePacket);
+        handle.sendPacket(BossBarS2CPacket::updateStyle);
     }
 
     @Override
@@ -155,12 +155,12 @@ public class CraftBossBar implements BossBar {
     @Override
     public void setProgress(double progress) {
         Preconditions.checkArgument(progress >= 0.0 && progress <= 1.0, "Progress must be between 0.0 and 1.0 (%s)", progress);
-        handle.setProgress((float) progress);
+        handle.a((float) progress);
     }
 
     @Override
     public double getProgress() {
-        return handle.getProgress();
+        return handle.getPercent();
     }
 
     @Override

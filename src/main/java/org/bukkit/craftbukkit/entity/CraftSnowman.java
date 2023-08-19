@@ -16,7 +16,7 @@ public class CraftSnowman extends CraftGolem implements Snowman {
 
     @Override
     public void setDerp(boolean derpMode) {
-        getHandle().setPumpkin(!derpMode);
+        getHandle().setHasPumpkin(!derpMode);
     }
 
     @Override

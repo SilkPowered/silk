@@ -40,7 +40,7 @@ public class CraftDropper extends CraftLootable<DropperBlockEntity> implements D
             CraftWorld world = (CraftWorld) this.getWorld();
             DropperBlock drop = (DropperBlock) Blocks.DROPPER;
 
-            drop.dispenseFrom(world.getHandle(), this.getPosition());
+            drop.a(world.getHandle(), this.getPosition());
         }
     }
 }

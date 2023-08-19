@@ -24,11 +24,11 @@ public class CraftBlockTag extends CraftTag<Block, Material> {
             return false;
         }
 
-        return block.builtInRegistryHolder().is(tag);
+        return block.builtInRegistryHolder().isIn(tag);
     }
 
     @Override
     public Set<Material> getValues() {
-        return getHandle().stream().map((block) -> CraftMagicNumbers.getMaterial(block.value())).collect(Collectors.toUnmodifiableSet());
+        return getHandle().stream().map((block) -> CraftMagicNumbers.getMaterial(block.comp_349())).collect(Collectors.toUnmodifiableSet());
     }
 }
