@@ -1,7 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
-import net.minecraft.block.ChestBlock;
+import cx.rain.silk.patched.ChestBlockDoubleInventory;
 import net.minecraft.inventory.DoubleInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import org.bukkit.Location;
@@ -15,24 +15,24 @@ public class CraftInventoryDoubleChest extends CraftInventory implements DoubleC
     private final CraftInventory left;
     private final CraftInventory right;
 
-    public CraftInventoryDoubleChest(ChestBlock.DoubleInventory block) {
+    public CraftInventoryDoubleChest(ChestBlockDoubleInventory block) {
         super(block.inventorylargechest);
         this.tile = block;
-        this.left = new CraftInventory(block.inventorylargechest.container1);
-        this.right = new CraftInventory(block.inventorylargechest.container2);
+        this.left = new CraftInventory(block.inventorylargechest.first);
+        this.right = new CraftInventory(block.inventorylargechest.second);
     }
 
     public CraftInventoryDoubleChest(DoubleInventory largeChest) {
         super(largeChest);
-        if (largeChest.container1 instanceof DoubleInventory) {
-            left = new CraftInventoryDoubleChest((DoubleInventory) largeChest.container1);
+        if (largeChest.first instanceof DoubleInventory) {
+            left = new CraftInventoryDoubleChest((DoubleInventory) largeChest.first);
         } else {
-            left = new CraftInventory(largeChest.container1);
+            left = new CraftInventory(largeChest.first);
         }
-        if (largeChest.container2 instanceof DoubleInventory) {
-            right = new CraftInventoryDoubleChest((DoubleInventory) largeChest.container2);
+        if (largeChest.second instanceof DoubleInventory) {
+            right = new CraftInventoryDoubleChest((DoubleInventory) largeChest.second);
         } else {
-            right = new CraftInventory(largeChest.container2);
+            right = new CraftInventory(largeChest.second);
         }
     }
 

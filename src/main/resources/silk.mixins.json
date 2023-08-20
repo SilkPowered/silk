@@ -9,23 +9,7 @@
         "defaultRequire": 1
     },
     "mixins": [
-        "entity.EntityMixin",
-        "item.ItemStackMixin",
-        "server.MainMixin",
-        "server.MinecraftServerMixin",
-        "server.world.ChunkTicketManagerMixin",
-        "world.WorldMixin",
-        "entity.LivingEntityMixin",
-        "entity.damage.DamageSourceMixin",
-        "entity.damage.DamageSourcesMixin",
-        "entity.effect.StatusEffectMixin",
-        "entity.effect.StatusEffectsMixin",
-        "entity.effect.StatusEffectUtilMixin",
-        "entity.player.HungerManagerMixin",
-        "server.PlayerManagerMixin",
-        "text.TextColorBridge",
         "util.crash.CrashReportMixin",
-        "world.ServerWorldMixin",
-        "world.chunk.WorldChunkMixin"
+        "advancements.AdvancementManagerMixin"
     ]
 }

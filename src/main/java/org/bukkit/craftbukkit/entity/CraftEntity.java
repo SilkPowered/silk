@@ -373,7 +373,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         }
         else if (entity instanceof EnderDragonPart) {
             EnderDragonPart part = (EnderDragonPart) entity;
-            if (part.parentMob instanceof EnderDragonEntity) { return new CraftEnderDragonPart(server, (EnderDragonPart) entity); }
+            if (part.owner instanceof EnderDragonEntity) { return new CraftEnderDragonPart(server, (EnderDragonPart) entity); }
             else { return new CraftComplexPart(server, (EnderDragonPart) entity); }
         }
         else if (entity instanceof ExperienceOrbEntity) { return new CraftExperienceOrb(server, (ExperienceOrbEntity) entity); }
@@ -445,7 +445,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public Location getLocation() {
-        return CraftLocation.toBukkit(entity.getPos(), getWorld(), entity.getBukkitYaw(), entity.getPitch());
+        return CraftLocation.toBukkit(entity.getPos(), getWorld(), entity.getYaw(), entity.getPitch());
     }
 
     @Override
@@ -455,7 +455,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             loc.setX(entity.getX());
             loc.setY(entity.getY());
             loc.setZ(entity.getZ());
-            loc.setYaw(entity.getBukkitYaw());
+            loc.setYaw(entity.getYaw());
             loc.setPitch(entity.getPitch());
         }
 
@@ -472,7 +472,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         Preconditions.checkArgument(velocity != null, "velocity");
         velocity.checkFinite();
         entity.setVelocity(CraftVector.toNMS(velocity));
-        entity.hurtMarked = true;
+        entity.velocityModified = true;
     }
 
     @Override
@@ -487,7 +487,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public BoundingBox getBoundingBox() {
-        Box bb = getHandle().cE();
+        Box bb = getHandle().getBoundingBox();
         return new BoundingBox(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
     }
 
@@ -519,8 +519,8 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
         entity.setYaw(yaw);
         entity.setPitch(pitch);
-        entity.yRotO = yaw;
-        entity.xRotO = pitch;
+        entity.prevYaw = yaw;
+        entity.prevPitch = pitch;
         entity.setHeadYaw(yaw);
     }
 
@@ -583,7 +583,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public int getEntityId() {
-        return entity.af();
+        return entity.getId();
     }
 
     @Override
@@ -673,7 +673,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public org.bukkit.entity.Entity getPassenger() {
-        return isEmpty() ? null : getHandle().passengers.get(0).getBukkitEntity();
+        return isEmpty() ? null : getHandle().getPassengerList().get(0).getBukkitEntity();
     }
 
     @Override
@@ -689,7 +689,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public List<org.bukkit.entity.Entity> getPassengers() {
-        return Lists.newArrayList(Lists.transform(getHandle().passengers, (Function<Entity, org.bukkit.entity.Entity>) input -> input.getBukkitEntity()));
+        return Lists.newArrayList(Lists.transform(getHandle().getPassengerList(), (Function<Entity, org.bukkit.entity.Entity>) input -> input.getBukkitEntity()));
     }
 
     @Override
@@ -745,18 +745,18 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public UUID getUniqueId() {
-        return getHandle().ct();
+        return getHandle().getUuid();
     }
 
     @Override
     public int getTicksLived() {
-        return getHandle().tickCount;
+        return getHandle().age;
     }
 
     @Override
     public void setTicksLived(int value) {
         Preconditions.checkArgument(value > 0, "Age value (%s) must be greater than 0", value);
-        getHandle().tickCount = value;
+        getHandle().age = value;
     }
 
     public Entity getHandle() {
@@ -780,17 +780,17 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public Sound getSwimSound() {
-        return CraftSound.getBukkit(getHandle().getSwimSound0());
+        return CraftSound.getBukkit(getHandle().getSwimSound());
     }
 
     @Override
     public Sound getSwimSplashSound() {
-        return CraftSound.getBukkit(getHandle().getSwimSplashSound0());
+        return CraftSound.getBukkit(getHandle().getSplashSound());
     }
 
     @Override
     public Sound getSwimHighSpeedSplashSound() {
-        return CraftSound.getBukkit(getHandle().getSwimHighSpeedSplashSound0());
+        return CraftSound.getBukkit(getHandle().getHighSpeedSplashSound());
     }
 
     public void setHandle(final Entity entity) {
@@ -877,7 +877,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public String getCustomName() {
-        Text name = getHandle().ab();
+        Text name = getHandle().getCustomName();
 
         if (name == null) {
             return null;

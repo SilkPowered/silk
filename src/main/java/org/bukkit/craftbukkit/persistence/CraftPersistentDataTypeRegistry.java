@@ -111,29 +111,29 @@ public final class CraftPersistentDataTypeRegistry {
             Primitives
          */
         if (Objects.equals(Byte.class, type)) {
-            return createAdapter(Byte.class, NbtByte.class, NbtByte::of, NbtByte::i);
+            return createAdapter(Byte.class, NbtByte.class, NbtByte::of, NbtByte::byteValue);
         }
         if (Objects.equals(Short.class, type)) {
-            return createAdapter(Short.class, NbtShort.class, NbtShort::of, NbtShort::h);
+            return createAdapter(Short.class, NbtShort.class, NbtShort::of, NbtShort::shortValue);
         }
         if (Objects.equals(Integer.class, type)) {
-            return createAdapter(Integer.class, NbtInt.class, NbtInt::of, NbtInt::g);
+            return createAdapter(Integer.class, NbtInt.class, NbtInt::of, NbtInt::intValue);
         }
         if (Objects.equals(Long.class, type)) {
-            return createAdapter(Long.class, NbtLong.class, NbtLong::of, NbtLong::f);
+            return createAdapter(Long.class, NbtLong.class, NbtLong::of, NbtLong::longValue);
         }
         if (Objects.equals(Float.class, type)) {
-            return createAdapter(Float.class, NbtFloat.class, NbtFloat::of, NbtFloat::k);
+            return createAdapter(Float.class, NbtFloat.class, NbtFloat::of, NbtFloat::floatValue);
         }
         if (Objects.equals(Double.class, type)) {
-            return createAdapter(Double.class, NbtDouble.class, NbtDouble::of, NbtDouble::j);
+            return createAdapter(Double.class, NbtDouble.class, NbtDouble::of, NbtDouble::doubleValue);
         }
 
         /*
             String
          */
         if (Objects.equals(String.class, type)) {
-            return createAdapter(String.class, NbtString.class, NbtString::of, NbtString::m_);
+            return createAdapter(String.class, NbtString.class, NbtString::of, NbtString::asString);
         }
 
         /*

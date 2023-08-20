@@ -38,3 +38,8 @@ accessible method net/minecraft/world/ChunkPosDistanceLevelPropagator updateLeve
 accessible field net/minecraft/server/world/ChunkTicket argument Ljava/lang/Object;
 
 accessible class net/minecraft/entity/mob/SpellcastingIllagerEntity$Spell
+accessible field net/minecraft/inventory/DoubleInventory first Lnet/minecraft/inventory/Inventory;
+accessible field net/minecraft/inventory/DoubleInventory second Lnet/minecraft/inventory/Inventory;
+accessible method net/minecraft/entity/Entity getSwimSound ()Lnet/minecraft/sound/SoundEvent;
+accessible method net/minecraft/entity/Entity getSplashSound ()Lnet/minecraft/sound/SoundEvent;
+accessible method net/minecraft/entity/Entity getHighSpeedSplashSound ()Lnet/minecraft/sound/SoundEvent;

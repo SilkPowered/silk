@@ -68,7 +68,7 @@ dependencies {
 	include group: 'org.apache.maven.resolver', name: 'maven-resolver-transport-http', version: '1.6.3'
 
 	implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-connector-basic', version: '1.7.3'
-	include group: 'org.apache.maven.resolver', name: 'maven-resolver--connector-basic', version: '1.7.3'
+	include group: 'org.apache.maven.resolver', name: 'maven-resolver-connector-basic', version: '1.7.3'
 
 	implementation group: 'org.apache.maven.resolver', name: 'maven-resolver-impl', version: '1.6.3'
 	include group: 'org.apache.maven.resolver', name: 'maven-resolver-impl', version: '1.6.3'
@@ -91,6 +91,8 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
 	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
 	it.options.release = 17
+
+	it.options.compilerArgs << "-Xmaxerrs" << "10000"
 }
 
 java {
